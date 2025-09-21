@@ -5,6 +5,7 @@ import 'package:office_archiving/functions/handle_delete_section.dart';
 import 'package:office_archiving/functions/handle_rename_Section.dart';
 import 'package:office_archiving/models/section.dart';
 import 'package:office_archiving/pages/section_screen.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class SectionListView extends StatelessWidget {
   final List<Section> sections;
@@ -33,9 +34,9 @@ class SectionListView extends StatelessWidget {
                       // color: Colors.grey.withOpacity(0.5),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'لا توجد أقسام بعد. اضغط على زر + لإضافة أول قسم.',
-                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    Text(
+                      AppLocalizations.of(context)!.emptySectionsMessage,
+                      style: const TextStyle(fontSize: 14, color: Colors.black54),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -129,7 +130,7 @@ class SectionListView extends StatelessWidget {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
-          'options of the section',
+          AppLocalizations.of(context)!.optionsTitle,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: kPrimaryColor,
@@ -141,7 +142,7 @@ class SectionListView extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(Icons.edit, color: kPrimaryColor),
-              title: const Text('edit name'),
+              title: Text(AppLocalizations.of(context)!.editName),
               onTap: () {
                 Navigator.pop(context);
                 handleRenameSection(
@@ -154,7 +155,7 @@ class SectionListView extends StatelessWidget {
             const Divider(height: 1),
             ListTile(
               leading: Icon(Icons.delete, color: Colors.red.shade700),
-              title: const Text('delete the section'),
+              title: Text(AppLocalizations.of(context)!.deleteSection),
               onTap: () {
                 Navigator.pop(context);
                 handleDeleteSection(context, sections[index]);
@@ -165,7 +166,7 @@ class SectionListView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('cancel', style: TextStyle(color: kPrimaryColor)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: kPrimaryColor)),
           ),
         ],
       ),

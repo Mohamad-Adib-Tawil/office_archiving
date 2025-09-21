@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/pages/home_screen.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -97,10 +98,10 @@ class SlidingText extends StatelessWidget {
         builder: (context, _) {
           return SlideTransition(
             position: slidingAnimation,
-            child: const Text(
-              'Make Your Files Archived',
+            child: Text(
+              AppLocalizations.of(context)!.splashMessage,
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+              style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
             ),
           );
         });
