@@ -74,33 +74,7 @@ class GridViewItemsSuccess extends StatelessWidget {
     return Colors.grey.shade700;
   }
 
-  Widget _buildMediaOverlay(String? fileType) {
-    final type = fileType?.toLowerCase();
-
-    if (_videoTypes.contains(type)) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.black54,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: const Center(
-          child: Icon(Icons.play_circle_filled, color: Colors.white, size: 40),
-        ),
-      );
-    }
-
-    if (_audioTypes.contains(type)) {
-      return const Align(
-        alignment: Alignment.topRight,
-        child: Padding(
-          padding: EdgeInsets.all(4.0),
-          child: Icon(Icons.music_note, color: Colors.white, size: 20),
-        ),
-      );
-    }
-
-    return const SizedBox.shrink();
-  }
+  // Removed unused _buildMediaOverlay to satisfy lint
 
   Widget _buildFileInfo(ItemSection item) {
     final isArabic =
@@ -232,32 +206,41 @@ class GridViewItemsSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GridView.builder(
-          padding: _gridPadding,
-          gridDelegate: _gridDelegate,
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
-            log('Item details: ${item.id} | ${item.name} | ${item.fileType} | ${item.filePath}');
-
-            return GestureDetector(
-              onTap: () => _handleFileTap(context, item),
-              onLongPress: () => showItemOptionsDialog(context, item, itemSectionCubit),
-              child: _buildFileThumbnail(item),
-            );
-          },
-        ),
-        if (items.isEmpty)
-          const Center(
-            child: Image(
+    if (items.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Image(
               image: AssetImage(kLogoOffice),
               width: 200,
               height: 200,
             ),
-          ),
-      ],
+            SizedBox(height: 12),
+            Text(
+              'لا توجد عناصر بعد في هذا القسم',
+              style: TextStyle(fontSize: 14, color: Colors.black54),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return GridView.builder(
+      padding: _gridPadding,
+      gridDelegate: _gridDelegate,
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        log('Item details: ${item.id} | ${item.name} | ${item.fileType} | ${item.filePath}');
+
+        return GestureDetector(
+          onTap: () => _handleFileTap(context, item),
+          onLongPress: () => showItemOptionsDialog(context, item, itemSectionCubit),
+          child: _buildFileThumbnail(item),
+        );
+      },
     );
   }
 

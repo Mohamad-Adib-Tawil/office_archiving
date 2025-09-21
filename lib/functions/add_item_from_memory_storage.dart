@@ -40,25 +40,18 @@ void addItemFromMemoryStorage(BuildContext context, int idSection, ItemSectionCu
 
 Future<bool> _requestPermission(BuildContext context) async {
   if (Platform.isAndroid) {
-    int sdkInt = (await Permission.storage.status).toString().contains("granted") ? 29 : 33;
+    // Request a set of relevant permissions and proceed if any is granted
+    final statuses = await [
+      Permission.storage,
+      Permission.photos,
+      Permission.videos,
+      Permission.audio,
+    ].request();
 
-    if (sdkInt >= 33) {
-      // Android 13+
-      var photos = await Permission.photos.request();
-      var videos = await Permission.videos.request();
-      var audio = await Permission.audio.request();
-      if (photos.isGranted || videos.isGranted || audio.isGranted) {
-        return true;
-      }
-    } else {
-      // Android 12 and below
-      var storage = await Permission.storage.request();
-      if (storage.isGranted) {
-        return true;
-      }
-    }
+    final granted = statuses.values.any((s) => s.isGranted);
+    if (granted) return true;
   } else {
-    // iOS or others
+    // iOS and others: generally allowed for file picker
     return true;
   }
 

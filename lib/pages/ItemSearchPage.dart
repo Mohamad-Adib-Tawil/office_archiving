@@ -23,7 +23,7 @@ class _ItemSearchPageState extends State<ItemSearchPage> {
     _itemSectionCubit.fetchItemsBySectionId(widget.sectionId);
 
     _searchController.addListener(() {
-      _itemSectionCubit.searchItems(_searchController.text);
+      _itemSectionCubit.searchItems(_searchController.text, widget.sectionId);
     });
   }
 
