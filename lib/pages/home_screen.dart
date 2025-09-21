@@ -40,9 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
         body: BlocBuilder<SectionCubit, SectionState>(
           builder: (context, state) {
-            if (state is SectionInitial) {
-              log('HomeScreen SectionInitial Received  state');
-              sectionCubit.loadSections();
+            if (state is SectionLoading) {
+              log('HomeScreen SectionLoading Received state');
               return const Center(child: CircularProgressIndicator());
             } else if (state is SectionLoaded) {
               log('Sections loaded successfully: ${state.sections}');

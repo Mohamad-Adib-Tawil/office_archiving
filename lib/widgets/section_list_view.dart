@@ -32,7 +32,12 @@ class SectionListView extends StatelessWidget {
                       height: 200,
                       // color: Colors.grey.withOpacity(0.5),
                     ),
-                   
+                    const SizedBox(height: 12),
+                    const Text(
+                      'لا توجد أقسام بعد. اضغط على زر + لإضافة أول قسم.',
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               )

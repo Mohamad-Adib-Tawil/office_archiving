@@ -35,10 +35,10 @@ class ItemSection {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'itemName': name,
+      'name': name,
       'filePath': filePath,
       'fileType': fileType,
-      'idSection': idSection,
+      'sectionId': idSection,
     };
   }
 

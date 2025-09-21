@@ -64,11 +64,11 @@ class ItemSectionCubit extends Cubit<ItemSectionState> {
       emit(ItemSectionError('Failed to update item name: $e'));
     }
   }
-   /// Search items by name
-  Future<void> searchItems(String query) async {
+   /// Search items by name within a specific section
+  Future<void> searchItems(String query, int sectionId) async {
     emit(ItemSectionLoading());
     try {
-      final itemsData = await _databaseService.searchItemsByName(query);
+      final itemsData = await _databaseService.searchItemsByNameInSection(query, sectionId);
 
       List<ItemSection> items = [];
       for (var itemData in itemsData) {

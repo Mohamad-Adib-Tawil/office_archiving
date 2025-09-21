@@ -73,6 +73,9 @@ class DatabaseService {
   Future<void> deleteSection(int id) async {
     log('deleteSection $id');
     await initDatabase();
+    // First delete all items that belong to this section to avoid orphans
+    await db.delete('items', where: 'sectionId = ?', whereArgs: [id]);
+    // Then delete the section itself
     await db.delete('section', where: 'id = ?', whereArgs: [id]);
   }
 
@@ -112,6 +115,17 @@ class DatabaseService {
       'items',
       where: 'name LIKE ?',
       whereArgs: ['%$query%'],
+    );
+  }
+
+  /// Search items by name within a specific section
+  Future<List<Map<String, dynamic>>> searchItemsByNameInSection(
+      String query, int sectionId) async {
+    await initDatabase();
+    return await db.query(
+      'items',
+      where: 'name LIKE ? AND sectionId = ?',
+      whereArgs: ['%$query%', sectionId],
     );
   }
 
