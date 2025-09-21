@@ -4,6 +4,9 @@ import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dar
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 import 'package:office_archiving/pages/splash.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/cubit/locale_cubit/locale_cubit.dart';
 
 import 'service/sqlite_service.dart';
 
@@ -22,16 +25,34 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => SectionCubit(DatabaseService.instance)),
         BlocProvider(create: (context) => ItemSectionCubit(DatabaseService.instance)),
+        BlocProvider(create: (context) => LocaleCubit()),
       ],
-      child: MaterialApp(
+      child: Builder(builder: (context) {
+        final locale = context.select((LocaleCubit c) => c.state);
+        return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
           useMaterial3: true,
           fontFamily: kFontGTSectraFine,
         ),
+        // Localization setup
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('ar'),
+        ],
+        locale: locale,
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
         home: const SplashView(),
-      ),
+      );
+      }),
     );
   }
 }
+

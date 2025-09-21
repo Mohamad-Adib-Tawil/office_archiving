@@ -31,32 +31,29 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     log('.............................Building HomeScreen......................................');
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: CustomAppBarWidgetApp(),
-        floatingActionButton: const HomeFloatingActionButtonWidgetApp(
-            // sectionCubit: sectionCubit,
-            ),
-        body: BlocBuilder<SectionCubit, SectionState>(
-          builder: (context, state) {
-            if (state is SectionLoading) {
-              log('HomeScreen SectionLoading Received state');
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is SectionLoaded) {
-              log('Sections loaded successfully: ${state.sections}');
-              return SectionListView(
-                  sections: state.sections, sectionCubit: sectionCubit);
-            } else if (state is SectionError) {
-              log('Failed to load sections: ${state.message}');
-              return Center(
-                  child: Text('Failed to load sections: ${state.message}'));
-            } else {
-              log('else  $state');
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
+    return Scaffold(
+      appBar: CustomAppBarWidgetApp(),
+      floatingActionButton: const HomeFloatingActionButtonWidgetApp(
+          // sectionCubit: sectionCubit,
+          ),
+      body: BlocBuilder<SectionCubit, SectionState>(
+        builder: (context, state) {
+          if (state is SectionLoading) {
+            log('HomeScreen SectionLoading Received state');
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is SectionLoaded) {
+            log('Sections loaded successfully: ${state.sections}');
+            return SectionListView(
+                sections: state.sections, sectionCubit: sectionCubit);
+          } else if (state is SectionError) {
+            log('Failed to load sections: ${state.message}');
+            return Center(
+                child: Text('Failed to load sections: ${state.message}'));
+          } else {
+            log('else  $state');
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }

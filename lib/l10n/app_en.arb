@@ -1,0 +1,15 @@
+{
+  "appTitle": "Office Archiving",
+  "splashMessage": "Make Your Files Archived",
+  "emptySectionsMessage": "No sections yet. Tap + to add the first section.",
+  "emptyItemsMessage": "No items in this section yet",
+  "optionsTitle": "Options of the section",
+  "editName": "Edit name",
+  "deleteSection": "Delete the section",
+  "cancel": "Cancel",
+  "searchItemsTitle": "Search Items",
+  "searchLabel": "Search",
+  "noItemsFound": "No items found.",
+  "fileErrorTitle": "File Error",
+  "fileErrorBody": "File is missing or invalid"
+}

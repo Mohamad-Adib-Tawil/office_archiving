@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/widgets/grid_view_items_success.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class ItemSearchPage extends StatefulWidget {
   final int sectionId;
@@ -37,7 +38,7 @@ class _ItemSearchPageState extends State<ItemSearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Items'),
+        title: Text(AppLocalizations.of(context)!.searchItemsTitle),
       ),
       body: Column(
         children: [
@@ -46,7 +47,7 @@ class _ItemSearchPageState extends State<ItemSearchPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Search',
+                labelText: AppLocalizations.of(context)!.searchLabel,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -58,7 +59,7 @@ class _ItemSearchPageState extends State<ItemSearchPage> {
                   return Center(child: CircularProgressIndicator());
                 } else if (state is ItemSectionLoaded) {
                   if (state.items.isEmpty) {
-                    return Center(child: Text('No items found.'));
+                    return Center(child: Text(AppLocalizations.of(context)!.noItemsFound));
                   }
                   return GridViewItemsSuccess(
                     items: state.items,

@@ -1,0 +1,15 @@
+{
+  "appTitle": "أرشفة المكتب",
+  "splashMessage": "أرشِف ملفاتك",
+  "emptySectionsMessage": "لا توجد أقسام بعد. اضغط على زر + لإضافة أول قسم.",
+  "emptyItemsMessage": "لا توجد عناصر بعد في هذا القسم",
+  "optionsTitle": "خيارات القسم",
+  "editName": "تعديل الاسم",
+  "deleteSection": "حذف القسم",
+  "cancel": "إلغاء",
+  "searchItemsTitle": "بحث عن العناصر",
+  "searchLabel": "بحث",
+  "noItemsFound": "لا توجد عناصر.",
+  "fileErrorTitle": "خطأ في الملف",
+  "fileErrorBody": "الملف مفقود أو غير صالح"
+}

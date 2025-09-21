@@ -8,6 +8,7 @@ import 'package:office_archiving/functions/show_item_dialog.dart';
 import 'package:office_archiving/helper/open_file.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/models/item.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class GridViewItemsSuccess extends StatelessWidget {
   const GridViewItemsSuccess({
@@ -210,16 +211,16 @@ class GridViewItemsSuccess extends StatelessWidget {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Image(
+          children: [
+            const Image(
               image: AssetImage(kLogoOffice),
               width: 200,
               height: 200,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
-              'لا توجد عناصر بعد في هذا القسم',
-              style: TextStyle(fontSize: 14, color: Colors.black54),
+              AppLocalizations.of(context)!.emptyItemsMessage,
+              style: const TextStyle(fontSize: 14, color: Colors.black54),
               textAlign: TextAlign.center,
             ),
           ],
@@ -248,8 +249,8 @@ class GridViewItemsSuccess extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('File Error'),
-        content: const Text('File is missing or invalid'),
+        title: Text(AppLocalizations.of(context)!.fileErrorTitle),
+        content: Text(AppLocalizations.of(context)!.fileErrorBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
