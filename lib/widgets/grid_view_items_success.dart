@@ -219,7 +219,7 @@ class GridViewItemsSuccess extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              AppLocalizations.of(context)!.emptyItemsMessage,
+              AppLocalizations.of(context).emptyItemsMessage,
               style: const TextStyle(fontSize: 14, color: Colors.black54),
               textAlign: TextAlign.center,
             ),
@@ -249,8 +249,8 @@ class GridViewItemsSuccess extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.fileErrorTitle),
-        content: Text(AppLocalizations.of(context)!.fileErrorBody),
+        title: Text(AppLocalizations.of(context).fileErrorTitle),
+        content: Text(AppLocalizations.of(context).fileErrorBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

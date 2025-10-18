@@ -11,5 +11,13 @@
   "searchLabel": "بحث",
   "noItemsFound": "لا توجد عناصر.",
   "fileErrorTitle": "خطأ في الملف",
-  "fileErrorBody": "الملف مفقود أو غير صالح"
+  "fileErrorBody": "الملف مفقود أو غير صالح",
+  "sectionNameRequired": "اسم القسم مطلوب",
+  "addSectionTitle": "إضافة قسم",
+  "sectionNameLabel": "اسم القسم",
+  "addAction": "إضافة",
+  "nameRequired": "الاسم مطلوب",
+  "renameItemTitle": "إعادة تسمية العنصر",
+  "newNameLabel": "الاسم الجديد",
+  "renameAction": "إعادة تسمية"
 }

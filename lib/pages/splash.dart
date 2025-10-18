@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:office_archiving/constants.dart';
-import 'package:office_archiving/pages/home_screen.dart';
-import 'package:office_archiving/l10n/app_localizations.dart';
+  import 'package:office_archiving/constants.dart';
+  import 'package:office_archiving/pages/home_screen.dart';
+  import 'package:office_archiving/l10n/app_localizations.dart';
 
-class SplashView extends StatefulWidget {
-  const SplashView({super.key});
+  class SplashView extends StatefulWidget {
+    const SplashView({super.key});
 
-  @override
-  State<SplashView> createState() => _SplashViewState();
-}
+    @override
+    State<SplashView> createState() => _SplashViewState();
+  }
 
 class _SplashViewState extends State<SplashView> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
@@ -67,6 +67,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
     Future.delayed(
       const Duration(seconds: 4),
       () {
+        if (!mounted) return;
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -99,7 +100,7 @@ class SlidingText extends StatelessWidget {
           return SlideTransition(
             position: slidingAnimation,
             child: Text(
-              AppLocalizations.of(context)!.splashMessage,
+              AppLocalizations.of(context).splashMessage,
               textAlign: TextAlign.center,
               style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
             ),

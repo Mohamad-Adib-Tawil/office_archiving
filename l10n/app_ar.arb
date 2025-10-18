@@ -11,5 +11,17 @@
   "searchLabel": "بحث",
   "noItemsFound": "لا توجد عناصر.",
   "fileErrorTitle": "خطأ في الملف",
-  "fileErrorBody": "الملف مفقود أو غير صالح"
+  "fileErrorBody": "الملف مفقود أو غير صالح",
+  "addSectionTitle": "إضافة قسم",
+  "sectionNameLabel": "اسم القسم",
+  "addAction": "إضافة",
+  "sectionNameRequired": "يرجى إدخال اسم القسم",
+  "renameItemTitle": "إعادة تسمية العنصر",
+  "newNameLabel": "الاسم الجديد",
+  "renameAction": "إعادة تسمية",
+  "nameRequired": "يرجى إدخال الاسم",
+  "deleteConfirmTitle": "حذف",
+  "deleteConfirmBody": "هل أنت متأكد أنك تريد حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+  "deleteAction": "حذف",
+  "keepAction": "إبقاء"
 }

@@ -14,6 +14,8 @@ void addItemFromCamera(
   final picker = ImagePicker();
   try {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (!context.mounted) return;
+    
     if (pickedFile != null) {
       final filePath = pickedFile.path;
       // final fileName = path.basename(filePath);
@@ -24,6 +26,7 @@ void addItemFromCamera(
       showSnackBar(context, 'No image selected');
     }
   } catch (e) {
+    if (!context.mounted) return;
     showSnackBar(context, 'Error: $e');
   }
 }

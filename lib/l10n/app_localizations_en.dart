@@ -47,4 +47,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fileErrorBody => 'File is missing or invalid';
+
+  @override
+  String get sectionNameRequired => 'Section name is required';
+
+  @override
+  String get addSectionTitle => 'Add Section';
+
+  @override
+  String get sectionNameLabel => 'Section name';
+
+  @override
+  String get addAction => 'Add';
+
+  @override
+  String get nameRequired => 'Name is required';
+
+  @override
+  String get renameItemTitle => 'Rename item';
+
+  @override
+  String get newNameLabel => 'New name';
+
+  @override
+  String get renameAction => 'Rename';
 }

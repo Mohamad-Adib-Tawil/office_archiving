@@ -10,12 +10,15 @@ void addItemFromGallery(BuildContext context, int idSection,ItemSectionCubit ite
     final picker = ImagePicker();
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (!context.mounted) return;
+      
       if (pickedFile != null) {
         processImageAndAddItem(File(pickedFile.path),idSection ,itemCubit );
       } else {
         showSnackBar(context,'No image picked');
       }
     } catch (e) {
+      if (!context.mounted) return;
       showSnackBar(context ,'Error: $e',);
     }
   }
