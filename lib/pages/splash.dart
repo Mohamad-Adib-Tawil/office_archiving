@@ -12,7 +12,9 @@ import 'package:flutter/material.dart';
 
 class _SplashViewState extends State<SplashView> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
-  late Animation<Offset> slidingAnimation;
+  late Animation<double> _logoOpacity;
+  late Animation<double> _logoScale;
+  late Animation<double> _textOpacity;
 
   @override
   void initState() {
@@ -30,20 +32,32 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Image.asset(
-            kLogoOffice,
-            width: 200,
-            height: 200,
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          SlidingText(slidingAnimation: slidingAnimation),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FadeTransition(
+              opacity: _logoOpacity,
+              child: ScaleTransition(
+                scale: _logoScale,
+                child: Image.asset(
+                  kLogoOffice,
+                  width: 200,
+                  height: 200,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            FadeTransition(
+              opacity: _textOpacity,
+              child: Text(
+                AppLocalizations.of(context).splashMessage,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -53,10 +67,22 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   void initSlidingAnimation() {
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 1200),
     );
 
-    slidingAnimation = Tween<Offset>(begin: const Offset(-2, 6), end: Offset.zero).animate(animationController);
+    _logoOpacity = CurvedAnimation(
+      parent: animationController,
+      curve: const Interval(0.0, 0.6, curve: Curves.easeOutCubic),
+    );
+
+    _logoScale = Tween<double>(begin: 0.92, end: 1.0).animate(
+      CurvedAnimation(parent: animationController, curve: const Interval(0.0, 0.8, curve: Curves.easeOutCubic)),
+    );
+
+    _textOpacity = CurvedAnimation(
+      parent: animationController,
+      curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
+    );
 
     animationController.forward();
   }
@@ -65,7 +91,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
 ///////////////////////////////////////////////////////////////////////
   void navigateToHome() {
     Future.delayed(
-      const Duration(seconds: 4),
+      const Duration(milliseconds: 1600),
       () {
         if (!mounted) return;
         Navigator.pushReplacement(
