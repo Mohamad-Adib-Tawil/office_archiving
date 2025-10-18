@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/models/section.dart';
-import 'package:office_archiving/pages/ItemSearchPage.dart';
+import 'package:office_archiving/pages/item_search_page.dart';
 import 'package:office_archiving/widgets/floating_action_button_section.dart';
 import 'package:office_archiving/widgets/grid_view_items_success.dart';
 import '../service/sqlite_service.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/widgets/shimmers.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class SectionScreen extends StatefulWidget {
   final Section section;
@@ -56,14 +57,20 @@ class _SectionScreenState extends State<SectionScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ItemSearchPage(sectionId: widget.section.id),
+                    builder: (context) =>
+                        ItemSearchPage(sectionId: widget.section.id),
                   ),
                 );
               },
-              icon: Icon(AppIcons.search, color: Theme.of(context).colorScheme.primary),
+              icon: Icon(AppIcons.search,
+                  color: Theme.of(context).colorScheme.primary),
               style: IconButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
               ),
             ),
           ),
@@ -76,11 +83,16 @@ class _SectionScreenState extends State<SectionScreen> {
                 onPressed: () => Navigator.pop(context),
                 icon: Transform.flip(
                   flipX: true,
-                  child: Icon(AppIcons.back, color: Theme.of(context).colorScheme.onSurface),
+                  child: Icon(AppIcons.back,
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
                 style: IconButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainerHighest
+                      .withValues(alpha: 0.5),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
                 ),
               ),
             ),
@@ -91,11 +103,13 @@ class _SectionScreenState extends State<SectionScreen> {
         body: Column(
           children: [
             FutureBuilder<String?>(
-              future: DatabaseService.instance.getSectionCoverOrLatest(widget.section.id),
+              future: DatabaseService.instance
+                  .getSectionCoverOrLatest(widget.section.id),
               builder: (context, snap) {
                 final scheme = Theme.of(context).colorScheme;
                 final path = snap.data;
-                final hasImage = path != null && path.isNotEmpty && File(path).existsSync();
+                final hasImage =
+                    path != null && path.isNotEmpty && File(path).existsSync();
                 if (!hasImage) {
                   return const SizedBox.shrink();
                 }
@@ -106,7 +120,7 @@ class _SectionScreenState extends State<SectionScreen> {
                     borderRadius: BorderRadius.circular(22),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 14,
                         offset: const Offset(0, 8),
                       ),
@@ -126,19 +140,21 @@ class _SectionScreenState extends State<SectionScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: scheme.primary.withOpacity(0.22),
+                              color: scheme.primary.withValues(alpha: 0.22),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(AppIcons.image, color: Colors.white, size: 16),
-                                SizedBox(width: 6),
+                              children: [
+                                const Icon(AppIcons.image,
+                                    color: Colors.white, size: 16),
+                                const SizedBox(width: 6),
                                 Text(
-                                  'صورة غلاف',
-                                  style: TextStyle(
+                                  AppLocalizations.of(context).cover_badge,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -171,11 +187,11 @@ class _SectionScreenState extends State<SectionScreen> {
                         itemSectionCubit: itemCubit,
                       );
                     } else if (state is ItemSectionError) {
-                      return const SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
+                      return SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 80),
-                          child: Center(child: Text('فشل في تحميل العناصر')),
+                          padding: const EdgeInsets.symmetric(vertical: 80),
+                          child: Center(child: Text(AppLocalizations.of(context).loading_error)),
                         ),
                       );
                     } else {

@@ -1,9 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:office_archiving/functions/show_snack_bar.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
+import 'dart:developer';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/helper/text_viewer.dart';
 
@@ -18,7 +19,7 @@ Future<void> openFile({
 
     if (!isGranted) {
       if (context.mounted) {
-        showSnackBar(context, 'يجب منح صلاحية التخزين لفتح الملف');
+        showSnackBar(context, AppLocalizations.of(context).storage_permission_required);
       }
       return;
     }
@@ -42,13 +43,13 @@ Future<void> openFile({
         log('openFile opened successfully');
       } else {
         if (context.mounted) {
-          showSnackBar(context, 'خطأ أثناء فتح الملف');
+          showSnackBar(context, AppLocalizations.of(context).file_open_error);
         }
       }
     }
   } catch (e) {
     if (context.mounted) {
-      showSnackBar(context, 'خطأ: $e');
+      showSnackBar(context, '${AppLocalizations.of(context).generic_error}: $e');
     }
   }
 }

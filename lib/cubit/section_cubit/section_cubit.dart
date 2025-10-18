@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/models/section.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:flutter/material.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 part 'section_state.dart';
 class SectionCubit extends Cubit<SectionState> {
@@ -27,12 +29,15 @@ class SectionCubit extends Cubit<SectionState> {
   }
 }
 
-Future<String?> addSection(String name) async {
+Future<String?> addSection(String name, BuildContext context) async {
   if (name.isEmpty) {
-    return 'Please enter section name';
+    return AppLocalizations.of(context).section_name_empty;
   } else {
     bool isNameUnique = await _checkSectionNameUnique(name);
     if (!isNameUnique) {
+      if (context.mounted) {
+        return AppLocalizations.of(context).section_name_exists;
+      }
       return 'Section name already exists';
     } else {
       try {

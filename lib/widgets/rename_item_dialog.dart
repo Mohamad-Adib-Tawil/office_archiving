@@ -45,14 +45,16 @@ class _RenameItemDialogState extends State<RenameItemDialog> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(AppRadius.lg)),
       ),
-      titlePadding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
-      contentPadding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+      titlePadding: const EdgeInsets.fromLTRB(
+          AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
+      contentPadding: const EdgeInsets.fromLTRB(
+          AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
       title: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(.10),
+              color: theme.colorScheme.primary.withValues(alpha: .10),
               shape: BoxShape.circle,
             ),
             child: Icon(AppIcons.rename, color: theme.colorScheme.primary),
@@ -61,7 +63,8 @@ class _RenameItemDialogState extends State<RenameItemDialog> {
           Expanded(
             child: Text(
               t.renameItemTitle,
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              style: theme.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
           ),
         ],
@@ -90,7 +93,8 @@ class _RenameItemDialogState extends State<RenameItemDialog> {
                   onPressed: () => Navigator.of(context).pop(),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md)),
                   ),
                   child: Text(t.cancel),
                 ),
@@ -103,7 +107,8 @@ class _RenameItemDialogState extends State<RenameItemDialog> {
                   label: Text(t.renameAction),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md)),
                   ),
                 ),
               ),

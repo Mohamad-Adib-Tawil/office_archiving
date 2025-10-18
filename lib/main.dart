@@ -90,10 +90,12 @@ class _MyAppState extends State<MyApp> {
       ],
       child: Builder(builder: (context) {
         final locale = context.select((LocaleCubit c) => c.state);
-        final theme = context.select((ThemeCubit c) => c.themeData);
+        final themeState = context.select((ThemeCubit c) => c.state);
+        final themeCubit = context.read<ThemeCubit>();
+        final theme = themeCubit.themeDataFor(context);
 
         final app = MaterialApp(
-          key: ValueKey('app-${locale.languageCode}-${theme.hashCode}'),
+          key: ValueKey('app-${locale.languageCode}-${themeState.name}'),
           navigatorKey: _navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: theme,

@@ -14,8 +14,9 @@ Widget buildSectionsShimmerGrid(BuildContext context) {
     itemCount: 6,
     itemBuilder: (context, index) {
       return Shimmer.fromColors(
-        baseColor: theme.colorScheme.surfaceVariant.withOpacity(0.3),
-        highlightColor: theme.colorScheme.surfaceVariant.withOpacity(0.15),
+        baseColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        highlightColor:
+            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -26,8 +27,10 @@ Widget buildSectionsShimmerGrid(BuildContext context) {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    color:
+                        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(20)),
                   ),
                 ),
               ),
@@ -36,7 +39,8 @@ Widget buildSectionsShimmerGrid(BuildContext context) {
                 height: 14,
                 margin: const EdgeInsets.symmetric(horizontal: 24),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                  color:
+                      theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -61,8 +65,9 @@ Widget buildItemsShimmerGrid(BuildContext context) {
     itemCount: 8,
     itemBuilder: (context, index) {
       return Shimmer.fromColors(
-        baseColor: theme.colorScheme.surfaceVariant.withOpacity(0.3),
-        highlightColor: theme.colorScheme.surfaceVariant.withOpacity(0.15),
+        baseColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        highlightColor:
+            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -75,8 +80,10 @@ Widget buildItemsShimmerGrid(BuildContext context) {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                    color:
+                        theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(14)),
                   ),
                 ),
               ),
@@ -88,7 +95,8 @@ Widget buildItemsShimmerGrid(BuildContext context) {
                     Container(
                       height: 12,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                        color: theme.colorScheme.surfaceContainerHighest
+                            .withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
@@ -97,7 +105,8 @@ Widget buildItemsShimmerGrid(BuildContext context) {
                       height: 10,
                       width: 60,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                        color: theme.colorScheme.surfaceContainerHighest
+                            .withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),

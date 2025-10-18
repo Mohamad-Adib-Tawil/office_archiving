@@ -31,14 +31,13 @@ void showAddSectionDialog(
               isSubmitting = true;
               errorText = null;
             });
+            
             try {
-              String? message = await sectionCubit.addSection(name);
+              String? error = await sectionCubit.addSection(name, context);
               if (!context.mounted) return;
               
-              if (message != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(message)),
-                );
+              if (error != null) {
+                setState(() => errorText = error);
               } else {
                 Navigator.pop(context);
               }
@@ -66,7 +65,7 @@ void showAddSectionDialog(
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(.12),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(AppIcons.folder, color: theme.colorScheme.primary),

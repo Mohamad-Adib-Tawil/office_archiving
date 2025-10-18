@@ -33,15 +33,15 @@ class CustomAppBarWidgetApp extends StatelessWidget
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withOpacity(0.08),
-              theme.colorScheme.primary.withOpacity(0.02),
+              theme.colorScheme.primary.withValues(alpha: 0.08),
+              theme.colorScheme.primary.withValues(alpha: 0.02),
             ],
           ),
         ),
       ),
       actions: [
         IconButton(
-          tooltip: 'الإعدادات',
+          tooltip: AppLocalizations.of(context).settings_tooltip,
           icon: const Icon(AppIcons.more),
           onPressed: () {
             HapticFeedback.lightImpact();

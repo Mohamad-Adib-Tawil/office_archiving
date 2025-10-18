@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class RenameSectionDialog extends StatefulWidget {
   const RenameSectionDialog({
@@ -24,17 +25,17 @@ class _RenameSectionDialogState extends State<RenameSectionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Rename Section'),
+      title: Text(AppLocalizations.of(context).rename_section_title),
       content: TextField(
         controller: _controller,
-        decoration: const InputDecoration(labelText: 'New Name'),
+        decoration: InputDecoration(labelText: AppLocalizations.of(context).new_name_label),
       ),
       actions: <Widget>[
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context).cancel),
         ),
         TextButton(
           onPressed: () {
@@ -46,7 +47,7 @@ class _RenameSectionDialogState extends State<RenameSectionDialog> {
                   .pop(newName); // Pass the new name back to the caller
             }
           },
-          child: const Text('Rename'),
+          child: Text(AppLocalizations.of(context).renameAction),
         ),
       ],
     );

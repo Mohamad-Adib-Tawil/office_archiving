@@ -2,15 +2,15 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/show_item_dialog.dart';
 import 'package:office_archiving/helper/open_file.dart';
-import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/models/item.dart';
-import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/theme/app_icons.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/widgets/empty_state.dart';
+import 'package:office_archiving/helper/pdf_viwer.dart';
+import 'package:office_archiving/constants.dart';
 
 class GridViewItemsSuccess extends StatelessWidget {
   const GridViewItemsSuccess({
@@ -79,9 +79,9 @@ class GridViewItemsSuccess extends StatelessWidget {
 
   // Removed unused _buildMediaOverlay to satisfy lint
 
-  Widget _buildFileInfo(ItemSection item) {
-    final isArabic =
-        item.name.contains(RegExp(r'[\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\uFE70-\uFEFF\uFB50-\uFDFF\uFEE0-\uFEFF]'));
+  Widget _buildFileInfo(BuildContext context, ItemSection item) {
+    final isArabic = item.name.contains(RegExp(
+        r'[\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\uFE70-\uFEFF\uFB50-\uFDFF\uFEE0-\uFEFF]'));
 
     return Column(
       children: [
@@ -95,8 +95,11 @@ class GridViewItemsSuccess extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          item.fileType?.toUpperCase() ?? 'UNKNOWN',
-          style: TextStyle(fontSize: 10, color: Colors.grey.shade600, fontWeight: FontWeight.bold),
+          item.fileType?.toUpperCase() ?? AppLocalizations.of(context).unknown_file_type,
+          style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -149,7 +152,7 @@ class GridViewItemsSuccess extends StatelessWidget {
     );
   }
 
-  Widget _buildFileThumbnail(ItemSection item) {
+  Widget _buildFileThumbnail(BuildContext context, ItemSection item) {
     return Container(
       margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -157,7 +160,7 @@ class GridViewItemsSuccess extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -172,7 +175,8 @@ class GridViewItemsSuccess extends StatelessWidget {
             child: SizedBox(
               height: 120,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(14)),
                 child: _buildMediaThumbnail(item),
               ),
             ),
@@ -180,7 +184,7 @@ class GridViewItemsSuccess extends StatelessWidget {
           // المنطقة السفلية للمعلومات
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: _buildFileInfo(item),
+            child: _buildFileInfo(context, item),
           ),
         ],
       ),
@@ -248,8 +252,9 @@ class GridViewItemsSuccess extends StatelessWidget {
           },
           child: GestureDetector(
             onTap: () => _handleFileTap(context, item),
-            onLongPress: () => showItemOptionsDialog(context, item, itemSectionCubit),
-            child: _buildFileThumbnail(item),
+            onLongPress: () =>
+                showItemOptionsDialog(context, item, itemSectionCubit),
+            child: _buildFileThumbnail(context, item),
           ),
         );
       },

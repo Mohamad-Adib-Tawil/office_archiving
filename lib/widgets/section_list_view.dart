@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 import 'package:office_archiving/functions/handle_delete_section.dart';
-import 'package:office_archiving/functions/handle_rename_Section.dart';
+import 'package:office_archiving/functions/handle_rename_section.dart';
 import 'package:office_archiving/models/section.dart';
 import 'package:office_archiving/pages/section_screen.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
@@ -38,123 +38,136 @@ class SectionListView extends StatelessWidget {
           },
           child: sections.isEmpty
               ? SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 80),
+                    padding: const EdgeInsets.symmetric(vertical: 80),
                     child: EmptyState(
                       asset: kLogoOffice,
                       title: null,
-                      message: 'لا توجد أقسام بعد',
+                      message: AppLocalizations.of(context).empty_sections_message,
                     ),
                   ),
                 )
               : GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.8,
-                ),
-                itemCount: sections.length,
-                itemBuilder: (context, index) {
-                  final animDuration = Duration(milliseconds: 420 + (index % 12) * 35);
-                  return TweenAnimationBuilder<double>(
-                    duration: animDuration,
-                    tween: Tween(begin: 0, end: 1),
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 18 * (1 - value)),
-                          child: Transform.scale(
-                            scale: 0.98 + (0.02 * value),
-                            child: child,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: sections.length,
+                  itemBuilder: (context, index) {
+                    final animDuration =
+                        Duration(milliseconds: 420 + (index % 12) * 35);
+                    return TweenAnimationBuilder<double>(
+                      duration: animDuration,
+                      tween: Tween(begin: 0, end: 1),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(0, 18 * (1 - value)),
+                            child: Transform.scale(
+                              scale: 0.98 + (0.02 * value),
+                              child: child,
+                            ),
+                          ),
+                        );
+                      },
+                      child: OpenContainer(
+                        openElevation: 0,
+                        closedElevation: 4,
+                        closedShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        openShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        transitionType: ContainerTransitionType.fadeThrough,
+                        openBuilder: (context, _) => SectionScreen(
+                          section: Section(
+                            id: sections[index].id,
+                            name: sections[index].name,
                           ),
                         ),
-                      );
-                    },
-                    child: OpenContainer(
-                      openElevation: 0,
-                      closedElevation: 4,
-                      closedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      openShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      transitionType: ContainerTransitionType.fadeThrough,
-                      openBuilder: (context, _) => SectionScreen(
-                        section: Section(
-                          id: sections[index].id,
-                          name: sections[index].name,
-                        ),
-                      ),
-                      closedBuilder: (context, open) => GestureDetector(
-                        onTap: open,
-                        onLongPress: () => _showOptionsDialog(context, index),
-                        child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    theme.colorScheme.primary.withOpacity(0.1),
-                                    theme.colorScheme.primary.withOpacity(0.05),
+                        closedBuilder: (context, open) => GestureDetector(
+                          onTap: open,
+                          onLongPress: () => _showOptionsDialog(context, index),
+                          child: Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      theme.colorScheme.primary
+                                          .withValues(alpha: 0.1),
+                                      theme.colorScheme.primary
+                                          .withValues(alpha: 0.05),
+                                    ],
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Expanded(
+                                      child: FutureBuilder<String?>(
+                                        future: DatabaseService.instance
+                                            .getSectionCoverOrLatest(
+                                                sections[index].id),
+                                        builder: (context, snap) {
+                                          final path = snap.data;
+                                          if (path != null &&
+                                              path.isNotEmpty &&
+                                              File(path).existsSync()) {
+                                            return ClipRRect(
+                                              borderRadius: BorderRadius.zero,
+                                              child: Image.file(
+                                                File(path),
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (ctx, _, __) =>
+                                                    _buildSectionFallback(ctx),
+                                              ),
+                                            );
+                                          }
+                                          return _buildSectionFallback(context);
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Text(
+                                        sections[index].name,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        maxLines: 2,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    child: FutureBuilder<String?>(
-                                      future: DatabaseService.instance.getSectionCoverOrLatest(sections[index].id),
-                                      builder: (context, snap) {
-                                        final path = snap.data;
-                                        if (path != null && path.isNotEmpty && File(path).existsSync()) {
-                                          return ClipRRect(
-                                            borderRadius: BorderRadius.zero,
-                                            child: Image.file(
-                                              File(path),
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (ctx, _, __) => _buildSectionFallback(ctx),
-                                            ),
-                                          );
-                                        }
-                                        return _buildSectionFallback(context);
-                                      },
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Text(
-                                      sections[index].name,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Theme.of(context).colorScheme.onSurface,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      maxLines: 2,
-                                    ),
-                                  ),
-                                ],
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        );
+                    );
+                  },
+                ),
+        ),
+      ),
+    );
   }
 
   Widget _buildSectionFallback(BuildContext context) {
@@ -165,8 +178,8 @@ class SectionListView extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            scheme.primary.withOpacity(0.18),
-            scheme.primary.withOpacity(0.08),
+            scheme.primary.withValues(alpha: 0.18),
+            scheme.primary.withValues(alpha: 0.08),
           ],
         ),
       ),
@@ -187,7 +200,7 @@ class SectionListView extends StatelessWidget {
               AppLocalizations.of(context).appTitle,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
-                color: scheme.onPrimaryContainer.withOpacity(0.9),
+                color: scheme.onPrimaryContainer.withValues(alpha: 0.9),
               ),
             ),
           ],
@@ -245,26 +258,33 @@ class SectionListView extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(AppIcons.image, color: scheme.primary),
-                  title: const Text('Set Cover Image'),
+                  title: Text(AppLocalizations.of(context).set_cover_image),
                   onTap: () async {
                     HapticFeedback.lightImpact();
                     Navigator.pop(sheetCtx);
                     final picker = ImagePicker();
-                    final picked = await picker.pickImage(source: ImageSource.gallery);
+                    final picked =
+                        await picker.pickImage(source: ImageSource.gallery);
                     if (picked != null) {
-                      await sectionCubit.updateSectionCover(sections[index].id, picked.path);
-                      UIFeedback.success(context, 'تم تعيين صورة الغلاف');
+                      await sectionCubit.updateSectionCover(
+                          sections[index].id, picked.path);
+                      if (context.mounted) {
+                        UIFeedback.success(context, AppLocalizations.of(context).snackbar_cover_set);
+                      }
                     }
                   },
                 ),
                 ListTile(
                   leading: Icon(AppIcons.close, color: Colors.red.shade700),
-                  title: const Text('Clear Cover'),
+                  title: Text(AppLocalizations.of(context).clear_cover),
                   onTap: () async {
                     HapticFeedback.lightImpact();
                     Navigator.pop(sheetCtx);
-                    await sectionCubit.updateSectionCover(sections[index].id, null);
-                    UIFeedback.info(context, 'تم مسح صورة الغلاف');
+                    await sectionCubit.updateSectionCover(
+                        sections[index].id, null);
+                    if (context.mounted) {
+                      UIFeedback.info(context, AppLocalizations.of(context).snackbar_cover_cleared);
+                    }
                   },
                 ),
                 const Divider(height: 1),
@@ -284,7 +304,8 @@ class SectionListView extends StatelessWidget {
                     onPressed: () => Navigator.pop(sheetCtx),
                     child: Text(
                       AppLocalizations.of(context).cancel,
-                      style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                          color: scheme.primary, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),

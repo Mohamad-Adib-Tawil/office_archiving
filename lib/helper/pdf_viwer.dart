@@ -50,7 +50,7 @@ class _MyPdfViewerState extends State<MyPdfViewer> {
             },
           ),
           if (errorMessage.isEmpty && !isReady)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             )
           else if (errorMessage.isNotEmpty)
