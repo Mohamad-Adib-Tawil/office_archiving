@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
   import 'package:office_archiving/constants.dart';
   import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
   import 'package:office_archiving/pages/section_screen.dart';
   import 'package:office_archiving/l10n/app_localizations.dart';
   import 'package:office_archiving/theme/app_icons.dart';
+  import 'package:image_picker/image_picker.dart';
+  import 'package:office_archiving/service/sqlite_service.dart';
 
   class SectionListView extends StatelessWidget {
   final List<Section> sections;
@@ -107,14 +110,22 @@ import 'package:flutter/material.dart';
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
-                                    ),
-                                    child: Image.asset(
-                                      kLogoOffice,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  child: FutureBuilder<String?>(
+                                    future: DatabaseService.instance.getSectionCoverOrLatest(sections[index].id),
+                                    builder: (context, snap) {
+                                      final path = snap.data;
+                                      if (path != null && path.isNotEmpty && File(path).existsSync()) {
+                                        return ClipRRect(
+                                          borderRadius: BorderRadius.zero,
+                                          child: Image.file(
+                                            File(path),
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (ctx, _, __) => _buildSectionFallback(),
+                                          ),
+                                        );
+                                      }
+                                      return _buildSectionFallback();
+                                    },
                                   ),
                                 ),
                                 Padding(
@@ -140,6 +151,16 @@ import 'package:flutter/material.dart';
                   );
                 },
               ),
+      ),
+    );
+  }
+
+  Widget _buildSectionFallback() {
+    return Container(
+      color: Colors.white.withOpacity(0.2),
+      child: Image.asset(
+        kLogoOffice,
+        fit: BoxFit.cover,
       ),
     );
   }
@@ -170,6 +191,28 @@ import 'package:flutter/material.dart';
                   sectionCubit,
                   sections[index],
                 );
+              },
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: Icon(AppIcons.image, color: Theme.of(context).colorScheme.primary),
+              title: const Text('Set Cover Image'),
+              onTap: () async {
+                Navigator.pop(context);
+                final picker = ImagePicker();
+                final picked = await picker.pickImage(source: ImageSource.gallery);
+                if (picked != null) {
+                  // Persist cover path
+                  await sectionCubit.updateSectionCover(sections[index].id, picked.path);
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(AppIcons.close, color: Colors.red.shade700),
+              title: const Text('Clear Cover'),
+              onTap: () async {
+                Navigator.pop(context);
+                await sectionCubit.updateSectionCover(sections[index].id, null);
               },
             ),
             const Divider(height: 1),
