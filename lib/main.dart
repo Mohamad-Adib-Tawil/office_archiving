@@ -19,21 +19,27 @@ void main() async {
   await DatabaseService.initDatabase();
   final prefs = await SharedPreferences.getInstance();
   final saved = prefs.getString('app_theme');
+  final savedLocale = prefs.getString('app_locale');
   AppTheme? initialTheme;
+  Locale? initialLocale;
   if (saved != null) {
     initialTheme = AppTheme.values.firstWhere(
       (e) => e.name == saved,
       orElse: () => AppTheme.indigo,
     );
   }
+  if (savedLocale != null) {
+    initialLocale = Locale(savedLocale);
+  }
 
-  runApp(MyApp(initialTheme: initialTheme));
+  runApp(MyApp(initialTheme: initialTheme, initialLocale: initialLocale));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, this.initialTheme});
+  const MyApp({super.key, this.initialTheme, this.initialLocale});
 
   final AppTheme? initialTheme;
+  final Locale? initialLocale;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -79,13 +85,15 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(create: (context) => SectionCubit(DatabaseService.instance)),
         BlocProvider(create: (context) => ItemSectionCubit(DatabaseService.instance)),
-        BlocProvider(create: (context) => LocaleCubit()),
+        BlocProvider(create: (context) => LocaleCubit(initial: widget.initialLocale)),
         BlocProvider(create: (context) => ThemeCubit(initial: widget.initialTheme)),
       ],
       child: Builder(builder: (context) {
         final locale = context.select((LocaleCubit c) => c.state);
         final theme = context.select((ThemeCubit c) => c.themeData);
-        return MaterialApp(
+
+        final app = MaterialApp(
+          key: ValueKey('app-${locale.languageCode}-${theme.hashCode}'),
           navigatorKey: _navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: theme,
@@ -95,6 +103,23 @@ class _MyAppState extends State<MyApp> {
           locale: locale,
           onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
           home: const SplashView(),
+        );
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 350),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (child, animation) {
+            final fade = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+            final offset = Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeOutCubic))
+                .animate(animation);
+            return FadeTransition(
+              opacity: fade,
+              child: SlideTransition(position: offset, child: child),
+            );
+          },
+          child: app,
         );
       }),
     );

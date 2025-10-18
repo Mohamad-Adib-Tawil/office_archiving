@@ -4,23 +4,17 @@ import 'package:office_archiving/functions/addItemFromGallery.dart';
 import 'package:office_archiving/functions/add_item_from_camera.dart';
 import 'package:office_archiving/functions/add_item_from_memory_storage.dart';
 
-void showAddItemDialog(
-  BuildContext context,
-  int idSection,
-  ItemSectionCubit itemCubit,
-) {
+void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit itemCubit) {
+  final theme = Theme.of(context);
+  final primary = theme.colorScheme.primary;
   showDialog(
     context: context,
     builder: (context) {
-      final theme = Theme.of(context);
-      final primary = theme.colorScheme.primary;
       return AlertDialog(
         title: Center(
           child: Text(
             'Add Item',
-            style: TextStyle(
-              color: primary,
-            ),
+            style: TextStyle(color: primary),
           ),
         ),
         content: Column(
@@ -28,15 +22,10 @@ void showAddItemDialog(
           children: [
             SizedBox(
               width: double.infinity,
-              height: 45, // Set desired height for buttons
+              height: 45,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      primary.withOpacity(.6),
-                      primary.withOpacity(.15),
-                    ],
-                  ),
+                  gradient: LinearGradient(colors: [primary.withOpacity(.6), primary.withOpacity(.15)]),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ElevatedButton(
@@ -45,34 +34,22 @@ void showAddItemDialog(
                     addItemFromMemoryStorage(context, idSection, itemCubit);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.transparent, // Make button transparent
-                    elevation: 0, // Remove button shadow
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text(
-                    'Add Item from Memory Storage',
-                    style: TextStyle(
-                        color: Colors.white), // Set text color to white
-                  ),
+                  child: const Text('Add Item from Memory Storage', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
-              height: 45, // Set desired height for buttons
+              height: 45,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      primary.withOpacity(.6),
-                      primary.withOpacity(.15),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(
-                      12), // Adjust border radius as needed
+                  gradient: LinearGradient(colors: [primary.withOpacity(.6), primary.withOpacity(.15)]),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: ElevatedButton(
                   onPressed: () {
@@ -80,35 +57,22 @@ void showAddItemDialog(
                     addItemFromCamera(idSection, itemCubit, context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.transparent, // Make button transparent
-                    elevation: 0, // Remove button shadow
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8)), // Same as container's border radius
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text(
-                    'Add Item from Camera',
-                    style: TextStyle(
-                        color: Colors.white), // Set text color to white
-                  ),
+                  child: const Text('Add Item from Camera', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
-              height: 45, // Set desired height for buttons
+              height: 45,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      primary.withOpacity(.6),
-                      primary.withOpacity(.15),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(
-                      8), // Adjust border radius as needed
+                  gradient: LinearGradient(colors: [primary.withOpacity(.6), primary.withOpacity(.15)]),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: ElevatedButton(
                   onPressed: () {
@@ -116,18 +80,11 @@ void showAddItemDialog(
                     addItemFromGallery(context, idSection, itemCubit);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.transparent, // Make button transparent
-                    elevation: 0, // Remove button shadow
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8)), // Same as container's border radius
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text(
-                    'Add Item from Gallery',
-                    style: TextStyle(
-                        color: Colors.white), // Set text color to white
-                  ),
+                  child: const Text('Add Item from Gallery', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),

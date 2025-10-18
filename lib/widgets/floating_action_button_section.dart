@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
-import 'package:office_archiving/functions/show_add_item_dialog.dart';
+import 'package:office_archiving/functions/show_add_item_sheet.dart';
 import 'package:office_archiving/pages/section_screen.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 
@@ -31,7 +31,7 @@ class FloatingActionButtonSection extends StatelessWidget {
       ),
       child: FloatingActionButton(
         onPressed: () {
-          showAddItemDialog(context, widget.section.id, itemCubit);
+          showAddItemSheet(context, widget.section.id, itemCubit);
         },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),

@@ -10,6 +10,7 @@ import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/models/item.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/theme/app_icons.dart';
+import 'package:office_archiving/widgets/empty_state.dart';
 
 class GridViewItemsSuccess extends StatelessWidget {
   const GridViewItemsSuccess({
@@ -209,22 +210,14 @@ class GridViewItemsSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Image(
-              image: AssetImage(kLogoOffice),
-              width: 200,
-              height: 200,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              AppLocalizations.of(context).emptyItemsMessage,
-              style: const TextStyle(fontSize: 14, color: Colors.black54),
-              textAlign: TextAlign.center,
-            ),
-          ],
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 80),
+          child: EmptyState(
+            asset: kLogoOffice,
+            message: AppLocalizations.of(context).emptyItemsMessage,
+          ),
         ),
       );
     }

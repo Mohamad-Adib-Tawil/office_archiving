@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/theme/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AppTheme { light, dark, yellow, blue, purple, teal, orange, pink, indigo }
+enum AppTheme { light, dark, yellow, blue, purple, teal, orange, pink, indigo, coral }
 
 class ThemeCubit extends Cubit<AppTheme> {
   static const _prefKey = 'app_theme';
@@ -47,6 +47,8 @@ class ThemeCubit extends Cubit<AppTheme> {
         return AppThemes.pink;
       case AppTheme.indigo:
         return AppThemes.indigo;
+      case AppTheme.coral:
+        return AppThemes.coral;
     }
   }
 
