@@ -21,6 +21,16 @@ class DatabaseService {
         name TEXT NOT NULL UNIQUE
       )
     ''');
+    // Migration: add coverPath column if missing
+    try {
+      final columns = await db.rawQuery("PRAGMA table_info('section')");
+      final hasCover = columns.any((c) => c['name'] == 'coverPath');
+      if (!hasCover) {
+        await db.execute("ALTER TABLE section ADD COLUMN coverPath TEXT");
+      }
+    } catch (e) {
+      log('section coverPath migration error: $e');
+    }
     
     await db.execute('''
       CREATE TABLE IF NOT EXISTS items (
@@ -70,6 +80,12 @@ class DatabaseService {
     await getAllSections();
   }
 
+  Future<void> updateSectionCover(int id, String? coverPath) async {
+    log('updateSectionCover id=$id coverPath=$coverPath');
+    await initDatabase();
+    await db.update('section', {'coverPath': coverPath}, where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<void> deleteSection(int id) async {
     log('deleteSection $id');
     await initDatabase();
@@ -83,6 +99,31 @@ class DatabaseService {
     await initDatabase();
     return await db
         .query('items', where: 'sectionId = ?', whereArgs: [sectionId]);
+  }
+
+  Future<String?> getLatestImagePathForSection(int sectionId) async {
+    await initDatabase();
+    // Assuming fileType holds extensions like 'jpg', 'png', etc.
+    final rows = await db.query(
+      'items',
+      columns: ['filePath'],
+      where: 'sectionId = ? AND (fileType IN ("jpg","jpeg","png","gif","webp","image"))',
+      whereArgs: [sectionId],
+      orderBy: 'id DESC',
+      limit: 1,
+    );
+    if (rows.isNotEmpty) return rows.first['filePath'] as String?;
+    return null;
+  }
+
+  Future<String?> getSectionCoverOrLatest(int sectionId) async {
+    await initDatabase();
+    final coverRows = await db.query('section', columns: ['coverPath'], where: 'id = ?', whereArgs: [sectionId]);
+    if (coverRows.isNotEmpty) {
+      final cover = coverRows.first['coverPath'] as String?;
+      if (cover != null && cover.isNotEmpty) return cover;
+    }
+    return getLatestImagePathForSection(sectionId);
   }
 
   Future<int> insertItem(

@@ -15,7 +15,11 @@ class SectionCubit extends Cubit<SectionState> {
   try {
     List<Map<String, dynamic>> sectionMaps = await _databaseService.getAllSections();
     List<Section> sections = sectionMaps.map((sectionMap) {
-      return Section(id: sectionMap['id'], name: sectionMap['name']);
+      return Section(
+        id: sectionMap['id'],
+        name: sectionMap['name'],
+        coverPath: sectionMap['coverPath'] as String?,
+      );
     }).toList();
     emit(SectionLoaded(sections));
   } catch (e) {
@@ -77,6 +81,26 @@ void updateSectionName(int id, String newName) async {
       loadSections();
     } catch (e) {
       emit(SectionError('Failed to delete section: $e'));
+    }
+  }
+
+  Future<void> updateSectionCover(int id, String? coverPath) async {
+    try {
+      await _databaseService.updateSectionCover(id, coverPath);
+      if (state is SectionLoaded) {
+        final updated = List<Section>.from((state as SectionLoaded).sections);
+        final idx = updated.indexWhere((s) => s.id == id);
+        if (idx != -1) {
+          updated[idx] = updated[idx].copyWith(coverPath: coverPath);
+          emit(SectionLoaded(updated));
+        } else {
+          loadSections();
+        }
+      } else {
+        loadSections();
+      }
+    } catch (e) {
+      emit(SectionError('Failed to update section cover: $e'));
     }
   }
 

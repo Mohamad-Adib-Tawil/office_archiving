@@ -7,19 +7,23 @@ class Section {
   final  int id;
 
   final String name;
+  final String? coverPath;
 
   Section({
     required this.id,
     required this.name,
+    this.coverPath,
   });
 
   Section copyWith({
     int? id,
     String? name,
+    String? coverPath,
   }) {
     return Section(
       id: id ?? this.id,
       name: name ?? this.name,
+      coverPath: coverPath ?? this.coverPath,
     );
   }
 
@@ -27,6 +31,7 @@ class Section {
     return <String, dynamic>{
       'id': id,
       'name': name,
+      'coverPath': coverPath,
     };
   }
 
@@ -34,6 +39,7 @@ class Section {
     return Section(
       id: map['id'] as int,
       name: map['name'] as String,
+      coverPath: map.containsKey('coverPath') ? map['coverPath'] as String? : null,
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/models/item.dart';
 import 'package:office_archiving/widgets/rename_item_dialog.dart';
+import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 
 void showItemOptionsDialog(BuildContext context, ItemSection itemSection,
       ItemSectionCubit itemSectionCubit) {
@@ -15,6 +16,15 @@ void showItemOptionsDialog(BuildContext context, ItemSection itemSection,
         return AlertDialog(
           title: Text('Options for ${itemSection.name}'),
           actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                if (itemSection.filePath != null && itemSection.filePath!.isNotEmpty) {
+                  await context.read<SectionCubit>().updateSectionCover(itemSection.idSection, itemSection.filePath!);
+                }
+              },
+              child: const Text('Set as Cover'),
+            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
