@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -92,8 +93,8 @@ import 'package:flutter/material.dart';
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  kPrimaryColor.withOpacity(0.1),
-                                  kPrimaryColor.withOpacity(0.05),
+                                  theme.colorScheme.primary.withOpacity(0.1),
+                                  theme.colorScheme.primary.withOpacity(0.05),
                                 ],
                               ),
                             ),
@@ -147,7 +148,7 @@ import 'package:flutter/material.dart';
           AppLocalizations.of(context).optionsTitle,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: kPrimaryColor,
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -155,7 +156,7 @@ import 'package:flutter/material.dart';
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.edit, color: kPrimaryColor),
+              leading: Icon(Icons.edit, color: Theme.of(context).colorScheme.primary),
               title: Text(AppLocalizations.of(context).editName),
               onTap: () {
                 Navigator.pop(context);
@@ -180,7 +181,7 @@ import 'package:flutter/material.dart';
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context).cancel, style: TextStyle(color: kPrimaryColor)),
+            child: Text(AppLocalizations.of(context).cancel, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
           ),
         ],
       ),

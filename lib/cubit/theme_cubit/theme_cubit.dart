@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/theme/themes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-enum AppTheme { light, dark, yellow }
+enum AppTheme { light, dark, yellow, blue, purple, teal, orange, pink, indigo }
 
 class ThemeCubit extends Cubit<AppTheme> {
-  ThemeCubit() : super(AppTheme.light);
+  static const _prefKey = 'app_theme';
 
-  void setTheme(AppTheme theme) => emit(theme);
-  void cycle() {
-    switch (state) {
-      case AppTheme.light:
-        emit(AppTheme.dark);
-        break;
-      case AppTheme.dark:
-        emit(AppTheme.yellow);
-        break;
-      case AppTheme.yellow:
-        emit(AppTheme.light);
-        break;
+  ThemeCubit({AppTheme? initial}) : super(initial ?? AppTheme.indigo) {
+    if (initial == null) {
+      _loadTheme();
     }
+  }
+
+  Future<void> setTheme(AppTheme theme) async {
+    emit(theme);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prefKey, theme.name);
+  }
+
+  void cycle() {
+    final values = AppTheme.values;
+    final nextIndex = (values.indexOf(state) + 1) % values.length;
+    // Persist as well
+    setTheme(values[nextIndex]);
   }
 
   ThemeData get themeData {
@@ -30,6 +35,30 @@ class ThemeCubit extends Cubit<AppTheme> {
         return AppThemes.dark;
       case AppTheme.yellow:
         return AppThemes.yellow;
+      case AppTheme.blue:
+        return AppThemes.blue;
+      case AppTheme.purple:
+        return AppThemes.purple;
+      case AppTheme.teal:
+        return AppThemes.teal;
+      case AppTheme.orange:
+        return AppThemes.orange;
+      case AppTheme.pink:
+        return AppThemes.pink;
+      case AppTheme.indigo:
+        return AppThemes.indigo;
+    }
+  }
+
+  Future<void> _loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getString(_prefKey);
+    if (saved != null) {
+      final parsed = AppTheme.values.firstWhere(
+        (e) => e.name == saved,
+        orElse: () => AppTheme.indigo,
+      );
+      emit(parsed);
     }
   }
 }

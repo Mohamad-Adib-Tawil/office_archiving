@@ -6,14 +6,13 @@ class AppThemes {
 
   static final ThemeData dark = _baseTheme(Brightness.dark, seed: kPrimaryColor);
 
-  static final ThemeData yellow = ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-    useMaterial3: true,
-    fontFamily: kFontGTSectraFine,
-    brightness: Brightness.light,
-    appBarTheme: const AppBarTheme(backgroundColor: Colors.amber),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: Colors.amber),
-  );
+  static final ThemeData yellow = _baseTheme(Brightness.light, seed: Colors.amber);
+  static final ThemeData blue = _baseTheme(Brightness.light, seed: Colors.blue);
+  static final ThemeData purple = _baseTheme(Brightness.light, seed: Colors.purple);
+  static final ThemeData teal = _baseTheme(Brightness.light, seed: Colors.teal);
+  static final ThemeData orange = _baseTheme(Brightness.light, seed: Colors.orange);
+  static final ThemeData pink = _baseTheme(Brightness.light, seed: Colors.pink);
+  static final ThemeData indigo = _baseTheme(Brightness.light, seed: Colors.indigo);
 
   static ThemeData _baseTheme(Brightness brightness, {required Color seed}) {
     final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);

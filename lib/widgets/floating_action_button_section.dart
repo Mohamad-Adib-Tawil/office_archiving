@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/show_add_item_dialog.dart';
 import 'package:office_archiving/pages/section_screen.dart';
@@ -18,13 +17,14 @@ class FloatingActionButtonSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
         gradient: LinearGradient(
           colors: [
-            kPrimaryColor.withOpacity(.6),
-            kPrimaryColor.withOpacity(.15),
+            primary.withOpacity(.6),
+            primary.withOpacity(.15),
           ],
         ),
       ),
