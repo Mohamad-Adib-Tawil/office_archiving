@@ -116,7 +116,12 @@ class _ThemeGrid extends StatelessWidget {
       _ThemeItemData(
           AppTheme.coral, AppLocalizations.of(context).theme_coral, const Color(0xFFFF6F61), Icons.circle),
       _ThemeItemData(AppTheme.yellow, AppLocalizations.of(context).theme_yellow, Colors.amber, Icons.circle),
-      _ThemeItemData(AppTheme.green, AppLocalizations.of(context).theme_green, Colors.green, Icons.circle),
+      // New gradient themes
+      _ThemeItemData(AppTheme.oceanBlue, AppLocalizations.of(context).theme_ocean_blue, const Color(0xFF0099CC), Icons.waves),
+      _ThemeItemData(AppTheme.sunsetOrange, AppLocalizations.of(context).theme_sunset_orange, const Color(0xFFF7931E), Icons.wb_sunny),
+      _ThemeItemData(AppTheme.forestGreen, AppLocalizations.of(context).theme_forest_green, const Color(0xFF4F7942), Icons.forest),
+      _ThemeItemData(AppTheme.royalPurple, AppLocalizations.of(context).theme_royal_purple, const Color(0xFF9A031E), Icons.diamond),
+      _ThemeItemData(AppTheme.roseGold, AppLocalizations.of(context).theme_rose_gold, const Color(0xFFD4AF37), Icons.auto_awesome),
     ];
 
     return GridView.builder(

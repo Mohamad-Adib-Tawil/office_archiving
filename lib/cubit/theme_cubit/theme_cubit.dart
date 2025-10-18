@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/theme/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AppTheme { system, light, dark, yellow, blue, purple, teal, orange, pink, indigo, coral, green }
+enum AppTheme { 
+  system, light, dark, yellow, blue, purple, teal, orange, pink, indigo, coral,
+  // New gradient themes
+  oceanBlue, sunsetOrange, forestGreen, royalPurple, roseGold
+}
 
 class ThemeCubit extends Cubit<AppTheme> {
   static const _prefKey = 'app_theme';
@@ -52,8 +56,16 @@ class ThemeCubit extends Cubit<AppTheme> {
         return AppThemes.indigo;
       case AppTheme.coral:
         return AppThemes.coral;
-      case AppTheme.green:
-        return AppThemes.green;
+      case AppTheme.oceanBlue:
+        return AppThemes.oceanBlue;
+      case AppTheme.sunsetOrange:
+        return AppThemes.sunsetOrange;
+      case AppTheme.forestGreen:
+        return AppThemes.forestGreen;
+      case AppTheme.royalPurple:
+        return AppThemes.royalPurple;
+      case AppTheme.roseGold:
+        return AppThemes.roseGold;
     }
   }
 
@@ -82,8 +94,16 @@ class ThemeCubit extends Cubit<AppTheme> {
         return AppThemes.indigo;
       case AppTheme.coral:
         return AppThemes.coral;
-      case AppTheme.green:
-        return AppThemes.green;
+      case AppTheme.oceanBlue:
+        return AppThemes.oceanBlue;
+      case AppTheme.sunsetOrange:
+        return AppThemes.sunsetOrange;
+      case AppTheme.forestGreen:
+        return AppThemes.forestGreen;
+      case AppTheme.royalPurple:
+        return AppThemes.royalPurple;
+      case AppTheme.roseGold:
+        return AppThemes.roseGold;
     }
   }
 

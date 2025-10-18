@@ -20,10 +20,20 @@ class AppThemes {
   static final ThemeData pink = _baseTheme(Brightness.light, seed: Colors.pink);
   static final ThemeData indigo =
       _baseTheme(Brightness.light, seed: Colors.indigo);
-  static final ThemeData green =
-      _baseTheme(Brightness.light, seed: Colors.green);
   static final ThemeData coral =
       _baseTheme(Brightness.light, seed: const Color(0xFFFF6F61));
+
+  // New gradient themes with beautiful colors
+  static final ThemeData oceanBlue =
+      _gradientTheme(const Color(0xFF006994), const Color(0xFF0099CC));
+  static final ThemeData sunsetOrange =
+      _gradientTheme(const Color(0xFFFF6B35), const Color(0xFFF7931E));
+  static final ThemeData forestGreen =
+      _gradientTheme(const Color(0xFF2D5016), const Color(0xFF4F7942));
+  static final ThemeData royalPurple =
+      _gradientTheme(const Color(0xFF6A0572), const Color(0xFF9A031E));
+  static final ThemeData roseGold =
+      _gradientTheme(const Color(0xFFE8B4B8), const Color(0xFFD4AF37));
 
   static ThemeData _baseTheme(Brightness brightness, {required Color seed}) {
     var scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
@@ -127,6 +137,25 @@ class AppThemes {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
+    );
+  }
+
+  // New gradient theme builder for beautiful gradient themes
+  static ThemeData _gradientTheme(Color primaryColor, Color secondaryColor) {
+    final gradientColor = Color.lerp(primaryColor, secondaryColor, 0.5)!;
+    return _baseTheme(Brightness.light, seed: gradientColor).copyWith(
+      // Add gradient customizations here
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: gradientColor,
+        foregroundColor: Colors.white,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: gradientColor,
+        foregroundColor: Colors.white,
+        elevation: 4,
+      ),
     );
   }
 }
