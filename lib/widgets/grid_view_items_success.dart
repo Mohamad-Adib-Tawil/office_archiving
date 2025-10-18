@@ -9,6 +9,7 @@ import 'package:office_archiving/helper/open_file.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/models/item.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/theme/app_icons.dart';
 
 class GridViewItemsSuccess extends StatelessWidget {
   const GridViewItemsSuccess({
@@ -36,22 +37,22 @@ class GridViewItemsSuccess extends StatelessWidget {
   IconData _getFileIcon(String? fileType) {
     final type = fileType?.toLowerCase();
 
-    if (_videoTypes.contains(type)) return Icons.videocam;
-    if (_audioTypes.contains(type)) return Icons.audiotrack;
+    if (_videoTypes.contains(type)) return AppIcons.video;
+    if (_audioTypes.contains(type)) return AppIcons.audio;
     if (_docTypes.contains(type)) {
       switch (type) {
         case 'pdf':
-          return Icons.picture_as_pdf;
+          return AppIcons.pdf;
         case 'txt':
-          return Icons.text_fields;
+          return AppIcons.text;
         default:
-          return Icons.description;
+          return AppIcons.document;
       }
     }
-    if (_sheetTypes.contains(type)) return Icons.table_chart;
-    if (_imageTypes.contains(type)) return Icons.image;
+    if (_sheetTypes.contains(type)) return AppIcons.spreadsheet;
+    if (_imageTypes.contains(type)) return AppIcons.image;
 
-    return Icons.insert_drive_file;
+    return AppIcons.file;
   }
 
   Color _getIconColor(String? fileType) {
@@ -114,7 +115,7 @@ class GridViewItemsSuccess extends StatelessWidget {
           height: 120,
           errorBuilder: (ctx, _, __) => Container(
             color: Colors.grey[200],
-            child: const Icon(Icons.broken_image),
+            child: const Icon(AppIcons.brokenImage),
           ),
         ),
       );
@@ -127,13 +128,13 @@ class GridViewItemsSuccess extends StatelessWidget {
             color: Colors.grey[200],
             height: 120,
             child: const Center(
-              child: Icon(Icons.videocam, size: 40),
+              child: Icon(AppIcons.video, size: 40),
             ),
           ),
           const Positioned.fill(
             child: Align(
               alignment: Alignment.center,
-              child: Icon(Icons.play_circle_filled, color: Colors.white54, size: 50),
+              child: Icon(AppIcons.play, color: Colors.white54, size: 50),
             ),
           ),
         ],

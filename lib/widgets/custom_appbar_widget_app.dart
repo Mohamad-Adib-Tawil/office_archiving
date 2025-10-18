@@ -4,6 +4,7 @@ import 'package:office_archiving/cubit/locale_cubit/locale_cubit.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/cubit/theme_cubit/theme_cubit.dart';
 import 'package:office_archiving/constants.dart';
+import 'package:office_archiving/theme/app_icons.dart';
 
 class CustomAppBarWidgetApp extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBarWidgetApp({super.key});
@@ -42,7 +43,7 @@ class CustomAppBarWidgetApp extends StatelessWidget implements PreferredSizeWidg
           final themeState = context.select((ThemeCubit c) => c.state);
           return PopupMenuButton<AppTheme>(
             tooltip: 'Theme',
-            icon: const Icon(Icons.palette_outlined),
+            icon: const Icon(AppIcons.theme),
             onSelected: (value) => context.read<ThemeCubit>().setTheme(value),
             itemBuilder: (context) => [
               CheckedPopupMenuItem<AppTheme>(value: AppTheme.light, checked: themeState == AppTheme.light, child: const Text('Light')),
@@ -60,7 +61,7 @@ class CustomAppBarWidgetApp extends StatelessWidget implements PreferredSizeWidg
         }),
         PopupMenuButton<String>(
           tooltip: 'Language',
-          icon: const Icon(Icons.language),
+          icon: const Icon(AppIcons.language),
           onSelected: (value) {
             if (value == 'ar') {
               context.read<LocaleCubit>().setLocale(const Locale('ar'));

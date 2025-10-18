@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 import 'package:office_archiving/functions/show_addSection_ialog.dart';
+import 'package:office_archiving/theme/app_icons.dart';
 
 class HomeFloatingActionButtonWidgetApp extends StatefulWidget {
   const HomeFloatingActionButtonWidgetApp({
@@ -46,7 +47,7 @@ class _HomeFloatingActionButtonWidgetAppState
         elevation: 0,
         foregroundColor: Colors.white,
         splashColor: Colors.transparent,
-        child: const Icon(Icons.my_library_add_rounded, color: kWhiteColor),
+        child: const Icon(AppIcons.createNew, color: kWhiteColor),
       ),
     );
   }

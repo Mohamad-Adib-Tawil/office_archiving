@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/theme/app_icons.dart';
 
 class RenameItemDialog extends StatefulWidget {
   const RenameItemDialog({
@@ -54,7 +55,7 @@ class _RenameItemDialogState extends State<RenameItemDialog> {
               color: theme.colorScheme.primary.withOpacity(.10),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.drive_file_rename_outline, color: theme.colorScheme.primary),
+            child: Icon(AppIcons.rename, color: theme.colorScheme.primary),
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
@@ -78,7 +79,7 @@ class _RenameItemDialogState extends State<RenameItemDialog> {
               labelText: t.newNameLabel,
               hintText: t.newNameLabel,
               errorText: errorText,
-              prefixIcon: const Icon(Icons.edit_outlined),
+              prefixIcon: const Icon(AppIcons.edit),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -98,7 +99,7 @@ class _RenameItemDialogState extends State<RenameItemDialog> {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: submit,
-                  icon: const Icon(Icons.check_rounded),
+                  icon: const Icon(AppIcons.check),
                   label: Text(t.renameAction),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),

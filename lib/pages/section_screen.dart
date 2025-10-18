@@ -7,6 +7,7 @@ import 'package:office_archiving/pages/ItemSearchPage.dart';
 import 'package:office_archiving/widgets/floating_action_button_section.dart';
 import 'package:office_archiving/widgets/grid_view_items_success.dart';
 import '../service/sqlite_service.dart';
+import 'package:office_archiving/theme/app_icons.dart';
 
 class SectionScreen extends StatefulWidget {
   final Section section;
@@ -55,7 +56,7 @@ class _SectionScreenState extends State<SectionScreen> {
                       ),
                     ));
               },
-              icon: Icon(Icons.search)),
+              icon: Icon(AppIcons.search)),
           title: Text(widget.section.name),
           centerTitle: true,
           // automaticallyImplyLeading: false,
