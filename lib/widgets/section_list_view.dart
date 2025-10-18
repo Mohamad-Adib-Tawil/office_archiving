@@ -53,16 +53,20 @@ import 'package:flutter/material.dart';
                 ),
                 itemCount: sections.length,
                 itemBuilder: (context, index) {
+                  final animDuration = Duration(milliseconds: 420 + (index % 12) * 35);
                   return TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 350),
+                    duration: animDuration,
                     tween: Tween(begin: 0, end: 1),
                     curve: Curves.easeOutCubic,
                     builder: (context, value, child) {
                       return Opacity(
                         opacity: value,
-                        child: Transform.scale(
-                          scale: 0.98 + (0.02 * value),
-                          child: child,
+                        child: Transform.translate(
+                          offset: Offset(0, 18 * (1 - value)),
+                          child: Transform.scale(
+                            scale: 0.98 + (0.02 * value),
+                            child: child,
+                          ),
                         ),
                       );
                     },

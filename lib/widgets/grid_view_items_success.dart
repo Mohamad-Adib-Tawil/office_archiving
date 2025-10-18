@@ -236,11 +236,28 @@ class GridViewItemsSuccess extends StatelessWidget {
       itemBuilder: (context, index) {
         final item = items[index];
         log('Item details: ${item.id} | ${item.name} | ${item.fileType} | ${item.filePath}');
-
-        return GestureDetector(
-          onTap: () => _handleFileTap(context, item),
-          onLongPress: () => showItemOptionsDialog(context, item, itemSectionCubit),
-          child: _buildFileThumbnail(item),
+        final animDuration = Duration(milliseconds: 400 + (index % 12) * 35);
+        return TweenAnimationBuilder<double>(
+          duration: animDuration,
+          tween: Tween(begin: 0, end: 1),
+          curve: Curves.easeOutCubic,
+          builder: (context, value, child) {
+            return Opacity(
+              opacity: value,
+              child: Transform.translate(
+                offset: Offset(0, 16 * (1 - value)),
+                child: Transform.scale(
+                  scale: 0.98 + (0.02 * value),
+                  child: child,
+                ),
+              ),
+            );
+          },
+          child: GestureDetector(
+            onTap: () => _handleFileTap(context, item),
+            onLongPress: () => showItemOptionsDialog(context, item, itemSectionCubit),
+            child: _buildFileThumbnail(item),
+          ),
         );
       },
     );
