@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
   import 'package:office_archiving/models/section.dart';
   import 'package:office_archiving/pages/section_screen.dart';
   import 'package:office_archiving/l10n/app_localizations.dart';
+  import 'package:office_archiving/theme/app_icons.dart';
 
   class SectionListView extends StatelessWidget {
   final List<Section> sections;
@@ -156,7 +157,7 @@ import 'package:flutter/material.dart';
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.edit, color: Theme.of(context).colorScheme.primary),
+              leading: Icon(AppIcons.edit, color: Theme.of(context).colorScheme.primary),
               title: Text(AppLocalizations.of(context).editName),
               onTap: () {
                 Navigator.pop(context);
@@ -169,7 +170,7 @@ import 'package:flutter/material.dart';
             ),
             const Divider(height: 1),
             ListTile(
-              leading: Icon(Icons.delete, color: Colors.red.shade700),
+              leading: Icon(AppIcons.delete, color: Colors.red.shade700),
               title: Text(AppLocalizations.of(context).deleteSection),
               onTap: () {
                 Navigator.pop(context);

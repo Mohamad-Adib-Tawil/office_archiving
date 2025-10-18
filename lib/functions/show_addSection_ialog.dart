@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/theme/app_icons.dart';
 
 void showAddSectionDialog(
   BuildContext context,
@@ -68,7 +69,7 @@ void showAddSectionDialog(
                     color: theme.colorScheme.primary.withOpacity(.12),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.folder_copy_rounded, color: theme.colorScheme.primary),
+                  child: Icon(AppIcons.folder, color: theme.colorScheme.primary),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
@@ -94,7 +95,7 @@ void showAddSectionDialog(
                       labelText: AppLocalizations.of(context).sectionNameLabel,
                       hintText: AppLocalizations.of(context).sectionNameLabel,
                       errorText: errorText,
-                      prefixIcon: const Icon(Icons.drive_file_rename_outline),
+                      prefixIcon: const Icon(AppIcons.rename),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -123,7 +124,7 @@ void showAddSectionDialog(
                                   height: 16,
                                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                 )
-                              : const Icon(Icons.check_rounded),
+                              : const Icon(AppIcons.check),
                           label: Text(AppLocalizations.of(context).addAction),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),

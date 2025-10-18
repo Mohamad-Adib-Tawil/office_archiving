@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/show_add_item_dialog.dart';
 import 'package:office_archiving/pages/section_screen.dart';
+import 'package:office_archiving/theme/app_icons.dart';
 
 
 class FloatingActionButtonSection extends StatelessWidget {
@@ -42,7 +43,7 @@ class FloatingActionButtonSection extends StatelessWidget {
         elevation: 0,
         foregroundColor: Colors.white,
         splashColor: Colors.transparent,
-        child: const Icon(Icons.note_add_rounded),
+        child: const Icon(AppIcons.addNote),
       ),
     );
   }
