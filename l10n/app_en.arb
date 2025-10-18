@@ -11,5 +11,18 @@
   "searchLabel": "Search",
   "noItemsFound": "No items found.",
   "fileErrorTitle": "File Error",
-  "fileErrorBody": "File is missing or invalid"
+  "fileErrorBody": "File is missing or invalid",
+  "addSectionTitle": "Add Section",
+  "sectionNameLabel": "Section Name",
+  "addAction": "Add",
+  "sectionNameRequired": "Please enter a section name",
+  "renameItemTitle": "Rename item",
+  "newNameLabel": "New name",
+  "renameAction": "Rename",
+  "nameRequired": "Please enter a name"
+  ,
+  "deleteConfirmTitle": "Delete",
+  "deleteConfirmBody": "Are you sure you want to delete this item? This action cannot be undone.",
+  "deleteAction": "Delete",
+  "keepAction": "Keep"
 }

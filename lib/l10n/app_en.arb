@@ -11,5 +11,13 @@
   "searchLabel": "Search",
   "noItemsFound": "No items found.",
   "fileErrorTitle": "File Error",
-  "fileErrorBody": "File is missing or invalid"
+  "fileErrorBody": "File is missing or invalid",
+  "sectionNameRequired": "Section name is required",
+  "addSectionTitle": "Add Section",
+  "sectionNameLabel": "Section name",
+  "addAction": "Add",
+  "nameRequired": "Name is required",
+  "renameItemTitle": "Rename item",
+  "newNameLabel": "New name",
+  "renameAction": "Rename"
 }

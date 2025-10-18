@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:office_archiving/constants.dart';
-import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
-import 'package:office_archiving/functions/handle_delete_section.dart';
-import 'package:office_archiving/functions/handle_rename_Section.dart';
-import 'package:office_archiving/models/section.dart';
-import 'package:office_archiving/pages/section_screen.dart';
-import 'package:office_archiving/l10n/app_localizations.dart';
+  import 'package:office_archiving/constants.dart';
+  import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
+  import 'package:office_archiving/functions/handle_delete_section.dart';
+  import 'package:office_archiving/functions/handle_rename_Section.dart';
+  import 'package:office_archiving/models/section.dart';
+  import 'package:office_archiving/pages/section_screen.dart';
+  import 'package:office_archiving/l10n/app_localizations.dart';
 
-class SectionListView extends StatelessWidget {
+  class SectionListView extends StatelessWidget {
   final List<Section> sections;
   final SectionCubit sectionCubit;
 
   const SectionListView({
+    Key? key,
     required this.sections,
     required this.sectionCubit,
-    super.key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class SectionListView extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      AppLocalizations.of(context)!.emptySectionsMessage,
+                      AppLocalizations.of(context).emptySectionsMessage,
                       style: const TextStyle(fontSize: 14, color: Colors.black54),
                       textAlign: TextAlign.center,
                     ),
@@ -51,68 +51,82 @@ class SectionListView extends StatelessWidget {
                 ),
                 itemCount: sections.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SectionScreen(
-                            section: Section(
-                              id: sections[index].id,
-                              name: sections[index].name,
-                            ),
-                          ),
+                  return TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 350),
+                    tween: Tween(begin: 0, end: 1),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.scale(
+                          scale: 0.98 + (0.02 * value),
+                          child: child,
                         ),
                       );
                     },
-                    onLongPress: () => _showOptionsDialog(context, index),
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                kPrimaryColor.withOpacity(0.1),
-                                kPrimaryColor.withOpacity(0.05),
-                              ],
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SectionScreen(
+                              section: Section(
+                                id: sections[index].id,
+                                name: sections[index].name,
+                              ),
                             ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                  ),
-                                  child: Image.asset(
-                                    kLogoOffice,
-                                    fit: BoxFit.cover,
+                        );
+                      },
+                      onLongPress: () => _showOptionsDialog(context, index),
+                      child: Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  kPrimaryColor.withOpacity(0.1),
+                                  kPrimaryColor.withOpacity(0.05),
+                                ],
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.2),
+                                    ),
+                                    child: Image.asset(
+                                      kLogoOffice,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Text(
-                                  sections[index].name,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                    overflow: TextOverflow.ellipsis,
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(
+                                    sections[index].name,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    maxLines: 2,
                                   ),
-                                  maxLines: 2,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -130,7 +144,7 @@ class SectionListView extends StatelessWidget {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
-          AppLocalizations.of(context)!.optionsTitle,
+          AppLocalizations.of(context).optionsTitle,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: kPrimaryColor,
@@ -142,7 +156,7 @@ class SectionListView extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(Icons.edit, color: kPrimaryColor),
-              title: Text(AppLocalizations.of(context)!.editName),
+              title: Text(AppLocalizations.of(context).editName),
               onTap: () {
                 Navigator.pop(context);
                 handleRenameSection(
@@ -155,7 +169,7 @@ class SectionListView extends StatelessWidget {
             const Divider(height: 1),
             ListTile(
               leading: Icon(Icons.delete, color: Colors.red.shade700),
-              title: Text(AppLocalizations.of(context)!.deleteSection),
+              title: Text(AppLocalizations.of(context).deleteSection),
               onTap: () {
                 Navigator.pop(context);
                 handleDeleteSection(context, sections[index]);
@@ -166,7 +180,7 @@ class SectionListView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: kPrimaryColor)),
+            child: Text(AppLocalizations.of(context).cancel, style: TextStyle(color: kPrimaryColor)),
           ),
         ],
       ),

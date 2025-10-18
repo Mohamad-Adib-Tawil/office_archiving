@@ -47,4 +47,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fileErrorBody => 'الملف مفقود أو غير صالح';
+
+  @override
+  String get sectionNameRequired => 'اسم القسم مطلوب';
+
+  @override
+  String get addSectionTitle => 'إضافة قسم';
+
+  @override
+  String get sectionNameLabel => 'اسم القسم';
+
+  @override
+  String get addAction => 'إضافة';
+
+  @override
+  String get nameRequired => 'الاسم مطلوب';
+
+  @override
+  String get renameItemTitle => 'إعادة تسمية العنصر';
+
+  @override
+  String get newNameLabel => 'الاسم الجديد';
+
+  @override
+  String get renameAction => 'إعادة تسمية';
 }

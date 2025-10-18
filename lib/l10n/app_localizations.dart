@@ -175,6 +175,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'File is missing or invalid'**
   String get fileErrorBody;
+
+  /// No description provided for @sectionNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Section name is required'**
+  String get sectionNameRequired;
+
+  /// No description provided for @addSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Section'**
+  String get addSectionTitle;
+
+  /// No description provided for @sectionNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Section name'**
+  String get sectionNameLabel;
+
+  /// No description provided for @addAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addAction;
+
+  /// No description provided for @nameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get nameRequired;
+
+  /// No description provided for @renameItemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename item'**
+  String get renameItemTitle;
+
+  /// No description provided for @newNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New name'**
+  String get newNameLabel;
+
+  /// No description provided for @renameAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get renameAction;
 }
 
 class _AppLocalizationsDelegate

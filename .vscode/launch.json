@@ -1,26 +1,112 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+       {
+        "name": "SM X110",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "R8YX81D6L9Y",
+        "flutterMode": "debug"
+      }, {
+        "name": "RMX3269 (S6 hotspot)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "192.168.43.185:5525",
+        "flutterMode": "debug"
+      },
+       {
+        "name": "SM X110 (S6 hotspot)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "192.168.43.181:5559",
+        "flutterMode": "debug"
+      },
+       {
+        "name": "lklk",
+        "request": "launch",
+        "type": "dart"
+      },
+      {
+        "name": "SM X110 (realme hotspot)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "10.242.73.221:5559",
+        "flutterMode": "debug"
+      },{
+        "name": "RMX3269 (realme hotspot)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "10.242.73.107:5525",
+        "flutterMode": "debug"
+      },
+  
+      {
+        "name": "RMX3269",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "2122293310NA1PH3",
+        "flutterMode": "debug"
+      },
+     
+      {
+        "name": "RMX3269 (Router)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "192.168.1.110:5555",
+        "flutterMode": "debug"
+      },
+     
+      {
+        "name": "S6 (S6 hotspot)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "10.242.73.107:5525",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "S6 Router",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "192.168.1.105:5556",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "emulator-5554 Android 16 (API 36)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "emulator-5554",
+        "preLaunchTask": "start-android-emulator",
         
-        {
-            "name": "office_archiving",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "office_archiving (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "office_archiving (release mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        }
+        "flutterMode": "debug"
+        
+      },
+      {
+        "name": "iPhone 16 Pro Max (mobile)",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "B2329F42-2117-418E-8507-CA3C2A8E5118",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "S6",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "1115fb81cd532f04",
+        "flutterMode": "debug"
+      },
+     
+      {
+        "name": " (profile mode)",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "profile"
+      },
+      {
+        "name": " (release mode)",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "release"
+      }
+      
     ]
-}
+  }
