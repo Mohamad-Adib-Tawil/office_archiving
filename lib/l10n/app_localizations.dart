@@ -223,6 +223,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rename'**
   String get renameAction;
+
+  /// No description provided for @app_settings_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get app_settings_title;
+
+  /// No description provided for @app_language_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get app_language_label;
+
+  /// No description provided for @app_language_ar.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get app_language_ar;
+
+  /// No description provided for @app_language_en.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get app_language_en;
+
+  /// No description provided for @app_theme_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get app_theme_label;
+
+  /// No description provided for @theme_light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get theme_light;
+
+  /// No description provided for @theme_dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get theme_dark;
+
+  /// No description provided for @theme_blue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get theme_blue;
+
+  /// No description provided for @theme_purple.
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get theme_purple;
+
+  /// No description provided for @theme_teal.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get theme_teal;
+
+  /// No description provided for @theme_orange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get theme_orange;
+
+  /// No description provided for @theme_pink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get theme_pink;
+
+  /// No description provided for @theme_indigo.
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get theme_indigo;
+
+  /// No description provided for @theme_coral.
+  ///
+  /// In en, this message translates to:
+  /// **'Coral'**
+  String get theme_coral;
+
+  /// No description provided for @theme_yellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get theme_yellow;
+
+  /// No description provided for @item_options_title.
+  ///
+  /// In en, this message translates to:
+  /// **'File Options'**
+  String get item_options_title;
+
+  /// No description provided for @action_set_as_cover.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as Cover'**
+  String get action_set_as_cover;
+
+  /// No description provided for @action_rename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get action_rename;
+
+  /// No description provided for @action_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get action_delete;
+
+  /// No description provided for @action_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get action_cancel;
+
+  /// No description provided for @snackbar_cover_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover image set'**
+  String get snackbar_cover_set;
+
+  /// No description provided for @snackbar_rename_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Name changed'**
+  String get snackbar_rename_done;
+
+  /// No description provided for @snackbar_item_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Item deleted'**
+  String get snackbar_item_deleted;
+
+  /// No description provided for @cover_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get cover_badge;
+
+  /// No description provided for @cover_none.
+  ///
+  /// In en, this message translates to:
+  /// **'No cover'**
+  String get cover_none;
+
+  /// No description provided for @cover_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover image set'**
+  String get cover_set;
+
+  /// No description provided for @cover_not_set.
+  ///
+  /// In en, this message translates to:
+  /// **'No cover image yet'**
+  String get cover_not_set;
 }
 
 class _AppLocalizationsDelegate

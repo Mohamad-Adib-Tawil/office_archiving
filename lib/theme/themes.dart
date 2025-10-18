@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:office_archiving/constants.dart';
 
 class AppThemes {
-  static final ThemeData light = _baseTheme(Brightness.light, seed: kPrimaryColor);
+  static final ThemeData light = _baseTheme(Brightness.light, seed: Colors.white)
+      .copyWith(scaffoldBackgroundColor: Colors.white);
 
   static final ThemeData dark = _baseTheme(Brightness.dark, seed: kPrimaryColor);
 
@@ -13,10 +14,27 @@ class AppThemes {
   static final ThemeData orange = _baseTheme(Brightness.light, seed: Colors.orange);
   static final ThemeData pink = _baseTheme(Brightness.light, seed: Colors.pink);
   static final ThemeData indigo = _baseTheme(Brightness.light, seed: Colors.indigo);
+  static final ThemeData green = _baseTheme(Brightness.light, seed: Colors.green);
+  static final ThemeData coral = _baseTheme(Brightness.light, seed: const Color(0xFFFF6F61));
 
   static ThemeData _baseTheme(Brightness brightness, {required Color seed}) {
-    final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
+    var scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
     final isDark = brightness == Brightness.dark;
+
+    if (isDark) {
+      // Tune dark palette for professional look
+      scheme = scheme.copyWith(
+        background: const Color(0xFF0F1115),
+        surface: const Color(0xFF13161B),
+        surfaceContainerHighest: const Color(0xFF1A1D22), // available in recent SDKs
+        surfaceVariant: const Color(0xFF1E2228),
+        outlineVariant: const Color(0xFF2A2F37),
+        primary: scheme.primary, // keep seed-derived primary
+        onPrimary: Colors.white,
+        onSurface: Colors.white.withOpacity(0.92),
+      );
+    }
+
     final surface = scheme.surface;
     final onSurface = scheme.onSurface;
 
@@ -25,7 +43,7 @@ class AppThemes {
       brightness: brightness,
       colorScheme: scheme,
       fontFamily: kFontGTSectraFine,
-      scaffoldBackgroundColor: isDark ? const Color(0xFF0F1115) : const Color(0xFFFAFAFA),
+      scaffoldBackgroundColor: isDark ? scheme.background : const Color(0xFFFAFAFA),
       appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: true,
@@ -45,10 +63,11 @@ class AppThemes {
         color: isDark ? const Color(0xFF1A1D22) : Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      textTheme: Typography.material2021(platform: TargetPlatform.android)
-          .black
+      textTheme: (isDark
+              ? Typography.material2021(platform: TargetPlatform.android).white
+              : Typography.material2021(platform: TargetPlatform.android).black)
           .apply(
-            bodyColor: onSurface.withOpacity(isDark ? 0.9 : 0.95),
+            bodyColor: onSurface.withOpacity(isDark ? 0.92 : 0.95),
             displayColor: onSurface,
           )
           .copyWith(
@@ -81,6 +100,16 @@ class AppThemes {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: scheme.primary, width: 1.5),
+        ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: isDark ? Colors.white10 : scheme.outlineVariant,
+        thickness: 1,
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: isDark ? surface : Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
       ),
       pageTransitionsTheme: const PageTransitionsTheme(builders: {

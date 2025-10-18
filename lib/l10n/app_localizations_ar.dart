@@ -71,4 +71,85 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get renameAction => 'إعادة تسمية';
+
+  @override
+  String get app_settings_title => 'الإعدادات';
+
+  @override
+  String get app_language_label => 'اللغة';
+
+  @override
+  String get app_language_ar => 'العربية';
+
+  @override
+  String get app_language_en => 'الإنجليزية';
+
+  @override
+  String get app_theme_label => 'الثيم';
+
+  @override
+  String get theme_light => 'فاتح';
+
+  @override
+  String get theme_dark => 'داكن';
+
+  @override
+  String get theme_blue => 'أزرق';
+
+  @override
+  String get theme_purple => 'بنفسجي';
+
+  @override
+  String get theme_teal => 'فيروزي';
+
+  @override
+  String get theme_orange => 'برتقالي';
+
+  @override
+  String get theme_pink => 'وردي';
+
+  @override
+  String get theme_indigo => 'نيلي';
+
+  @override
+  String get theme_coral => 'كورال';
+
+  @override
+  String get theme_yellow => 'أصفر';
+
+  @override
+  String get item_options_title => 'خيارات الملف';
+
+  @override
+  String get action_set_as_cover => 'تعيين كغلاف';
+
+  @override
+  String get action_rename => 'إعادة تسمية';
+
+  @override
+  String get action_delete => 'حذف';
+
+  @override
+  String get action_cancel => 'إلغاء';
+
+  @override
+  String get snackbar_cover_set => 'تم تعيين صورة الغلاف';
+
+  @override
+  String get snackbar_rename_done => 'تم تغيير الاسم';
+
+  @override
+  String get snackbar_item_deleted => 'تم حذف العنصر';
+
+  @override
+  String get cover_badge => 'صورة غلاف';
+
+  @override
+  String get cover_none => 'بدون صورة غلاف';
+
+  @override
+  String get cover_set => 'تم تعيين صورة غلاف';
+
+  @override
+  String get cover_not_set => 'لم يتم تعيين صورة غلاف بعد';
 }

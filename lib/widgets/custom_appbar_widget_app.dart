@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:office_archiving/cubit/locale_cubit/locale_cubit.dart';
+import 'package:flutter/services.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
-import 'package:office_archiving/cubit/theme_cubit/theme_cubit.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/theme/app_icons.dart';
+import 'package:office_archiving/widgets/settings_sheet.dart';
 
-class CustomAppBarWidgetApp extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarWidgetApp extends StatelessWidget
+    implements PreferredSizeWidget {
   const CustomAppBarWidgetApp({super.key});
 
   @override
@@ -14,16 +14,17 @@ class CustomAppBarWidgetApp extends StatelessWidget implements PreferredSizeWidg
 
   @override
   Widget build(BuildContext context) {
-    final locale = context.select((LocaleCubit c) => c.state);
     final theme = Theme.of(context);
     return AppBar(
       centerTitle: true,
       title: Text(
         AppLocalizations.of(context).appTitle,
-        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        style:
+            theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
       ),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(AppRadius.lg)),
+        borderRadius:
+            BorderRadius.vertical(bottom: Radius.circular(AppRadius.lg)),
       ),
       elevation: 2,
       flexibleSpace: Container(
@@ -39,40 +40,20 @@ class CustomAppBarWidgetApp extends StatelessWidget implements PreferredSizeWidg
         ),
       ),
       actions: [
-        Builder(builder: (context) {
-          final themeState = context.select((ThemeCubit c) => c.state);
-          return PopupMenuButton<AppTheme>(
-            tooltip: 'Theme',
-            icon: const Icon(AppIcons.theme),
-            onSelected: (value) => context.read<ThemeCubit>().setTheme(value),
-            itemBuilder: (context) => [
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.light, checked: themeState == AppTheme.light, child: const Text('Light')),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.dark, checked: themeState == AppTheme.dark, child: const Text('Dark')),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.yellow, checked: themeState == AppTheme.yellow, child: const Text('Yellow')),
-              const PopupMenuDivider(),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.blue, checked: themeState == AppTheme.blue, child: const Text('Blue')),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.purple, checked: themeState == AppTheme.purple, child: const Text('Purple')),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.teal, checked: themeState == AppTheme.teal, child: const Text('Teal')),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.orange, checked: themeState == AppTheme.orange, child: const Text('Orange')),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.pink, checked: themeState == AppTheme.pink, child: const Text('Pink')),
-              CheckedPopupMenuItem<AppTheme>(value: AppTheme.indigo, checked: themeState == AppTheme.indigo, child: const Text('Indigo')),
-            ],
-          );
-        }),
-        PopupMenuButton<String>(
-          tooltip: 'Language',
-          icon: const Icon(AppIcons.language),
-          onSelected: (value) {
-            if (value == 'ar') {
-              context.read<LocaleCubit>().setLocale(const Locale('ar'));
-            } else if (value == 'en') {
-              context.read<LocaleCubit>().setLocale(const Locale('en'));
-            }
+        IconButton(
+          tooltip: 'الإعدادات',
+          icon: const Icon(AppIcons.more),
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              builder: (_) => const SettingsSheet(),
+            );
           },
-          itemBuilder: (context) => [
-            CheckedPopupMenuItem(value: 'ar', checked: locale.languageCode == 'ar', child: const Text('العربية')),
-            CheckedPopupMenuItem(value: 'en', checked: locale.languageCode == 'en', child: const Text('English')),
-          ],
         ),
       ],
     );
