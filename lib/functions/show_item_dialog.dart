@@ -63,7 +63,9 @@ void showItemOptionsDialog(
                           itemSection.idSection,
                           path,
                         );
-                    UIFeedback.success(context, t.snackbar_cover_set);
+                    if (context.mounted) {
+                      UIFeedback.success(context, t.snackbar_cover_set);
+                    }
                   }
                 },
               ),

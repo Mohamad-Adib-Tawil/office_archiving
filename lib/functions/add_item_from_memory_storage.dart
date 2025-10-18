@@ -1,10 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/show_snack_bar.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 void addItemFromMemoryStorage(BuildContext context, int idSection, ItemSectionCubit itemCubit) async {
   try {
@@ -28,12 +29,12 @@ void addItemFromMemoryStorage(BuildContext context, int idSection, ItemSectionCu
       itemCubit.addItem(fileName, filePath, fileType, idSection);
     } else {
       if (context.mounted) {
-        showSnackBar(context, 'لم يتم تحديد أي ملف');
+        showSnackBar(context, AppLocalizations.of(context).no_file_selected);
       }
     }
   } catch (e) {
     if (context.mounted) {
-      showSnackBar(context, 'حدث خطأ: $e');
+      showSnackBar(context, '${AppLocalizations.of(context).generic_error}: $e');
     }
   }
 }
@@ -56,7 +57,7 @@ Future<bool> _requestPermission(BuildContext context) async {
   }
 
   if (context.mounted) {
-    showSnackBar(context, 'مطلوب إذن للوصول إلى الملفات');
+    showSnackBar(context, AppLocalizations.of(context).permission_files_required);
   }
   return false;
 }

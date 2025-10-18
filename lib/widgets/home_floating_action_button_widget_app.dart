@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
-import 'package:office_archiving/functions/show_addSection_ialog.dart';
+import 'package:office_archiving/functions/show_add_section_dialog.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 
 class HomeFloatingActionButtonWidgetApp extends StatefulWidget {
@@ -34,8 +34,8 @@ class _HomeFloatingActionButtonWidgetAppState
         borderRadius: BorderRadius.circular(18),
         gradient: LinearGradient(
           colors: [
-            primary.withOpacity(.6),
-            primary.withOpacity(.15),
+            primary.withValues(alpha: .6),
+            primary.withValues(alpha: .15),
           ],
         ),
       ),

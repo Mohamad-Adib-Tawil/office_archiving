@@ -33,10 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     log('.............................Building HomeScreen......................................');
     return Scaffold(
-      appBar: CustomAppBarWidgetApp(),
-      floatingActionButton: const HomeFloatingActionButtonWidgetApp(
-          // sectionCubit: sectionCubit,
-          ),
+      appBar: const CustomAppBarWidgetApp(),
+      floatingActionButton: const HomeFloatingActionButtonWidgetApp(),
       body: BlocBuilder<SectionCubit, SectionState>(
         builder: (context, state) {
           if (state is SectionLoading) {
@@ -45,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is SectionLoaded) {
             log('Sections loaded successfully: ${state.sections}');
             return SectionListView(
-                sections: state.sections, sectionCubit: sectionCubit);
+              sections: state.sections, 
+              sectionCubit: sectionCubit
+            );
           } else if (state is SectionError) {
             log('Failed to load sections: ${state.message}');
             return Center(

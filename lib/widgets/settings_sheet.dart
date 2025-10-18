@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/locale_cubit/locale_cubit.dart';
 import 'package:office_archiving/cubit/theme_cubit/theme_cubit.dart';
@@ -52,19 +53,24 @@ class SettingsSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(AppLocalizations.of(context).app_language_label,
-                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             SegmentedButton<String>(
               segments: [
-                ButtonSegment(value: 'ar', label: Text(AppLocalizations.of(context).app_language_ar)),
-                ButtonSegment(value: 'en', label: Text(AppLocalizations.of(context).app_language_en)),
+                ButtonSegment(
+                    value: 'ar',
+                    label: Text(AppLocalizations.of(context).app_language_ar)),
+                ButtonSegment(
+                    value: 'en',
+                    label: Text(AppLocalizations.of(context).app_language_en)),
               ],
               selected: {locale.languageCode},
               showSelectedIcon: false,
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 visualDensity: VisualDensity.compact,
               ),
-              onSelectionChanged: (values) {
+              onSelectionChanged: (Set<String> values) {
                 final value = values.first;
                 if (value == 'ar') {
                   context.read<LocaleCubit>().setLocale(const Locale('ar'));
@@ -75,7 +81,8 @@ class SettingsSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(AppLocalizations.of(context).app_theme_label,
-                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             _ThemeGrid(themeState: themeState),
             const SizedBox(height: 8),
@@ -93,18 +100,23 @@ class _ThemeGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final t = AppLocalizations.of(context);
     final items = <_ThemeItemData>[
-      _ThemeItemData(AppTheme.light, t.theme_light, scheme.primary, Icons.wb_sunny_outlined),
-      _ThemeItemData(AppTheme.dark, t.theme_dark, scheme.primary, Icons.nightlight_round),
-      _ThemeItemData(AppTheme.blue, t.theme_blue, Colors.blue, Icons.circle),
-      _ThemeItemData(AppTheme.purple, t.theme_purple, Colors.purple, Icons.circle),
-      _ThemeItemData(AppTheme.teal, t.theme_teal, Colors.teal, Icons.circle),
-      _ThemeItemData(AppTheme.orange, t.theme_orange, Colors.orange, Icons.circle),
-      _ThemeItemData(AppTheme.pink, t.theme_pink, Colors.pink, Icons.circle),
-      _ThemeItemData(AppTheme.indigo, t.theme_indigo, Colors.indigo, Icons.circle),
-      _ThemeItemData(AppTheme.coral, t.theme_coral, const Color(0xFFFF6F61), Icons.circle),
-      _ThemeItemData(AppTheme.yellow, t.theme_yellow, Colors.amber, Icons.circle),
+      _ThemeItemData(AppTheme.system, AppLocalizations.of(context).theme_system, scheme.primary,
+          Icons.brightness_auto),
+      _ThemeItemData(
+          AppTheme.light, AppLocalizations.of(context).theme_light, scheme.primary, Icons.wb_sunny_outlined),
+      _ThemeItemData(
+          AppTheme.dark, AppLocalizations.of(context).theme_dark, scheme.primary, Icons.nightlight_round),
+      _ThemeItemData(AppTheme.blue, AppLocalizations.of(context).theme_blue, Colors.blue, Icons.circle),
+      _ThemeItemData(AppTheme.purple, AppLocalizations.of(context).theme_purple, Colors.purple, Icons.circle),
+      _ThemeItemData(AppTheme.teal, AppLocalizations.of(context).theme_teal, Colors.teal, Icons.circle),
+      _ThemeItemData(AppTheme.orange, AppLocalizations.of(context).theme_orange, Colors.orange, Icons.circle),
+      _ThemeItemData(AppTheme.pink, AppLocalizations.of(context).theme_pink, Colors.pink, Icons.circle),
+      _ThemeItemData(AppTheme.indigo, AppLocalizations.of(context).theme_indigo, Colors.indigo, Icons.circle),
+      _ThemeItemData(
+          AppTheme.coral, AppLocalizations.of(context).theme_coral, const Color(0xFFFF6F61), Icons.circle),
+      _ThemeItemData(AppTheme.yellow, AppLocalizations.of(context).theme_yellow, Colors.amber, Icons.circle),
+      _ThemeItemData(AppTheme.green, AppLocalizations.of(context).theme_green, Colors.green, Icons.circle),
     ];
 
     return GridView.builder(
@@ -113,7 +125,7 @@ class _ThemeGrid extends StatelessWidget {
       padding: EdgeInsets.zero,
       itemCount: items.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
+        crossAxisCount: 4,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         childAspectRatio: .72,
@@ -126,7 +138,10 @@ class _ThemeGrid extends StatelessWidget {
           color: it.color,
           icon: it.icon,
           selected: selected,
-          onTap: () => context.read<ThemeCubit>().setTheme(it.theme),
+          onTap: () {
+            HapticFeedback.selectionClick();
+            context.read<ThemeCubit>().setTheme(it.theme);
+          },
         );
       },
     );
@@ -157,8 +172,10 @@ class _ThemeCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: scheme.surfaceVariant.withOpacity(0.5),
-          border: Border.all(color: selected ? scheme.primary : scheme.outlineVariant, width: selected ? 1.5 : 1),
+          color: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
+          border: Border.all(
+              color: selected ? scheme.primary : scheme.outlineVariant,
+              width: selected ? 1.5 : 1),
         ),
         padding: const EdgeInsets.all(8),
         child: Column(

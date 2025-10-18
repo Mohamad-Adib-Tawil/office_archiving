@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/add_item_from_memory_storage.dart';
 import 'package:office_archiving/functions/add_item_from_camera.dart';
-import 'package:office_archiving/functions/addItemFromGallery.dart';
+import 'package:office_archiving/functions/add_item_from_gallery.dart';
 import 'package:office_archiving/theme/app_icons.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit itemCubit) {
   final theme = Theme.of(context);
@@ -28,20 +29,20 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: primary.withOpacity(.12),
+                      color: primary.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(AppIcons.add, color: primary),
                   ),
                   const SizedBox(width: 12),
-                  Text('Add item', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+                  Text(AppLocalizations.of(context).add_item_title, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
                 ],
               ),
               const SizedBox(height: 12),
               _ActionTile(
                 icon: AppIcons.file,
                 color: Colors.blue,
-                title: 'From Files',
+                title: AppLocalizations.of(context).from_files,
                 onTap: () {
                   Navigator.pop(ctx);
                   addItemFromMemoryStorage(context, idSection, itemCubit);
@@ -50,7 +51,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
               _ActionTile(
                 icon: AppIcons.image,
                 color: Colors.orange,
-                title: 'From Gallery',
+                title: AppLocalizations.of(context).from_gallery,
                 onTap: () {
                   Navigator.pop(ctx);
                   addItemFromGallery(context, idSection, itemCubit);
@@ -59,7 +60,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
               _ActionTile(
                 icon: AppIcons.video, // fallback if no camera icon
                 color: Colors.teal,
-                title: 'From Camera',
+                title: AppLocalizations.of(context).from_camera,
                 onTap: () {
                   Navigator.pop(ctx);
                   addItemFromCamera(idSection, itemCubit, context);
@@ -85,13 +86,13 @@ class _ActionTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [color.withOpacity(.6), color.withOpacity(.15)]),
+        gradient: LinearGradient(colors: [color.withValues(alpha: 0.6), color.withValues(alpha: 0.15)]),
         borderRadius: BorderRadius.circular(14),
       ),
       child: ListTile(
         leading: Container(
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(.2), shape: BoxShape.circle),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), shape: BoxShape.circle),
           child: Icon(icon, color: Colors.white),
         ),
         title: Text(title, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),

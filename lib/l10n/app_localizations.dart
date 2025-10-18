@@ -314,6 +314,18 @@ abstract class AppLocalizations {
   /// **'Yellow'**
   String get theme_yellow;
 
+  /// No description provided for @theme_green.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get theme_green;
+
+  /// No description provided for @theme_system.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow System'**
+  String get theme_system;
+
   /// No description provided for @item_options_title.
   ///
   /// In en, this message translates to:
@@ -385,6 +397,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No cover image yet'**
   String get cover_not_set;
+
+  /// No description provided for @snackbar_cover_cleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover image cleared'**
+  String get snackbar_cover_cleared;
+
+  /// No description provided for @settings_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings_tooltip;
+
+  /// No description provided for @empty_sections_message.
+  ///
+  /// In en, this message translates to:
+  /// **'No sections yet'**
+  String get empty_sections_message;
+
+  /// No description provided for @loading_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load items'**
+  String get loading_error;
+
+  /// No description provided for @storage_permission_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage permission required to open file'**
+  String get storage_permission_required;
+
+  /// No description provided for @file_open_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error opening file'**
+  String get file_open_error;
+
+  /// No description provided for @generic_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get generic_error;
+
+  /// No description provided for @no_file_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'No file selected'**
+  String get no_file_selected;
+
+  /// No description provided for @permission_files_required.
+  ///
+  /// In en, this message translates to:
+  /// **'File access permission required'**
+  String get permission_files_required;
+
+  /// No description provided for @no_image_picked.
+  ///
+  /// In en, this message translates to:
+  /// **'No image picked'**
+  String get no_image_picked;
+
+  /// No description provided for @no_image_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'No image selected'**
+  String get no_image_selected;
+
+  /// No description provided for @rename_section_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename Section'**
+  String get rename_section_title;
+
+  /// No description provided for @new_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'New name'**
+  String get new_name_label;
+
+  /// No description provided for @set_cover_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Cover Image'**
+  String get set_cover_image;
+
+  /// No description provided for @clear_cover.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Cover'**
+  String get clear_cover;
+
+  /// No description provided for @unknown_file_type.
+  ///
+  /// In en, this message translates to:
+  /// **'UNKNOWN'**
+  String get unknown_file_type;
+
+  /// No description provided for @add_item_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Item'**
+  String get add_item_title;
+
+  /// No description provided for @add_item_from_memory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Item from Memory Storage'**
+  String get add_item_from_memory;
+
+  /// No description provided for @add_item_from_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Item from Camera'**
+  String get add_item_from_camera;
+
+  /// No description provided for @add_item_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Item from Gallery'**
+  String get add_item_from_gallery;
+
+  /// No description provided for @from_files.
+  ///
+  /// In en, this message translates to:
+  /// **'From Files'**
+  String get from_files;
+
+  /// No description provided for @from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'From Gallery'**
+  String get from_gallery;
+
+  /// No description provided for @from_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'From Camera'**
+  String get from_camera;
+
+  /// No description provided for @section_name_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter section name'**
+  String get section_name_empty;
+
+  /// No description provided for @section_name_exists.
+  ///
+  /// In en, this message translates to:
+  /// **'Section name already exists'**
+  String get section_name_exists;
 }
 
 class _AppLocalizationsDelegate

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
-import 'package:office_archiving/functions/addItemFromGallery.dart';
+import 'package:office_archiving/functions/add_item_from_gallery.dart';
 import 'package:office_archiving/functions/add_item_from_camera.dart';
 import 'package:office_archiving/functions/add_item_from_memory_storage.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit itemCubit) {
   final theme = Theme.of(context);
@@ -13,7 +14,7 @@ void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit ite
       return AlertDialog(
         title: Center(
           child: Text(
-            'Add Item',
+            AppLocalizations.of(context).add_item_title,
             style: TextStyle(color: primary),
           ),
         ),
@@ -25,7 +26,7 @@ void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit ite
               height: 45,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [primary.withOpacity(.6), primary.withOpacity(.15)]),
+                  gradient: LinearGradient(colors: [primary.withValues(alpha: 0.6), primary.withValues(alpha: 0.15)]),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ElevatedButton(
@@ -38,7 +39,7 @@ void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit ite
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Add Item from Memory Storage', style: TextStyle(color: Colors.white)),
+                  child: Text(AppLocalizations.of(context).add_item_from_memory, style: const TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -48,7 +49,7 @@ void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit ite
               height: 45,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [primary.withOpacity(.6), primary.withOpacity(.15)]),
+                  gradient: LinearGradient(colors: [primary.withValues(alpha: 0.6), primary.withValues(alpha: 0.15)]),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ElevatedButton(
@@ -61,7 +62,7 @@ void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit ite
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text('Add Item from Camera', style: TextStyle(color: Colors.white)),
+                  child: Text(AppLocalizations.of(context).add_item_from_camera, style: const TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -71,7 +72,7 @@ void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit ite
               height: 45,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [primary.withOpacity(.6), primary.withOpacity(.15)]),
+                  gradient: LinearGradient(colors: [primary.withValues(alpha: 0.6), primary.withValues(alpha: 0.15)]),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ElevatedButton(
@@ -84,7 +85,7 @@ void showAddItemDialog(BuildContext context, int idSection, ItemSectionCubit ite
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text('Add Item from Gallery', style: TextStyle(color: Colors.white)),
+                  child: Text(AppLocalizations.of(context).add_item_from_gallery, style: const TextStyle(color: Colors.white)),
                 ),
               ),
             ),

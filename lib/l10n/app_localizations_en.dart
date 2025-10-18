@@ -118,6 +118,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get theme_yellow => 'Yellow';
 
   @override
+  String get theme_green => 'Green';
+
+  @override
+  String get theme_system => 'Follow System';
+
+  @override
   String get item_options_title => 'File Options';
 
   @override
@@ -152,4 +158,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cover_not_set => 'No cover image yet';
+
+  @override
+  String get snackbar_cover_cleared => 'Cover image cleared';
+
+  @override
+  String get settings_tooltip => 'Settings';
+
+  @override
+  String get empty_sections_message => 'No sections yet';
+
+  @override
+  String get loading_error => 'Failed to load items';
+
+  @override
+  String get storage_permission_required =>
+      'Storage permission required to open file';
+
+  @override
+  String get file_open_error => 'Error opening file';
+
+  @override
+  String get generic_error => 'Error';
+
+  @override
+  String get no_file_selected => 'No file selected';
+
+  @override
+  String get permission_files_required => 'File access permission required';
+
+  @override
+  String get no_image_picked => 'No image picked';
+
+  @override
+  String get no_image_selected => 'No image selected';
+
+  @override
+  String get rename_section_title => 'Rename Section';
+
+  @override
+  String get new_name_label => 'New name';
+
+  @override
+  String get set_cover_image => 'Set Cover Image';
+
+  @override
+  String get clear_cover => 'Clear Cover';
+
+  @override
+  String get unknown_file_type => 'UNKNOWN';
+
+  @override
+  String get add_item_title => 'Add Item';
+
+  @override
+  String get add_item_from_memory => 'Add Item from Memory Storage';
+
+  @override
+  String get add_item_from_camera => 'Add Item from Camera';
+
+  @override
+  String get add_item_from_gallery => 'Add Item from Gallery';
+
+  @override
+  String get from_files => 'From Files';
+
+  @override
+  String get from_gallery => 'From Gallery';
+
+  @override
+  String get from_camera => 'From Camera';
+
+  @override
+  String get section_name_empty => 'Please enter section name';
+
+  @override
+  String get section_name_exists => 'Section name already exists';
 }

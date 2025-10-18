@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/theme/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AppTheme { light, dark, yellow, blue, purple, teal, orange, pink, indigo, coral }
+enum AppTheme { system, light, dark, yellow, blue, purple, teal, orange, pink, indigo, coral, green }
 
 class ThemeCubit extends Cubit<AppTheme> {
   static const _prefKey = 'app_theme';
@@ -21,14 +21,17 @@ class ThemeCubit extends Cubit<AppTheme> {
   }
 
   void cycle() {
-    final values = AppTheme.values;
+    const values = AppTheme.values;
     final nextIndex = (values.indexOf(state) + 1) % values.length;
     // Persist as well
     setTheme(values[nextIndex]);
   }
 
-  ThemeData get themeData {
+  ThemeData themeDataFor(BuildContext context) {
     switch (state) {
+      case AppTheme.system:
+        final brightness = MediaQuery.of(context).platformBrightness;
+        return brightness == Brightness.dark ? AppThemes.dark : AppThemes.light;
       case AppTheme.light:
         return AppThemes.light;
       case AppTheme.dark:
@@ -49,6 +52,38 @@ class ThemeCubit extends Cubit<AppTheme> {
         return AppThemes.indigo;
       case AppTheme.coral:
         return AppThemes.coral;
+      case AppTheme.green:
+        return AppThemes.green;
+    }
+  }
+
+  // Legacy getter - defaults to light theme for system
+  ThemeData get themeData {
+    switch (state) {
+      case AppTheme.system:
+        return AppThemes.light; // Fallback when no context available
+      case AppTheme.light:
+        return AppThemes.light;
+      case AppTheme.dark:
+        return AppThemes.dark;
+      case AppTheme.yellow:
+        return AppThemes.yellow;
+      case AppTheme.blue:
+        return AppThemes.blue;
+      case AppTheme.purple:
+        return AppThemes.purple;
+      case AppTheme.teal:
+        return AppThemes.teal;
+      case AppTheme.orange:
+        return AppThemes.orange;
+      case AppTheme.pink:
+        return AppThemes.pink;
+      case AppTheme.indigo:
+        return AppThemes.indigo;
+      case AppTheme.coral:
+        return AppThemes.coral;
+      case AppTheme.green:
+        return AppThemes.green;
     }
   }
 

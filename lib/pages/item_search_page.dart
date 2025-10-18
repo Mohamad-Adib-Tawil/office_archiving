@@ -37,7 +37,6 @@ class _ItemSearchPageState extends State<ItemSearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).searchItemsTitle),
       ),
       body: Column(
         children: [
@@ -47,7 +46,7 @@ class _ItemSearchPageState extends State<ItemSearchPage> {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context).searchLabel,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
             ),
           ),
@@ -55,7 +54,9 @@ class _ItemSearchPageState extends State<ItemSearchPage> {
             child: BlocBuilder<ItemSectionCubit, ItemSectionState>(
               builder: (context, state) {
                 if (state is ItemSectionLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 } else if (state is ItemSectionLoaded) {
                   if (state.items.isEmpty) {
                     return Center(child: Text(AppLocalizations.of(context).noItemsFound));

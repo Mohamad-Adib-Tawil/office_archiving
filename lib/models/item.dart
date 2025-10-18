@@ -25,7 +25,7 @@ class ItemSection {
   }) {
     return ItemSection(
       id: id ?? this.id,
-      name: itemName ?? this.name,
+      name: itemName ?? name,
       filePath: filePath ?? this.filePath,
       fileType: fileType ?? this.fileType,
       idSection: idSection ?? this.idSection,

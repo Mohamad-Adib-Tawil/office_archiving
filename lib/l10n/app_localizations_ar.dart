@@ -118,6 +118,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get theme_yellow => 'أصفر';
 
   @override
+  String get theme_green => 'أخضر';
+
+  @override
+  String get theme_system => 'تابع النظام';
+
+  @override
   String get item_options_title => 'خيارات الملف';
 
   @override
@@ -152,4 +158,79 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cover_not_set => 'لم يتم تعيين صورة غلاف بعد';
+
+  @override
+  String get snackbar_cover_cleared => 'تم مسح صورة الغلاف';
+
+  @override
+  String get settings_tooltip => 'الإعدادات';
+
+  @override
+  String get empty_sections_message => 'لا توجد أقسام بعد';
+
+  @override
+  String get loading_error => 'فشل في تحميل العناصر';
+
+  @override
+  String get storage_permission_required => 'يجب منح صلاحية التخزين لفتح الملف';
+
+  @override
+  String get file_open_error => 'خطأ أثناء فتح الملف';
+
+  @override
+  String get generic_error => 'خطأ';
+
+  @override
+  String get no_file_selected => 'لم يتم تحديد أي ملف';
+
+  @override
+  String get permission_files_required => 'مطلوب إذن للوصول إلى الملفات';
+
+  @override
+  String get no_image_picked => 'لم يتم اختيار صورة';
+
+  @override
+  String get no_image_selected => 'لم يتم تحديد صورة';
+
+  @override
+  String get rename_section_title => 'إعادة تسمية القسم';
+
+  @override
+  String get new_name_label => 'الاسم الجديد';
+
+  @override
+  String get set_cover_image => 'تعيين صورة الغلاف';
+
+  @override
+  String get clear_cover => 'مسح الغلاف';
+
+  @override
+  String get unknown_file_type => 'غير معروف';
+
+  @override
+  String get add_item_title => 'إضافة عنصر';
+
+  @override
+  String get add_item_from_memory => 'إضافة عنصر من الذاكرة';
+
+  @override
+  String get add_item_from_camera => 'إضافة عنصر من الكاميرا';
+
+  @override
+  String get add_item_from_gallery => 'إضافة عنصر من المعرض';
+
+  @override
+  String get from_files => 'من الملفات';
+
+  @override
+  String get from_gallery => 'من المعرض';
+
+  @override
+  String get from_camera => 'من الكاميرا';
+
+  @override
+  String get section_name_empty => 'يرجى إدخال اسم القسم';
+
+  @override
+  String get section_name_exists => 'اسم القسم موجود بالفعل';
 }
