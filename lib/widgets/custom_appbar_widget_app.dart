@@ -48,6 +48,13 @@ class CustomAppBarWidgetApp extends StatelessWidget implements PreferredSizeWidg
               CheckedPopupMenuItem<AppTheme>(value: AppTheme.light, checked: themeState == AppTheme.light, child: const Text('Light')),
               CheckedPopupMenuItem<AppTheme>(value: AppTheme.dark, checked: themeState == AppTheme.dark, child: const Text('Dark')),
               CheckedPopupMenuItem<AppTheme>(value: AppTheme.yellow, checked: themeState == AppTheme.yellow, child: const Text('Yellow')),
+              const PopupMenuDivider(),
+              CheckedPopupMenuItem<AppTheme>(value: AppTheme.blue, checked: themeState == AppTheme.blue, child: const Text('Blue')),
+              CheckedPopupMenuItem<AppTheme>(value: AppTheme.purple, checked: themeState == AppTheme.purple, child: const Text('Purple')),
+              CheckedPopupMenuItem<AppTheme>(value: AppTheme.teal, checked: themeState == AppTheme.teal, child: const Text('Teal')),
+              CheckedPopupMenuItem<AppTheme>(value: AppTheme.orange, checked: themeState == AppTheme.orange, child: const Text('Orange')),
+              CheckedPopupMenuItem<AppTheme>(value: AppTheme.pink, checked: themeState == AppTheme.pink, child: const Text('Pink')),
+              CheckedPopupMenuItem<AppTheme>(value: AppTheme.indigo, checked: themeState == AppTheme.indigo, child: const Text('Indigo')),
             ],
           );
         }),

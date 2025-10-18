@@ -10,18 +10,30 @@ import 'package:flutter/services.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/helper/text_viewer.dart';
 import 'package:open_file/open_file.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'service/sqlite_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseService.initDatabase();
- 
-  runApp(const MyApp());
+  final prefs = await SharedPreferences.getInstance();
+  final saved = prefs.getString('app_theme');
+  AppTheme? initialTheme;
+  if (saved != null) {
+    initialTheme = AppTheme.values.firstWhere(
+      (e) => e.name == saved,
+      orElse: () => AppTheme.indigo,
+    );
+  }
+
+  runApp(MyApp(initialTheme: initialTheme));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.initialTheme});
+
+  final AppTheme? initialTheme;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -68,7 +80,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => SectionCubit(DatabaseService.instance)),
         BlocProvider(create: (context) => ItemSectionCubit(DatabaseService.instance)),
         BlocProvider(create: (context) => LocaleCubit()),
-        BlocProvider(create: (context) => ThemeCubit()),
+        BlocProvider(create: (context) => ThemeCubit(initial: widget.initialTheme)),
       ],
       child: Builder(builder: (context) {
         final locale = context.select((LocaleCubit c) => c.state);

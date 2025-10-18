@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/addItemFromGallery.dart';
 import 'package:office_archiving/functions/add_item_from_camera.dart';
@@ -13,12 +12,14 @@ void showAddItemDialog(
   showDialog(
     context: context,
     builder: (context) {
+      final theme = Theme.of(context);
+      final primary = theme.colorScheme.primary;
       return AlertDialog(
         title: Center(
-          child: const Text(
+          child: Text(
             'Add Item',
             style: TextStyle(
-              color: kPrimaryColor,
+              color: primary,
             ),
           ),
         ),
@@ -32,8 +33,8 @@ void showAddItemDialog(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      kPrimaryColor.withOpacity(.6),
-                      kPrimaryColor.withOpacity(.15),
+                      primary.withOpacity(.6),
+                      primary.withOpacity(.15),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -66,8 +67,8 @@ void showAddItemDialog(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      kPrimaryColor.withOpacity(.6),
-                      kPrimaryColor.withOpacity(.15),
+                      primary.withOpacity(.6),
+                      primary.withOpacity(.15),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(
@@ -102,8 +103,8 @@ void showAddItemDialog(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      kPrimaryColor.withOpacity(.6),
-                      kPrimaryColor.withOpacity(.15),
+                      primary.withOpacity(.6),
+                      primary.withOpacity(.15),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(

@@ -65,10 +65,10 @@ void showAddSectionDialog(
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: kPrimaryColor.withOpacity(.12),
+                    color: theme.colorScheme.primary.withOpacity(.12),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.folder_copy_rounded, color: kPrimaryColor),
+                  child: Icon(Icons.folder_copy_rounded, color: theme.colorScheme.primary),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(

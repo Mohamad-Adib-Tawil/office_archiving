@@ -27,13 +27,14 @@ class _HomeFloatingActionButtonWidgetAppState
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
         gradient: LinearGradient(
           colors: [
-            kPrimaryColor.withOpacity(.6),
-            kPrimaryColor.withOpacity(.15),
+            primary.withOpacity(.6),
+            primary.withOpacity(.15),
           ],
         ),
       ),
