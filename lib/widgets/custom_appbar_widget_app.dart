@@ -4,6 +4,8 @@ import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/widgets/settings_sheet.dart';
+import 'package:office_archiving/pages/analytics_page.dart';
+import 'package:office_archiving/pages/file_cleanup_page.dart';
 
 class CustomAppBarWidgetApp extends StatelessWidget
     implements PreferredSizeWidget {
@@ -40,6 +42,32 @@ class CustomAppBarWidgetApp extends StatelessWidget
         ),
       ),
       actions: [
+        IconButton(
+          tooltip: AppLocalizations.of(context).analytics_title,
+          icon: const Icon(Icons.analytics_outlined),
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AnalyticsPage(),
+              ),
+            );
+          },
+        ),
+        IconButton(
+          tooltip: AppLocalizations.of(context).file_cleanup_title,
+          icon: const Icon(Icons.cleaning_services_outlined),
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FileCleanupPage(),
+              ),
+            );
+          },
+        ),
         IconButton(
           tooltip: AppLocalizations.of(context).settings_tooltip,
           icon: const Icon(AppIcons.more),

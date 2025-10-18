@@ -314,12 +314,6 @@ abstract class AppLocalizations {
   /// **'Yellow'**
   String get theme_yellow;
 
-  /// No description provided for @theme_green.
-  ///
-  /// In en, this message translates to:
-  /// **'Green'**
-  String get theme_green;
-
   /// No description provided for @theme_system.
   ///
   /// In en, this message translates to:
@@ -547,6 +541,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Section name already exists'**
   String get section_name_exists;
+
+  /// No description provided for @theme_ocean_blue.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean Blue'**
+  String get theme_ocean_blue;
+
+  /// No description provided for @theme_sunset_orange.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunset Orange'**
+  String get theme_sunset_orange;
+
+  /// No description provided for @theme_forest_green.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest Green'**
+  String get theme_forest_green;
+
+  /// No description provided for @theme_royal_purple.
+  ///
+  /// In en, this message translates to:
+  /// **'Royal Purple'**
+  String get theme_royal_purple;
+
+  /// No description provided for @theme_rose_gold.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose Gold'**
+  String get theme_rose_gold;
+
+  /// No description provided for @file_cleanup_title.
+  ///
+  /// In en, this message translates to:
+  /// **'File Cleanup'**
+  String get file_cleanup_title;
+
+  /// No description provided for @analytics_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Analytics'**
+  String get analytics_title;
+
+  /// No description provided for @scan_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Files'**
+  String get scan_files;
+
+  /// No description provided for @scan_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for duplicate, broken, and large files to improve performance and save space'**
+  String get scan_description;
+
+  /// No description provided for @start_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Scan'**
+  String get start_scan;
+
+  /// No description provided for @scanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning...'**
+  String get scanning;
+
+  /// No description provided for @files_scanned.
+  ///
+  /// In en, this message translates to:
+  /// **'files scanned'**
+  String get files_scanned;
+
+  /// No description provided for @scan_results.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Results'**
+  String get scan_results;
+
+  /// No description provided for @duplicate_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate Files'**
+  String get duplicate_files;
+
+  /// No description provided for @broken_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Broken Files'**
+  String get broken_files;
+
+  /// No description provided for @large_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Large Files'**
+  String get large_files;
+
+  /// No description provided for @cleanup_actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanup Actions'**
+  String get cleanup_actions;
+
+  /// No description provided for @cleanup_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanup Options'**
+  String get cleanup_options;
+
+  /// No description provided for @remove_broken_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Broken Files'**
+  String get remove_broken_files;
+
+  /// No description provided for @view_duplicate_files.
+  ///
+  /// In en, this message translates to:
+  /// **'View Duplicate Files'**
+  String get view_duplicate_files;
+
+  /// No description provided for @view_large_files.
+  ///
+  /// In en, this message translates to:
+  /// **'View Large Files'**
+  String get view_large_files;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @cleaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning...'**
+  String get cleaning;
+
+  /// No description provided for @auto_cleanup.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Cleanup'**
+  String get auto_cleanup;
+
+  /// No description provided for @space_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Space saved'**
+  String get space_saved;
+
+  /// No description provided for @files_cleaned.
+  ///
+  /// In en, this message translates to:
+  /// **'broken files cleaned'**
+  String get files_cleaned;
+
+  /// No description provided for @cleanup_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanup error'**
+  String get cleanup_error;
+
+  /// No description provided for @scan_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan error'**
+  String get scan_error;
+
+  /// No description provided for @no_issues_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No issues found! Your files are well organized'**
+  String get no_issues_found;
+
+  /// No description provided for @copies.
+  ///
+  /// In en, this message translates to:
+  /// **'copies'**
+  String get copies;
+
+  /// No description provided for @same_size_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Files with same size'**
+  String get same_size_files;
+
+  /// No description provided for @files.
+  ///
+  /// In en, this message translates to:
+  /// **'files'**
+  String get files;
+
+  /// No description provided for @file_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'File not found'**
+  String get file_not_found;
+
+  /// No description provided for @monthly_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Report'**
+  String get monthly_report;
+
+  /// No description provided for @files_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Files Added'**
+  String get files_added;
+
+  /// No description provided for @space_used.
+  ///
+  /// In en, this message translates to:
+  /// **'Space Used'**
+  String get space_used;
+
+  /// No description provided for @most_common_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Common Type'**
+  String get most_common_type;
+
+  /// No description provided for @growth_rate.
+  ///
+  /// In en, this message translates to:
+  /// **'Growth Rate'**
+  String get growth_rate;
+
+  /// No description provided for @file_type_distribution.
+  ///
+  /// In en, this message translates to:
+  /// **'File Type Distribution'**
+  String get file_type_distribution;
+
+  /// No description provided for @size_distribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Size Distribution'**
+  String get size_distribution;
+
+  /// No description provided for @weekly_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Usage'**
+  String get weekly_usage;
+
+  /// No description provided for @most_accessed_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Accessed Files'**
+  String get most_accessed_files;
+
+  /// No description provided for @no_data.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get no_data;
+
+  /// No description provided for @undefined.
+  ///
+  /// In en, this message translates to:
+  /// **'Undefined'**
+  String get undefined;
+
+  /// No description provided for @times.
+  ///
+  /// In en, this message translates to:
+  /// **'times'**
+  String get times;
+
+  /// No description provided for @minutes_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes ago'**
+  String get minutes_ago;
+
+  /// No description provided for @hours_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'hours ago'**
+  String get hours_ago;
+
+  /// No description provided for @days_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'days ago'**
+  String get days_ago;
+
+  /// No description provided for @total_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Files'**
+  String get total_files;
+
+  /// No description provided for @sections.
+  ///
+  /// In en, this message translates to:
+  /// **'Sections'**
+  String get sections;
+
+  /// No description provided for @storage_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Size'**
+  String get storage_size;
+
+  /// No description provided for @avg_files_per_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Files/Section'**
+  String get avg_files_per_section;
+
+  /// No description provided for @no_files_to_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'No files to scan'**
+  String get no_files_to_scan;
+
+  /// No description provided for @scan_completed_issues.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan completed! Found {count} issues'**
+  String scan_completed_issues(Object count);
+
+  /// No description provided for @scan_completed_no_issues.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan completed successfully! No issues found'**
+  String get scan_completed_no_issues;
+
+  /// No description provided for @space_analyzed.
+  ///
+  /// In en, this message translates to:
+  /// **'Space analyzed'**
+  String get space_analyzed;
+
+  /// No description provided for @starting_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting scan...'**
+  String get starting_scan;
+
+  /// No description provided for @issue.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue'**
+  String get issue;
+
+  /// No description provided for @and_more_items.
+  ///
+  /// In en, this message translates to:
+  /// **'and {count} more items...'**
+  String and_more_items(Object count);
+
+  /// No description provided for @since.
+  ///
+  /// In en, this message translates to:
+  /// **'since'**
+  String get since;
 }
 
 class _AppLocalizationsDelegate

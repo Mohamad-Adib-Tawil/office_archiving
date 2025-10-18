@@ -118,9 +118,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get theme_yellow => 'أصفر';
 
   @override
-  String get theme_green => 'أخضر';
-
-  @override
   String get theme_system => 'تابع النظام';
 
   @override
@@ -233,4 +230,189 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get section_name_exists => 'اسم القسم موجود بالفعل';
+
+  @override
+  String get theme_ocean_blue => 'أزرق المحيط';
+
+  @override
+  String get theme_sunset_orange => 'برتقالي الغروب';
+
+  @override
+  String get theme_forest_green => 'أخضر الغابة';
+
+  @override
+  String get theme_royal_purple => 'بنفسجي ملكي';
+
+  @override
+  String get theme_rose_gold => 'ذهبي وردي';
+
+  @override
+  String get file_cleanup_title => 'تنظيف الملفات';
+
+  @override
+  String get analytics_title => 'إحصائيات التخزين';
+
+  @override
+  String get scan_files => 'فحص الملفات';
+
+  @override
+  String get scan_description =>
+      'ابحث عن الملفات المكررة والتالفة والكبيرة لتحسين الأداء وتوفير المساحة';
+
+  @override
+  String get start_scan => 'بدء الفحص';
+
+  @override
+  String get scanning => 'جاري الفحص...';
+
+  @override
+  String get files_scanned => 'ملف تم فحصه';
+
+  @override
+  String get scan_results => 'نتائج الفحص';
+
+  @override
+  String get duplicate_files => 'الملفات المكررة';
+
+  @override
+  String get broken_files => 'الملفات التالفة';
+
+  @override
+  String get large_files => 'الملفات الكبيرة';
+
+  @override
+  String get cleanup_actions => 'إجراءات التنظيف';
+
+  @override
+  String get cleanup_options => 'خيارات التنظيف';
+
+  @override
+  String get remove_broken_files => 'إزالة الملفات التالفة';
+
+  @override
+  String get view_duplicate_files => 'عرض الملفات المكررة';
+
+  @override
+  String get view_large_files => 'عرض الملفات الكبيرة';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String get cleaning => 'جاري التنظيف...';
+
+  @override
+  String get auto_cleanup => 'تنظيف تلقائي';
+
+  @override
+  String get space_saved => 'تم توفير';
+
+  @override
+  String get files_cleaned => 'ملف مكسور تم تنظيفه';
+
+  @override
+  String get cleanup_error => 'خطأ في التنظيف';
+
+  @override
+  String get scan_error => 'خطأ في المسح';
+
+  @override
+  String get no_issues_found => 'لا توجد مشاكل! ملفاتك منظمة بشكل جيد';
+
+  @override
+  String get copies => 'نسخ';
+
+  @override
+  String get same_size_files => 'ملفات بنفس الحجم';
+
+  @override
+  String get files => 'ملفات';
+
+  @override
+  String get file_not_found => 'الملف غير موجود';
+
+  @override
+  String get monthly_report => 'تقرير شهر';
+
+  @override
+  String get files_added => 'الملفات المضافة';
+
+  @override
+  String get space_used => 'المساحة المستخدمة';
+
+  @override
+  String get most_common_type => 'أكثر نوع ملف';
+
+  @override
+  String get growth_rate => 'معدل النمو';
+
+  @override
+  String get file_type_distribution => 'توزيع أنواع الملفات';
+
+  @override
+  String get size_distribution => 'توزيع أحجام الملفات';
+
+  @override
+  String get weekly_usage => 'الاستخدام الأسبوعي';
+
+  @override
+  String get most_accessed_files => 'الملفات الأكثر استخداماً';
+
+  @override
+  String get no_data => 'لا توجد بيانات';
+
+  @override
+  String get undefined => 'غير محدد';
+
+  @override
+  String get times => 'مرة';
+
+  @override
+  String get minutes_ago => 'دقيقة';
+
+  @override
+  String get hours_ago => 'ساعة';
+
+  @override
+  String get days_ago => 'يوم';
+
+  @override
+  String get total_files => 'إجمالي الملفات';
+
+  @override
+  String get sections => 'الأقسام';
+
+  @override
+  String get storage_size => 'حجم التخزين';
+
+  @override
+  String get avg_files_per_section => 'متوسط الملفات/قسم';
+
+  @override
+  String get no_files_to_scan => 'لا توجد ملفات للفحص';
+
+  @override
+  String scan_completed_issues(Object count) {
+    return 'تم الفحص! وُجد $count مشكلة';
+  }
+
+  @override
+  String get scan_completed_no_issues => 'تم الفحص بنجاح! لا توجد مشاكل';
+
+  @override
+  String get space_analyzed => 'المساحة المحللة';
+
+  @override
+  String get starting_scan => 'بدء الفحص...';
+
+  @override
+  String get issue => 'مشكلة';
+
+  @override
+  String and_more_items(Object count) {
+    return 'و $count عنصر آخر...';
+  }
+
+  @override
+  String get since => 'منذ';
 }

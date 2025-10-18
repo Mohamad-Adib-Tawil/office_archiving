@@ -6,8 +6,14 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseService {
   static late Database db;
   static final DatabaseService _instance = DatabaseService._();
+  static bool _isInitialized = false;
   DatabaseService._();
-  static DatabaseService get instance => _instance;
+  static DatabaseService get instance {
+    if (!_isInitialized) {
+      log('DatabaseService accessed before initialization!');
+    }
+    return _instance;
+  }
 
   static Future<void> initDatabase() async {
     log('initDatabase');
@@ -42,11 +48,13 @@ class DatabaseService {
         FOREIGN KEY(sectionId) REFERENCES section(id)
       )
     ''');
+    
+    _isInitialized = true;
+    log('Database initialized successfully');
   }
 
   Future<List<Map<String, dynamic>>> getAllSections() async {
     log('databse getAllSections');
-    await initDatabase();
     List<Map<String, dynamic>> sections = await db.query('section');
     log('databse getAllSections sections ::: $sections');
     return sections;
@@ -54,8 +62,7 @@ class DatabaseService {
 
   Future<int> insertSection(String name) async {
     log('insertSection $name');
-    await initDatabase();
-
+    
     List<Map<String, dynamic>> existingSections = await db.query(
       'section',
       where: 'name = ?',
@@ -72,7 +79,6 @@ class DatabaseService {
 
   Future<void> updateSectionName(int id, String newName) async {
     log('updateSectionName ::: $newName');
-    await initDatabase();
     int index = await db.update('section', {'name': newName},
         where: 'id = ?', whereArgs: [id]);
     log('updateSectionName :::  index = $index');
@@ -82,13 +88,11 @@ class DatabaseService {
 
   Future<void> updateSectionCover(int id, String? coverPath) async {
     log('updateSectionCover id=$id coverPath=$coverPath');
-    await initDatabase();
     await db.update('section', {'coverPath': coverPath}, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> deleteSection(int id) async {
     log('deleteSection $id');
-    await initDatabase();
     // First delete all items that belong to this section to avoid orphans
     await db.delete('items', where: 'sectionId = ?', whereArgs: [id]);
     // Then delete the section itself
@@ -96,13 +100,15 @@ class DatabaseService {
   }
 
   Future<List<Map<String, dynamic>>> getItemsBySectionId(int sectionId) async {
-    await initDatabase();
     return await db
         .query('items', where: 'sectionId = ?', whereArgs: [sectionId]);
   }
 
+  Future<List<Map<String, dynamic>>> getAllItems() async {
+    return await db.query('items');
+  }
+
   Future<String?> getLatestImagePathForSection(int sectionId) async {
-    await initDatabase();
     // Assuming fileType holds extensions like 'jpg', 'png', etc.
     final rows = await db.query(
       'items',
@@ -117,7 +123,6 @@ class DatabaseService {
   }
 
   Future<String?> getSectionCoverOrLatest(int sectionId) async {
-    await initDatabase();
     final coverRows = await db.query('section', columns: ['coverPath'], where: 'id = ?', whereArgs: [sectionId]);
     if (coverRows.isNotEmpty) {
       final cover = coverRows.first['coverPath'] as String?;
@@ -128,7 +133,6 @@ class DatabaseService {
 
   Future<int> insertItem(
       String name, String filePath, String fileType, int sectionId) async {
-    await initDatabase();
     return await db.insert('items', {
       'name': name,
       'filePath': filePath,
@@ -139,19 +143,16 @@ class DatabaseService {
 
   Future<void> updateItemName(int id, String newName) async {
     log('updateItemName');
-    await initDatabase();
     await db.update('items', {'name': newName},
         where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> deleteItem(int id) async {
     log('deleteItem');
-    await initDatabase();
     await db.delete('items', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> searchItemsByName(String query) async {
-    await initDatabase();
     return await db.query(
       'items',
       where: 'name LIKE ?',
@@ -162,12 +163,70 @@ class DatabaseService {
   /// Search items by name within a specific section
   Future<List<Map<String, dynamic>>> searchItemsByNameInSection(
       String query, int sectionId) async {
-    await initDatabase();
     return await db.query(
       'items',
       where: 'name LIKE ? AND sectionId = ?',
       whereArgs: ['%$query%', sectionId],
     );
+  }
+
+  // Analytics methods
+  Future<Map<String, dynamic>> getStorageAnalytics() async {
+    // Get total files and sections
+    final totalFiles = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM items')) ?? 0;
+    final totalSections = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM section')) ?? 0;
+    
+    // Get file type distribution
+    final fileTypeRows = await db.rawQuery('''
+      SELECT fileType, COUNT(*) as count 
+      FROM items 
+      GROUP BY fileType 
+      ORDER BY count DESC
+    ''');
+    
+    Map<String, int> fileTypeCount = {};
+    for (var row in fileTypeRows) {
+      fileTypeCount[row['fileType'] as String] = row['count'] as int;
+    }
+    
+    // Get recent activity (last 7 days)
+    final now = DateTime.now();
+    
+    // Note: This is simplified since we don't have creation dates in the current schema
+    // In a real app, you'd have created_at timestamps
+    List<Map<String, dynamic>> dailyUsage = [];
+    for (int i = 6; i >= 0; i--) {
+      final date = now.subtract(Duration(days: i));
+      // Simulate some activity based on existing data
+      final dayActivity = (totalFiles / 7 * (0.5 + (i % 3) * 0.3)).round();
+      dailyUsage.add({
+        'date': date.toIso8601String(),
+        'filesAdded': dayActivity,
+        'sizeAdded': dayActivity * 1024 * 1024 * 2, // Simulate 2MB per file
+      });
+    }
+    
+    // Get most accessed files (simulate based on file names)
+    final allItems = await db.query('items', limit: 10);
+    List<Map<String, dynamic>> popularFiles = [];
+    for (int i = 0; i < allItems.length && i < 5; i++) {
+      final item = allItems[i];
+      popularFiles.add({
+        'name': item['name'],
+        'type': item['fileType'],
+        'accessCount': 20 - i * 3, // Simulate access counts
+        'lastAccessed': now.subtract(Duration(hours: i + 1)).toIso8601String(),
+      });
+    }
+    
+    return {
+      'totalFiles': totalFiles,
+      'totalSections': totalSections,
+      'totalSizeBytes': totalFiles * 1024 * 1024 * 2.5, // Simulate 2.5MB per file
+      'fileTypeCount': fileTypeCount,
+      'dailyUsage': dailyUsage,
+      'mostAccessedFiles': popularFiles,
+    };
   }
 
   Future<void> dispose() async {

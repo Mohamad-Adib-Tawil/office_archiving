@@ -118,9 +118,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get theme_yellow => 'Yellow';
 
   @override
-  String get theme_green => 'Green';
-
-  @override
   String get theme_system => 'Follow System';
 
   @override
@@ -234,4 +231,191 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get section_name_exists => 'Section name already exists';
+
+  @override
+  String get theme_ocean_blue => 'Ocean Blue';
+
+  @override
+  String get theme_sunset_orange => 'Sunset Orange';
+
+  @override
+  String get theme_forest_green => 'Forest Green';
+
+  @override
+  String get theme_royal_purple => 'Royal Purple';
+
+  @override
+  String get theme_rose_gold => 'Rose Gold';
+
+  @override
+  String get file_cleanup_title => 'File Cleanup';
+
+  @override
+  String get analytics_title => 'Storage Analytics';
+
+  @override
+  String get scan_files => 'Scan Files';
+
+  @override
+  String get scan_description =>
+      'Search for duplicate, broken, and large files to improve performance and save space';
+
+  @override
+  String get start_scan => 'Start Scan';
+
+  @override
+  String get scanning => 'Scanning...';
+
+  @override
+  String get files_scanned => 'files scanned';
+
+  @override
+  String get scan_results => 'Scan Results';
+
+  @override
+  String get duplicate_files => 'Duplicate Files';
+
+  @override
+  String get broken_files => 'Broken Files';
+
+  @override
+  String get large_files => 'Large Files';
+
+  @override
+  String get cleanup_actions => 'Cleanup Actions';
+
+  @override
+  String get cleanup_options => 'Cleanup Options';
+
+  @override
+  String get remove_broken_files => 'Remove Broken Files';
+
+  @override
+  String get view_duplicate_files => 'View Duplicate Files';
+
+  @override
+  String get view_large_files => 'View Large Files';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get cleaning => 'Cleaning...';
+
+  @override
+  String get auto_cleanup => 'Auto Cleanup';
+
+  @override
+  String get space_saved => 'Space saved';
+
+  @override
+  String get files_cleaned => 'broken files cleaned';
+
+  @override
+  String get cleanup_error => 'Cleanup error';
+
+  @override
+  String get scan_error => 'Scan error';
+
+  @override
+  String get no_issues_found =>
+      'No issues found! Your files are well organized';
+
+  @override
+  String get copies => 'copies';
+
+  @override
+  String get same_size_files => 'Files with same size';
+
+  @override
+  String get files => 'files';
+
+  @override
+  String get file_not_found => 'File not found';
+
+  @override
+  String get monthly_report => 'Monthly Report';
+
+  @override
+  String get files_added => 'Files Added';
+
+  @override
+  String get space_used => 'Space Used';
+
+  @override
+  String get most_common_type => 'Most Common Type';
+
+  @override
+  String get growth_rate => 'Growth Rate';
+
+  @override
+  String get file_type_distribution => 'File Type Distribution';
+
+  @override
+  String get size_distribution => 'Size Distribution';
+
+  @override
+  String get weekly_usage => 'Weekly Usage';
+
+  @override
+  String get most_accessed_files => 'Most Accessed Files';
+
+  @override
+  String get no_data => 'No data';
+
+  @override
+  String get undefined => 'Undefined';
+
+  @override
+  String get times => 'times';
+
+  @override
+  String get minutes_ago => 'minutes ago';
+
+  @override
+  String get hours_ago => 'hours ago';
+
+  @override
+  String get days_ago => 'days ago';
+
+  @override
+  String get total_files => 'Total Files';
+
+  @override
+  String get sections => 'Sections';
+
+  @override
+  String get storage_size => 'Storage Size';
+
+  @override
+  String get avg_files_per_section => 'Avg Files/Section';
+
+  @override
+  String get no_files_to_scan => 'No files to scan';
+
+  @override
+  String scan_completed_issues(Object count) {
+    return 'Scan completed! Found $count issues';
+  }
+
+  @override
+  String get scan_completed_no_issues =>
+      'Scan completed successfully! No issues found';
+
+  @override
+  String get space_analyzed => 'Space analyzed';
+
+  @override
+  String get starting_scan => 'Starting scan...';
+
+  @override
+  String get issue => 'Issue';
+
+  @override
+  String and_more_items(Object count) {
+    return 'and $count more items...';
+  }
+
+  @override
+  String get since => 'since';
 }

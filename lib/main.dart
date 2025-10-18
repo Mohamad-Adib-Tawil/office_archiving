@@ -47,7 +47,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   static const _channel = MethodChannel('com.werewolf.office_archiving/open_file');
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
