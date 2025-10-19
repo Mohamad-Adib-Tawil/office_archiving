@@ -7,6 +7,7 @@ import 'package:office_archiving/widgets/settings_sheet.dart';
 import 'package:office_archiving/pages/analytics_page.dart';
 import 'package:office_archiving/pages/file_cleanup_page.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
+import 'package:office_archiving/pages/document_management_page.dart';
 
 class CustomAppBarWidgetApp extends StatelessWidget
     implements PreferredSizeWidget {
@@ -78,6 +79,19 @@ class CustomAppBarWidgetApp extends StatelessWidget
               context,
               MaterialPageRoute(
                 builder: (context) => const AIFeaturesPage(),
+              ),
+            );
+          },
+        ),
+        IconButton(
+          tooltip: 'إدارة المستندات',
+          icon: const Icon(Icons.document_scanner_outlined),
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DocumentManagementPage(),
               ),
             );
           },
