@@ -269,6 +269,7 @@ class SectionListView extends StatelessWidget {
                     String? imagePath;
                     
                     // عرض خيارات للمستخدم لاختيار مصدر الصورة
+                    if (!rootContext.mounted) return;
                     final source = await _showImageSourceDialog(rootContext);
                     if (source == null) return;
 
