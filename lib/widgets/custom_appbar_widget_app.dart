@@ -6,6 +6,7 @@ import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/widgets/settings_sheet.dart';
 import 'package:office_archiving/pages/analytics_page.dart';
 import 'package:office_archiving/pages/file_cleanup_page.dart';
+import 'package:office_archiving/pages/ai_features_page.dart';
 
 class CustomAppBarWidgetApp extends StatelessWidget
     implements PreferredSizeWidget {
@@ -64,6 +65,19 @@ class CustomAppBarWidgetApp extends StatelessWidget
               context,
               MaterialPageRoute(
                 builder: (context) => const FileCleanupPage(),
+              ),
+            );
+          },
+        ),
+        IconButton(
+          tooltip: 'ميزات الذكاء الاصطناعي',
+          icon: const Icon(Icons.psychology_outlined),
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AIFeaturesPage(),
               ),
             );
           },

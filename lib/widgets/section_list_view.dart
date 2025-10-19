@@ -210,6 +210,7 @@ class SectionListView extends StatelessWidget {
   }
 
   void _showOptionsDialog(BuildContext context, int index) {
+    final rootContext = context; // capture root context to use after sheet dismissal
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     showModalBottomSheet(
@@ -262,14 +263,28 @@ class SectionListView extends StatelessWidget {
                   onTap: () async {
                     HapticFeedback.lightImpact();
                     Navigator.pop(sheetCtx);
+                    // Wait for the sheet to fully dismiss before presenting picker (prevents UI freeze on iOS)
+                    await Future.delayed(const Duration(milliseconds: 220));
+
+                    String? imagePath;
+                    
+                    // عرض خيارات للمستخدم لاختيار مصدر الصورة
+                    final source = await _showImageSourceDialog(rootContext);
+                    if (source == null) return;
+
                     final picker = ImagePicker();
-                    final picked =
-                        await picker.pickImage(source: ImageSource.gallery);
+                    final picked = await picker.pickImage(
+                      source: source,
+                      imageQuality: 85, // ضغط الصورة لتوفير المساحة
+                    );
                     if (picked != null) {
-                      await sectionCubit.updateSectionCover(
-                          sections[index].id, picked.path);
-                      if (context.mounted) {
-                        UIFeedback.success(context, AppLocalizations.of(context).snackbar_cover_set);
+                      imagePath = picked.path;
+                    }
+
+                    if (imagePath != null) {
+                      await sectionCubit.updateSectionCover(sections[index].id, imagePath);
+                      if (rootContext.mounted) {
+                        UIFeedback.success(rootContext, AppLocalizations.of(rootContext).snackbar_cover_set);
                       }
                     }
                   },
@@ -312,6 +327,38 @@ class SectionListView extends StatelessWidget {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  static Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
+    return showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('اختر مصدر الصورة'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('معرض الصور'),
+                onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('الكاميرا'),
+                onTap: () => Navigator.of(context).pop(ImageSource.camera),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('إلغاء'),
+            ),
+          ],
         );
       },
     );
