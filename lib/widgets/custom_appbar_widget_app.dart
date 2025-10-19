@@ -11,7 +11,8 @@ import 'package:office_archiving/pages/document_management_page.dart';
 
 class CustomAppBarWidgetApp extends StatelessWidget
     implements PreferredSizeWidget {
-  const CustomAppBarWidgetApp({super.key});
+  final bool showActions;
+  const CustomAppBarWidgetApp({super.key, this.showActions = true});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -43,7 +44,7 @@ class CustomAppBarWidgetApp extends StatelessWidget
           ),
         ),
       ),
-      actions: [
+      actions: showActions ? [
         IconButton(
           tooltip: AppLocalizations.of(context).analytics_title,
           icon: const Icon(Icons.analytics_outlined),
@@ -111,7 +112,7 @@ class CustomAppBarWidgetApp extends StatelessWidget
             );
           },
         ),
-      ],
+      ] : null,
     );
   }
 }
