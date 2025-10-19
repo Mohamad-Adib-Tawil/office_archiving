@@ -18,9 +18,9 @@ class _FileCleanupPageState extends State<FileCleanupPage> with TickerProviderSt
   bool _isScanning = false;
   bool _isCleaningUp = false;
   
-  List<Map<String, dynamic>> _duplicateFiles = [];
-  List<Map<String, dynamic>> _brokenFiles = [];
-  List<Map<String, dynamic>> _largeFiles = [];
+  final List<Map<String, dynamic>> _duplicateFiles = [];
+  final List<Map<String, dynamic>> _brokenFiles = [];
+  final List<Map<String, dynamic>> _largeFiles = [];
   int _totalFilesScanned = 0;
   double _spaceSaved = 0;
   double _totalSpaceAnalyzed = 0;
