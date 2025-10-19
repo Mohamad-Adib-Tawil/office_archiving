@@ -4,6 +4,7 @@ import 'package:office_archiving/services/ocr_service.dart';
 import 'package:office_archiving/services/translation_service.dart';
 import 'package:office_archiving/services/ai_summarization_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class AIFeaturesPage extends StatefulWidget {
   const AIFeaturesPage({super.key});
@@ -53,18 +54,18 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('اختر مصدر الصورة'),
+          title: Text(AppLocalizations.of(context).choose_image_source),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('معرض الصور'),
+                title: Text(AppLocalizations.of(context).from_gallery),
                 onTap: () => Navigator.of(context).pop(ImageSource.gallery),
               ),
               ListTile(
                 leading: const Icon(Icons.camera_alt),
-                title: const Text('الكاميرا'),
+                title: Text(AppLocalizations.of(context).from_camera),
                 onTap: () => Navigator.of(context).pop(ImageSource.camera),
               ),
             ],
@@ -72,7 +73,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('إلغاء'),
+              child: Text(AppLocalizations.of(context).cancel),
             ),
           ],
         );
@@ -116,8 +117,8 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
         if (extractedText.isNotEmpty) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم استخراج النص بنجاح!'),
+              SnackBar(
+                content: Text(AppLocalizations.of(context).snack_extraction_done),
                 backgroundColor: Colors.green,
               ),
             );
@@ -126,7 +127,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('لم يتم اختيار صورة')),
+          SnackBar(content: Text(AppLocalizations.of(context).no_image_selected)),
         );
       }
     } catch (e) {
@@ -137,7 +138,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في استخراج النص: $e')),
+          SnackBar(content: Text('${AppLocalizations.of(context).generic_error}: $e')),
         );
       }
     }
@@ -159,8 +160,8 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم ترجمة النص بنجاح!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).snack_translation_done),
             backgroundColor: Colors.green,
           ),
         );
@@ -172,7 +173,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في الترجمة: $e')),
+          SnackBar(content: Text('${AppLocalizations.of(context).generic_error}: $e')),
         );
       }
     }
@@ -194,8 +195,8 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم تلخيص النص بنجاح!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).snack_summary_done),
             backgroundColor: Colors.green,
           ),
         );
@@ -207,7 +208,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في التلخيص: $e')),
+          SnackBar(content: Text('${AppLocalizations.of(context).generic_error}: $e')),
         );
       }
     }
@@ -217,7 +218,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ميزات الذكاء الاصطناعي'),
+        title: Text(AppLocalizations.of(context).ai_features_title),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
@@ -229,21 +230,21 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildFeatureCard(
-                'استخراج النص من الصور',
-                'قم بتحويل الصور إلى نص قابل للتحرير',
+                AppLocalizations.of(context).ai_extract_title,
+                AppLocalizations.of(context).ai_extract_desc,
                 Icons.text_fields,
                 Colors.blue,
                 _pickImageAndExtractText,
               ),
               const SizedBox(height: 16),
               if (_extractedText.isNotEmpty) ...[
-                _buildResultCard('النص المستخرج', _extractedText, Colors.blue),
+                _buildResultCard(AppLocalizations.of(context).ai_extracted_text_title, _extractedText, Colors.blue),
                 const SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
                       child: _buildActionButton(
-                        'ترجمة النص',
+                        AppLocalizations.of(context).ai_translate_action,
                         Icons.translate,
                         Colors.green,
                         _translateText,
@@ -252,7 +253,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                     const SizedBox(width: 16),
                     Expanded(
                       child: _buildActionButton(
-                        'تلخيص النص',
+                        AppLocalizations.of(context).ai_summary_action,
                         Icons.summarize,
                         Colors.orange,
                         _summarizeText,
@@ -263,11 +264,11 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                 const SizedBox(height: 16),
               ],
               if (_translatedText.isNotEmpty) ...[
-                _buildResultCard('النص المترجم', _translatedText, Colors.green),
+                _buildResultCard(AppLocalizations.of(context).ai_translated_text_title, _translatedText, Colors.green),
                 const SizedBox(height: 16),
               ],
               if (_summary.isNotEmpty) ...[
-                _buildResultCard('ملخص النص', _summary, Colors.orange),
+                _buildResultCard(AppLocalizations.of(context).ai_summary_text_title, _summary, Colors.orange),
                 const SizedBox(height: 16),
               ],
               _buildFeaturesList(),
@@ -331,7 +332,9 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
                   : Icon(icon),
-              label: Text(_isProcessing ? 'جاري المعالجة...' : 'ابدأ'),
+              label: Text(_isProcessing
+                  ? AppLocalizations.of(context).processing_ellipsis
+                  : AppLocalizations.of(context).start_action),
               style: ElevatedButton.styleFrom(
                 backgroundColor: color,
                 foregroundColor: Colors.white,
@@ -387,11 +390,11 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: content));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('تم نسخ النص')),
+                    SnackBar(content: Text(AppLocalizations.of(context).snack_copy_done)),
                   );
                 },
                 icon: const Icon(Icons.copy, size: 16),
-                label: const Text('نسخ'),
+                label: Text(AppLocalizations.of(context).copy_action),
               ),
             ],
           ),
@@ -432,35 +435,35 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'ميزات الذكاء الاصطناعي المتاحة',
+            AppLocalizations.of(context).ai_features_list_title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 16),
           _buildFeatureItem(
-            '📷 استخراج النص من الصور',
-            'تحويل الصور والمستندات الممسوحة إلى نص قابل للتحرير',
+            AppLocalizations.of(context).ai_feature_extract_title,
+            AppLocalizations.of(context).ai_feature_extract_desc,
             true,
           ),
           _buildFeatureItem(
-            '🌐 ترجمة المستندات',
-            'ترجمة النصوص تلقائياً بين العربية والإنجليزية',
+            AppLocalizations.of(context).ai_feature_translate_title,
+            AppLocalizations.of(context).ai_feature_translate_desc,
             true,
           ),
           _buildFeatureItem(
-            '📝 تلخيص المستندات',
-            'إنشاء ملخصات ذكية للنصوص الطويلة',
+            AppLocalizations.of(context).ai_feature_summarize_title,
+            AppLocalizations.of(context).ai_feature_summarize_desc,
             true,
           ),
           _buildFeatureItem(
-            '🤖 التنظيم الذكي',
-            'اقتراحات تلقائية لتصنيف وتنظيم الملفات',
+            AppLocalizations.of(context).ai_feature_smart_organize_title,
+            AppLocalizations.of(context).ai_feature_smart_organize_desc,
             false,
           ),
           _buildFeatureItem(
-            '🔍 البحث الذكي',
-            'البحث في محتوى الملفات والصور',
+            AppLocalizations.of(context).ai_feature_smart_search_title,
+            AppLocalizations.of(context).ai_feature_smart_search_desc,
             false,
           ),
         ],
@@ -513,8 +516,8 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                 color: Colors.orange.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
-                'قريباً',
+              child: Text(
+                AppLocalizations.of(context).coming_soon,
                 style: TextStyle(
                   fontSize: 10,
                   color: Colors.orange,

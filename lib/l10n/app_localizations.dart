@@ -896,6 +896,438 @@ abstract class AppLocalizations {
   /// **'and {count} more items...'**
   String and_more_items(Object count);
 
+  /// No description provided for @deleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteConfirmTitle;
+
+  /// No description provided for @deleteConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this item? This action cannot be undone.'**
+  String get deleteConfirmBody;
+
+  /// No description provided for @deleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteAction;
+
+  /// No description provided for @keepAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get keepAction;
+
+  /// No description provided for @choose_image_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose image source'**
+  String get choose_image_source;
+
+  /// No description provided for @snack_extraction_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Text extracted successfully!'**
+  String get snack_extraction_done;
+
+  /// No description provided for @snack_translation_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Text translated successfully!'**
+  String get snack_translation_done;
+
+  /// No description provided for @snack_summary_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Text summarized successfully!'**
+  String get snack_summary_done;
+
+  /// No description provided for @snack_copy_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Text copied'**
+  String get snack_copy_done;
+
+  /// No description provided for @copy_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy_action;
+
+  /// No description provided for @ai_features_title.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Features'**
+  String get ai_features_title;
+
+  /// No description provided for @ai_extract_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Extract text from images'**
+  String get ai_extract_title;
+
+  /// No description provided for @ai_extract_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Convert images into editable text'**
+  String get ai_extract_desc;
+
+  /// No description provided for @ai_extracted_text_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracted text'**
+  String get ai_extracted_text_title;
+
+  /// No description provided for @ai_translate_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Translate text'**
+  String get ai_translate_action;
+
+  /// No description provided for @ai_summary_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Summarize text'**
+  String get ai_summary_action;
+
+  /// No description provided for @ai_translated_text_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Translated text'**
+  String get ai_translated_text_title;
+
+  /// No description provided for @ai_summary_text_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Text summary'**
+  String get ai_summary_text_title;
+
+  /// No description provided for @ai_features_list_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Available AI features'**
+  String get ai_features_list_title;
+
+  /// No description provided for @ai_feature_extract_title.
+  ///
+  /// In en, this message translates to:
+  /// **'📷 Extract text from images'**
+  String get ai_feature_extract_title;
+
+  /// No description provided for @ai_feature_extract_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Convert scanned images and documents into editable text'**
+  String get ai_feature_extract_desc;
+
+  /// No description provided for @ai_feature_translate_title.
+  ///
+  /// In en, this message translates to:
+  /// **'🌐 Translate documents'**
+  String get ai_feature_translate_title;
+
+  /// No description provided for @ai_feature_translate_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically translate texts between Arabic and English'**
+  String get ai_feature_translate_desc;
+
+  /// No description provided for @ai_feature_summarize_title.
+  ///
+  /// In en, this message translates to:
+  /// **'📝 Summarize documents'**
+  String get ai_feature_summarize_title;
+
+  /// No description provided for @ai_feature_summarize_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate smart summaries for long texts'**
+  String get ai_feature_summarize_desc;
+
+  /// No description provided for @ai_feature_smart_organize_title.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 Smart organization'**
+  String get ai_feature_smart_organize_title;
+
+  /// No description provided for @ai_feature_smart_organize_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic suggestions to classify and organize files'**
+  String get ai_feature_smart_organize_desc;
+
+  /// No description provided for @ai_feature_smart_search_title.
+  ///
+  /// In en, this message translates to:
+  /// **'🔍 Smart search'**
+  String get ai_feature_smart_search_title;
+
+  /// No description provided for @ai_feature_smart_search_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Search within file and image contents'**
+  String get ai_feature_smart_search_desc;
+
+  /// No description provided for @coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get coming_soon;
+
+  /// No description provided for @start_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start_action;
+
+  /// No description provided for @processing_ellipsis.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing_ellipsis;
+
+  /// No description provided for @tooltip_scanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanner'**
+  String get tooltip_scanner;
+
+  /// No description provided for @tooltip_ai.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Features'**
+  String get tooltip_ai;
+
+  /// No description provided for @tooltip_cleaner.
+  ///
+  /// In en, this message translates to:
+  /// **'File Cleaner'**
+  String get tooltip_cleaner;
+
+  /// No description provided for @doc_manage_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Management'**
+  String get doc_manage_title;
+
+  /// No description provided for @scan_document_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Document'**
+  String get scan_document_action;
+
+  /// No description provided for @create_pdf_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Create PDF'**
+  String get create_pdf_action;
+
+  /// No description provided for @digital_signature_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital Signature'**
+  String get digital_signature_action;
+
+  /// No description provided for @merge_files_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge Files'**
+  String get merge_files_action;
+
+  /// No description provided for @tab_images.
+  ///
+  /// In en, this message translates to:
+  /// **'Images'**
+  String get tab_images;
+
+  /// No description provided for @tab_documents.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get tab_documents;
+
+  /// No description provided for @tab_signatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Signatures'**
+  String get tab_signatures;
+
+  /// No description provided for @empty_images.
+  ///
+  /// In en, this message translates to:
+  /// **'No scanned images'**
+  String get empty_images;
+
+  /// No description provided for @empty_documents.
+  ///
+  /// In en, this message translates to:
+  /// **'No documents'**
+  String get empty_documents;
+
+  /// No description provided for @empty_signatures.
+  ///
+  /// In en, this message translates to:
+  /// **'No signatures'**
+  String get empty_signatures;
+
+  /// No description provided for @empty_hint_add_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the buttons above to add new content'**
+  String get empty_hint_add_content;
+
+  /// No description provided for @snack_document_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Document added successfully!'**
+  String get snack_document_added;
+
+  /// No description provided for @delete_document_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete document'**
+  String get delete_document_title;
+
+  /// No description provided for @delete_document_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this document?'**
+  String get delete_document_message;
+
+  /// No description provided for @delete_signature_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete signature'**
+  String get delete_signature_title;
+
+  /// No description provided for @delete_signature_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this signature?'**
+  String get delete_signature_message;
+
+  /// No description provided for @snack_document_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Document deleted'**
+  String get snack_document_deleted;
+
+  /// No description provided for @snack_signature_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature deleted'**
+  String get snack_signature_deleted;
+
+  /// No description provided for @snack_pdf_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Document file created successfully!'**
+  String get snack_pdf_created;
+
+  /// No description provided for @error_merge_min_files.
+  ///
+  /// In en, this message translates to:
+  /// **'At least two files are required to merge'**
+  String get error_merge_min_files;
+
+  /// No description provided for @snack_merge_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Files merged successfully!'**
+  String get snack_merge_success;
+
+  /// No description provided for @snack_watermark_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Watermark added successfully!'**
+  String get snack_watermark_added;
+
+  /// No description provided for @digital_signature_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Digital Signature'**
+  String get digital_signature_title;
+
+  /// No description provided for @enter_signature_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter signature text:'**
+  String get enter_signature_text;
+
+  /// No description provided for @signature_hint_example.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: John Doe'**
+  String get signature_hint_example;
+
+  /// No description provided for @create_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create_action;
+
+  /// No description provided for @document_n.
+  ///
+  /// In en, this message translates to:
+  /// **'Document {n}'**
+  String document_n(Object n);
+
+  /// No description provided for @signature_n.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature {n}'**
+  String signature_n(Object n);
+
+  /// No description provided for @view_action.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view_action;
+
+  /// No description provided for @share_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_action;
+
+  /// No description provided for @watermark_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Watermark'**
+  String get watermark_action;
+
+  /// No description provided for @view_document_title.
+  ///
+  /// In en, this message translates to:
+  /// **'View Document'**
+  String get view_document_title;
+
+  /// No description provided for @view_file_title.
+  ///
+  /// In en, this message translates to:
+  /// **'View {name}'**
+  String view_file_title(Object name);
+
+  /// No description provided for @share_prepared_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'File prepared for sharing:'**
+  String get share_prepared_prefix;
+
+  /// No description provided for @file_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get file_size;
+
+  /// No description provided for @file_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get file_date;
+
   /// No description provided for @since.
   ///
   /// In en, this message translates to:

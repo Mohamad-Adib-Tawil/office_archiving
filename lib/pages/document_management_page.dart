@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class DocumentManagementPage extends StatefulWidget {
   const DocumentManagementPage({super.key});
@@ -16,9 +16,9 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  List<String> _documentImages = [];
-  List<String> _pdfFiles = [];
-  List<String> _signatures = [];
+  final List<String> _documentImages = [];
+  final List<String> _pdfFiles = [];
+  final List<String> _signatures = [];
   bool _isProcessing = false;
 
   @override
@@ -34,6 +34,69 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     _animationController.forward();
   }
 
+  Widget _buildSignaturesList() {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: _signatures.length,
+      itemBuilder: (context, index) {
+        final filePath = _signatures[index];
+        final file = File(filePath);
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(12),
+            leading: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.draw,
+                color: Colors.blue,
+                size: 32,
+              ),
+            ),
+            title: Text(AppLocalizations.of(context).signature_n(index + 1)),
+            subtitle: Text(
+              '${AppLocalizations.of(context).file_size}: ${_getFileSize(file)} • ${AppLocalizations.of(context).file_date}: ${_getFileDate(file)}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            trailing: PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.visibility, size: 20),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).view_action),
+                    ],
+                  ),
+                  onTap: () => _viewTextFile(filePath),
+                ),
+                PopupMenuItem(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.delete, color: Colors.red, size: 20),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).action_delete, style: const TextStyle(color: Colors.red)),
+                    ],
+                  ),
+                  onTap: () => _deleteSignature(index),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -44,7 +107,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
   Future<void> _scanDocument() async {
     try {
       setState(() => _isProcessing = true);
-      
+
       final source = await _showImageSourceDialog();
       if (source == null) return;
 
@@ -53,15 +116,17 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
         source: source,
         imageQuality: 90,
       );
-      
+
       if (image != null) {
         setState(() {
           _documentImages.add(image.path);
         });
-        _showSuccessSnackBar('تم إضافة المستند بنجاح!');
+        if (!mounted) return;
+        _showSuccessSnackBar(AppLocalizations.of(context).snack_document_added);
       }
     } catch (e) {
-      _showErrorSnackBar('خطأ في المسح الضوئي: $e');
+      if (!mounted) return;
+      _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     } finally {
       setState(() => _isProcessing = false);
     }
@@ -73,20 +138,18 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('اختر مصدر المستند'),
+          title: Text(AppLocalizations.of(context).choose_image_source),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: Colors.blue),
-                title: const Text('الكاميرا (مسح ضوئي)'),
-                subtitle: const Text('التقط صورة للمستند'),
+                title: Text(AppLocalizations.of(context).from_camera),
                 onTap: () => Navigator.of(context).pop(ImageSource.camera),
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library, color: Colors.green),
-                title: const Text('معرض الصور'),
-                subtitle: const Text('اختر من الصور المحفوظة'),
+                title: Text(AppLocalizations.of(context).from_gallery),
                 onTap: () => Navigator.of(context).pop(ImageSource.gallery),
               ),
             ],
@@ -94,7 +157,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('إلغاء'),
+              child: Text(AppLocalizations.of(context).cancel),
             ),
           ],
         );
@@ -107,12 +170,12 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('حذف المستند'),
-        content: const Text('هل أنت متأكد من حذف هذا المستند؟'),
+        title: Text(AppLocalizations.of(context).delete_document_title),
+        content: Text(AppLocalizations.of(context).delete_document_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
@@ -120,9 +183,9 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                 _documentImages.removeAt(index);
               });
               Navigator.pop(context);
-              _showSuccessSnackBar('تم حذف المستند');
+              _showSuccessSnackBar(AppLocalizations.of(context).snack_document_deleted);
             },
-            child: const Text('حذف', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context).action_delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -158,7 +221,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إدارة المستندات'),
+        title: Text(AppLocalizations.of(context).doc_manage_title),
         elevation: 0,
         backgroundColor: Colors.transparent,
         flexibleSpace: Container(
@@ -213,34 +276,34 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                     ),
                   ),
                   const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'إجمالي الملفات',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${_documentImages.length + _pdfFiles.length + _signatures.length}',
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'صور: ${_documentImages.length} • مستندات: ${_pdfFiles.length} • توقيعات: ${_signatures.length}',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).total_files,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${_documentImages.length + _pdfFiles.length + _signatures.length}',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${AppLocalizations.of(context).tab_images}: ${_documentImages.length} • ${AppLocalizations.of(context).tab_documents}: ${_pdfFiles.length} • ${AppLocalizations.of(context).tab_signatures}: ${_signatures.length}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -257,7 +320,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                         child: ElevatedButton.icon(
                           onPressed: _isProcessing ? null : _scanDocument,
                           icon: const Icon(Icons.camera_alt),
-                          label: const Text('مسح مستند'),
+                          label: Text(AppLocalizations.of(context).scan_document_action),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: colorScheme.primary,
                             foregroundColor: Colors.white,
@@ -271,9 +334,10 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                       const SizedBox(width: 8),
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: _isProcessing ? null : _createPdfFromImages,
+                          onPressed:
+                              _isProcessing ? null : _createPdfFromImages,
                           icon: const Icon(Icons.picture_as_pdf),
-                          label: const Text('إنشاء PDF'),
+                          label: Text(AppLocalizations.of(context).create_pdf_action),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange,
                             foregroundColor: Colors.white,
@@ -292,9 +356,10 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                     children: [
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: _isProcessing ? null : _createDigitalSignature,
+                          onPressed:
+                              _isProcessing ? null : _createDigitalSignature,
                           icon: const Icon(Icons.draw),
-                          label: const Text('توقيع رقمي'),
+                          label: Text(AppLocalizations.of(context).digital_signature_action),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             foregroundColor: Colors.white,
@@ -310,7 +375,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                         child: ElevatedButton.icon(
                           onPressed: _isProcessing ? null : _mergeDocuments,
                           icon: const Icon(Icons.merge),
-                          label: const Text('دمج ملفات'),
+                          label: Text(AppLocalizations.of(context).merge_files_action),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.purple,
                             foregroundColor: Colors.white,
@@ -335,11 +400,11 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                 length: 3,
                 child: Column(
                   children: [
-                    const TabBar(
+                    TabBar(
                       tabs: [
-                        Tab(text: 'الصور', icon: Icon(Icons.image)),
-                        Tab(text: 'المستندات', icon: Icon(Icons.picture_as_pdf)),
-                        Tab(text: 'التوقيعات', icon: Icon(Icons.draw)),
+                        Tab(text: AppLocalizations.of(context).tab_images, icon: const Icon(Icons.image)),
+                        Tab(text: AppLocalizations.of(context).tab_documents, icon: const Icon(Icons.picture_as_pdf)),
+                        Tab(text: AppLocalizations.of(context).tab_signatures, icon: const Icon(Icons.draw)),
                       ],
                     ),
                     Expanded(
@@ -347,15 +412,15 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                         children: [
                           // تبويب الصور
                           _documentImages.isEmpty
-                              ? _buildEmptyState('لا توجد صور ممسوحة')
+                              ? _buildEmptyState(AppLocalizations.of(context).empty_images)
                               : _buildDocumentsList(),
                           // تبويب المستندات
                           _pdfFiles.isEmpty
-                              ? _buildEmptyState('لا توجد مستندات')
+                              ? _buildEmptyState(AppLocalizations.of(context).empty_documents)
                               : _buildPdfFilesList(),
                           // تبويب التوقيعات
                           _signatures.isEmpty
-                              ? _buildEmptyState('لا توجد توقيعات')
+                              ? _buildEmptyState(AppLocalizations.of(context).empty_signatures)
                               : _buildSignaturesList(),
                         ],
                       ),
@@ -369,12 +434,12 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
             if (_isProcessing)
               Container(
                 padding: const EdgeInsets.all(16),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
                     SizedBox(width: 16),
-                    Text('جاري المعالجة...'),
+                    Text(AppLocalizations.of(context).processing_ellipsis),
                   ],
                 ),
               ),
@@ -396,17 +461,17 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
           ),
           const SizedBox(height: 16),
           Text(
-            message ?? 'لا توجد مستندات ممسوحة',
+            message ?? AppLocalizations.of(context).empty_images,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
-            'استخدم الأزرار أعلاه لإضافة محتوى جديد',
+            AppLocalizations.of(context).empty_hint_add_content,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[500],
-            ),
+                  color: Colors.grey[500],
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -421,7 +486,6 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
       itemBuilder: (context, index) {
         final filePath = _pdfFiles[index];
         final file = File(filePath);
-        
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           elevation: 2,
@@ -443,106 +507,42 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                 size: 32,
               ),
             ),
-            title: Text('مستند ${index + 1}'),
+            title: Text(AppLocalizations.of(context).document_n(index + 1)),
             subtitle: Text(
-              'الحجم: ${_getFileSize(file)} • ${_getFileDate(file)}',
+              '${AppLocalizations.of(context).file_size}: ${_getFileSize(file)} • ${AppLocalizations.of(context).file_date}: ${_getFileDate(file)}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             trailing: PopupMenuButton(
               itemBuilder: (context) => [
                 PopupMenuItem(
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.visibility, size: 20),
-                      SizedBox(width: 8),
-                      Text('عرض'),
+                      const Icon(Icons.visibility, size: 20),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).view_action),
                     ],
                   ),
                   onTap: () => _viewTextFile(filePath),
                 ),
                 PopupMenuItem(
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.branding_watermark, size: 20, color: Colors.blue),
-                      SizedBox(width: 8),
-                      Text('علامة مائية'),
+                      const Icon(Icons.branding_watermark, size: 20, color: Colors.blue),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).watermark_action),
                     ],
                   ),
                   onTap: () => _addWatermark(filePath),
                 ),
                 PopupMenuItem(
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.delete, color: Colors.red, size: 20),
-                      SizedBox(width: 8),
-                      Text('حذف', style: TextStyle(color: Colors.red)),
+                      const Icon(Icons.delete, color: Colors.red, size: 20),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).action_delete, style: const TextStyle(color: Colors.red)),
                     ],
                   ),
                   onTap: () => _deletePdfFile(index),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSignaturesList() {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: _signatures.length,
-      itemBuilder: (context, index) {
-        final filePath = _signatures[index];
-        final file = File(filePath);
-        
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(12),
-            leading: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.draw,
-                color: Colors.blue,
-                size: 32,
-              ),
-            ),
-            title: Text('توقيع ${index + 1}'),
-            subtitle: Text(
-              'الحجم: ${_getFileSize(file)} • ${_getFileDate(file)}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            trailing: PopupMenuButton(
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: const Row(
-                    children: [
-                      Icon(Icons.visibility, size: 20),
-                      SizedBox(width: 8),
-                      Text('عرض'),
-                    ],
-                  ),
-                  onTap: () => _viewTextFile(filePath),
-                ),
-                PopupMenuItem(
-                  child: const Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red, size: 20),
-                      SizedBox(width: 8),
-                      Text('حذف', style: TextStyle(color: Colors.red)),
-                    ],
-                  ),
-                  onTap: () => _deleteSignature(index),
                 ),
               ],
             ),
@@ -565,12 +565,12 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('حذف المستند'),
-        content: const Text('هل أنت متأكد من حذف هذا المستند؟'),
+        title: Text(AppLocalizations.of(context).delete_document_title),
+        content: Text(AppLocalizations.of(context).delete_document_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
@@ -580,9 +580,9 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                 _pdfFiles.removeAt(index);
               });
               Navigator.pop(context);
-              _showSuccessSnackBar('تم حذف المستند');
+              _showSuccessSnackBar(AppLocalizations.of(context).snack_document_deleted);
             },
-            child: const Text('حذف', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context).action_delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -593,12 +593,12 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('حذف التوقيع'),
-        content: const Text('هل أنت متأكد من حذف هذا التوقيع؟'),
+        title: Text(AppLocalizations.of(context).delete_signature_title),
+        content: Text(AppLocalizations.of(context).delete_signature_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
@@ -608,9 +608,9 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                 _signatures.removeAt(index);
               });
               Navigator.pop(context);
-              _showSuccessSnackBar('تم حذف التوقيع');
+              _showSuccessSnackBar(AppLocalizations.of(context).snack_signature_deleted);
             },
-            child: const Text('حذف', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context).action_delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -624,7 +624,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
       itemBuilder: (context, index) {
         final imagePath = _documentImages[index];
         final file = File(imagePath);
-        
+
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           elevation: 2,
@@ -650,49 +650,49 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                 },
               ),
             ),
-            title: Text('مستند ${index + 1}'),
+            title: Text(AppLocalizations.of(context).document_n(index + 1)),
             subtitle: Text(
-              'الحجم: ${_getFileSize(file)} • ${_getFileDate(file)}',
+              '${AppLocalizations.of(context).file_size}: ${_getFileSize(file)} • ${AppLocalizations.of(context).file_date}: ${_getFileDate(file)}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             trailing: PopupMenuButton(
               itemBuilder: (context) => [
                 PopupMenuItem(
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.visibility, size: 20),
-                      SizedBox(width: 8),
-                      Text('عرض'),
+                      const Icon(Icons.visibility, size: 20),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).view_action),
                     ],
                   ),
                   onTap: () => _viewDocument(imagePath),
                 ),
                 PopupMenuItem(
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.share, size: 20),
-                      SizedBox(width: 8),
-                      Text('مشاركة'),
+                      const Icon(Icons.share, size: 20),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).share_action),
                     ],
                   ),
                   onTap: () => _shareDocument(imagePath),
                 ),
                 PopupMenuItem(
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.branding_watermark, size: 20, color: Colors.blue),
-                      SizedBox(width: 8),
-                      Text('علامة مائية'),
+                      const Icon(Icons.branding_watermark, size: 20, color: Colors.blue),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).watermark_action),
                     ],
                   ),
                   onTap: () => _addWatermark(imagePath),
                 ),
                 PopupMenuItem(
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.delete, color: Colors.red, size: 20),
-                      SizedBox(width: 8),
-                      Text('حذف', style: TextStyle(color: Colors.red)),
+                      const Icon(Icons.delete, color: Colors.red, size: 20),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context).action_delete, style: const TextStyle(color: Colors.red)),
                     ],
                   ),
                   onTap: () => _deleteDocument(index),
@@ -709,7 +709,8 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     try {
       final bytes = file.lengthSync();
       if (bytes < 1024) return '$bytes ب';
-      if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} ك.ب';
+      if (bytes < 1024 * 1024)
+        return '${(bytes / 1024).toStringAsFixed(1)} ك.ب';
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} م.ب';
     } catch (e) {
       return 'غير معروف';
@@ -737,34 +738,35 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
   // إنشاء PDF من الصور (فعلي)
   Future<void> _createPdfFromImages() async {
     if (_documentImages.isEmpty) {
-      _showErrorSnackBar('لا توجد صور لإنشاء PDF');
+      _showErrorSnackBar(AppLocalizations.of(context).empty_images);
       return;
     }
 
     try {
       setState(() => _isProcessing = true);
-      
+
       // إنشاء ملف PDF بسيط (نص فقط لأننا لا نملك مكتبة PDF)
       final directory = await getApplicationDocumentsDirectory();
       final fileName = 'document_${DateTime.now().millisecondsSinceEpoch}.txt';
       final file = File('${directory.path}/$fileName');
-      
-      String content = 'مستند PDF تم إنشاؤه من ${_documentImages.length} صورة\n';
+
+      String content =
+          'مستند PDF تم إنشاؤه من ${_documentImages.length} صورة\n';
       content += 'تاريخ الإنشاء: ${DateTime.now()}\n\n';
-      
+
       for (int i = 0; i < _documentImages.length; i++) {
         content += 'الصورة ${i + 1}: ${_documentImages[i].split('/').last}\n';
       }
-      
+
       await file.writeAsString(content);
-      
+
       setState(() {
         _pdfFiles.add(file.path);
       });
-      
-      _showSuccessSnackBar('تم إنشاء ملف المستند بنجاح!');
+
+      _showSuccessSnackBar(AppLocalizations.of(context).snack_pdf_created);
     } catch (e) {
-      _showErrorSnackBar('خطأ في إنشاء PDF: $e');
+      _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     } finally {
       setState(() => _isProcessing = false);
     }
@@ -773,21 +775,21 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
   // دمج الملفات (فعلي)
   Future<void> _mergeDocuments() async {
     if (_pdfFiles.length < 2) {
-      _showErrorSnackBar('يجب وجود ملفين على الأقل للدمج');
+      _showErrorSnackBar(AppLocalizations.of(context).error_merge_min_files);
       return;
     }
 
     try {
       setState(() => _isProcessing = true);
-      
+
       final directory = await getApplicationDocumentsDirectory();
       final fileName = 'merged_${DateTime.now().millisecondsSinceEpoch}.txt';
       final file = File('${directory.path}/$fileName');
-      
+
       String mergedContent = 'مستند مدمج\n';
       mergedContent += 'تاريخ الدمج: ${DateTime.now()}\n';
       mergedContent += 'عدد الملفات المدمجة: ${_pdfFiles.length}\n\n';
-      
+
       for (int i = 0; i < _pdfFiles.length; i++) {
         mergedContent += '--- الملف ${i + 1} ---\n';
         final sourceFile = File(_pdfFiles[i]);
@@ -796,16 +798,16 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
           mergedContent += content + '\n\n';
         }
       }
-      
+
       await file.writeAsString(mergedContent);
-      
+
       setState(() {
         _pdfFiles.add(file.path);
       });
-      
-      _showSuccessSnackBar('تم دمج الملفات بنجاح!');
+
+      _showSuccessSnackBar(AppLocalizations.of(context).snack_merge_success);
     } catch (e) {
-      _showErrorSnackBar('خطأ في دمج الملفات: $e');
+      _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     } finally {
       setState(() => _isProcessing = false);
     }
@@ -815,32 +817,34 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
   Future<void> _addWatermark(String filePath) async {
     try {
       setState(() => _isProcessing = true);
-      
+
       final sourceFile = File(filePath);
       if (!await sourceFile.exists()) {
-        _showErrorSnackBar('الملف غير موجود');
+        _showErrorSnackBar(AppLocalizations.of(context).file_not_found);
         return;
       }
-      
+
       final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'watermarked_${DateTime.now().millisecondsSinceEpoch}.txt';
+      final fileName =
+          'watermarked_${DateTime.now().millisecondsSinceEpoch}.txt';
       final newFile = File('${directory.path}/$fileName');
-      
+
       String content = await sourceFile.readAsString();
-      String watermarkedContent = '*** أرشيف المكتب - ${DateTime.now().year} ***\n';
+      String watermarkedContent =
+          '*** أرشيف المكتب - ${DateTime.now().year} ***\n';
       watermarkedContent += '*** مستند محمي بعلامة مائية ***\n\n';
       watermarkedContent += content;
       watermarkedContent += '\n\n*** نهاية المستند المحمي ***';
-      
+
       await newFile.writeAsString(watermarkedContent);
-      
+
       setState(() {
         _pdfFiles.add(newFile.path);
       });
-      
-      _showSuccessSnackBar('تم إضافة العلامة المائية بنجاح!');
+
+      _showSuccessSnackBar(AppLocalizations.of(context).snack_watermark_added);
     } catch (e) {
-      _showErrorSnackBar('خطأ في إضافة العلامة المائية: $e');
+      _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     } finally {
       setState(() => _isProcessing = false);
     }
@@ -849,21 +853,21 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
   // إنشاء توقيع رقمي (فعلي)
   Future<void> _createDigitalSignature() async {
     final TextEditingController signatureController = TextEditingController();
-    
+
     final signature = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('إنشاء توقيع رقمي'),
+        title: Text(AppLocalizations.of(context).digital_signature_title),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('أدخل نص التوقيع:'),
+            Text(AppLocalizations.of(context).enter_signature_text),
             const SizedBox(height: 16),
             TextField(
               controller: signatureController,
-              decoration: const InputDecoration(
-                hintText: 'مثال: محمد أحمد',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context).signature_hint_example,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
@@ -871,41 +875,41 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, signatureController.text),
-            child: const Text('إنشاء'),
+            child: Text(AppLocalizations.of(context).create_action),
           ),
         ],
       ),
     );
-    
+
     if (signature == null || signature.isEmpty) return;
-    
+
     try {
       setState(() => _isProcessing = true);
-      
+
       final directory = await getApplicationDocumentsDirectory();
       final fileName = 'signature_${DateTime.now().millisecondsSinceEpoch}.txt';
       final file = File('${directory.path}/$fileName');
-      
+
       String signatureContent = 'توقيع رقمي\n';
       signatureContent += '================\n';
       signatureContent += 'الاسم: $signature\n';
       signatureContent += 'التاريخ: ${DateTime.now()}\n';
       signatureContent += 'الوقت: ${DateTime.now().toLocal()}\n';
       signatureContent += '================\n';
-      
+
       await file.writeAsString(signatureContent);
-      
+
       setState(() {
         _signatures.add(file.path);
       });
-      
-      _showSuccessSnackBar('تم إنشاء التوقيع الرقمي بنجاح!');
+
+      _showSuccessSnackBar(AppLocalizations.of(context).snack_document_added);
     } catch (e) {
-      _showErrorSnackBar('خطأ في إنشاء التوقيع: $e');
+      _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     } finally {
       setState(() => _isProcessing = false);
     }
@@ -915,15 +919,16 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     try {
       // نسخ الملف إلى مجلد مؤقت للمشاركة
       final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'shared_${DateTime.now().millisecondsSinceEpoch}_${imagePath.split('/').last}';
+      final fileName =
+          'shared_${DateTime.now().millisecondsSinceEpoch}_${imagePath.split('/').last}';
       final sharedFile = File('${directory.path}/$fileName');
-      
+
       final originalFile = File(imagePath);
       await originalFile.copy(sharedFile.path);
-      
-      _showSuccessSnackBar('تم تحضير الملف للمشاركة: ${sharedFile.path}');
+
+      _showSuccessSnackBar('${AppLocalizations.of(context).share_prepared_prefix} ${sharedFile.path}');
     } catch (e) {
-      _showErrorSnackBar('خطأ في تحضير الملف للمشاركة: $e');
+      _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     }
   }
 }
@@ -938,7 +943,7 @@ class DocumentViewerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('عرض المستند'),
+        title: Text(AppLocalizations.of(context).view_document_title),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
@@ -949,15 +954,15 @@ class DocumentViewerPage extends StatelessWidget {
             File(imagePath),
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error, size: 64, color: Colors.white),
-                    SizedBox(height: 16),
+                    const Icon(Icons.error, size: 64, color: Colors.white),
+                    const SizedBox(height: 16),
                     Text(
-                      'خطأ في تحميل الصورة',
-                      style: TextStyle(color: Colors.white),
+                      AppLocalizations.of(context).file_open_error,
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
@@ -980,17 +985,17 @@ class TextFileViewerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('عرض ${filePath.split('/').last}'),
+        title: Text(AppLocalizations.of(context).view_file_title(filePath.split('/').last)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: FutureBuilder<String>(
-        future: _loadFileContent(),
+        future: _loadFileContent(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -998,19 +1003,19 @@ class TextFileViewerPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.error, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('خطأ في تحميل الملف: ${snapshot.error}'),
+                  Text('${AppLocalizations.of(context).file_open_error}: ${snapshot.error}'),
                 ],
               ),
             );
           }
-          
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: SelectableText(
-                  snapshot.data ?? 'لا يوجد محتوى',
+                  snapshot.data ?? AppLocalizations.of(context).no_data,
                   style: const TextStyle(
                     fontSize: 16,
                     height: 1.5,
@@ -1024,15 +1029,15 @@ class TextFileViewerPage extends StatelessWidget {
     );
   }
 
-  Future<String> _loadFileContent() async {
+  Future<String> _loadFileContent(BuildContext context) async {
     try {
       final file = File(filePath);
       if (await file.exists()) {
         return await file.readAsString();
       }
-      return 'الملف غير موجود';
+      return AppLocalizations.of(context).file_not_found;
     } catch (e) {
-      throw Exception('فشل في قراءة الملف: $e');
+      throw Exception('${AppLocalizations.of(context).file_open_error}: $e');
     }
   }
 }
