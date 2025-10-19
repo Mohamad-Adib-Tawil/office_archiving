@@ -94,7 +94,6 @@
   "remove_broken_files": "إزالة الملفات التالفة",
   "view_duplicate_files": "عرض الملفات المكررة",
   "view_large_files": "عرض الملفات الكبيرة",
-  "cancel": "إلغاء",
   "close": "إغلاق",
   "cleaning": "جاري التنظيف...",
   "auto_cleanup": "تنظيف تلقائي",
@@ -133,5 +132,84 @@
   "starting_scan": "بدء الفحص...",
   "issue": "مشكلة",
   "and_more_items": "و {count} عنصر آخر...",
+  
+  "deleteConfirmTitle": "حذف",
+  "deleteConfirmBody": "هل أنت متأكد أنك تريد حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+  "deleteAction": "حذف",
+  "keepAction": "إبقاء",
+  
+  "choose_image_source": "اختر مصدر الصورة",
+  "snack_extraction_done": "تم استخراج النص بنجاح!",
+  "snack_translation_done": "تم ترجمة النص بنجاح!",
+  "snack_summary_done": "تم تلخيص النص بنجاح!",
+  "snack_copy_done": "تم نسخ النص",
+  "copy_action": "نسخ",
+  "ai_features_title": "ميزات الذكاء الاصطناعي",
+  "ai_extract_title": "استخراج النص من الصور",
+  "ai_extract_desc": "قم بتحويل الصور إلى نص قابل للتحرير",
+  "ai_extracted_text_title": "النص المستخرج",
+  "ai_translate_action": "ترجمة النص",
+  "ai_summary_action": "تلخيص النص",
+  "ai_translated_text_title": "النص المترجم",
+  "ai_summary_text_title": "ملخص النص",
+  "ai_features_list_title": "ميزات الذكاء الاصطناعي المتاحة",
+  "ai_feature_extract_title": "📷 استخراج النص من الصور",
+  "ai_feature_extract_desc": "تحويل الصور والمستندات الممسوحة إلى نص قابل للتحرير",
+  "ai_feature_translate_title": "🌐 ترجمة المستندات",
+  "ai_feature_translate_desc": "ترجمة النصوص تلقائياً بين العربية والإنجليزية",
+  "ai_feature_summarize_title": "📝 تلخيص المستندات",
+  "ai_feature_summarize_desc": "إنشاء ملخصات ذكية للنصوص الطويلة",
+  "ai_feature_smart_organize_title": "🤖 التنظيم الذكي",
+  "ai_feature_smart_organize_desc": "اقتراحات تلقائية لتصنيف وتنظيم الملفات",
+  "ai_feature_smart_search_title": "🔍 البحث الذكي",
+  "ai_feature_smart_search_desc": "البحث في محتوى الملفات والصور",
+  "coming_soon": "قريباً",
+  "start_action": "ابدأ",
+  "processing_ellipsis": "جاري المعالجة...",
+  
+  "tooltip_scanner": "الماسح الضوئي",
+  "tooltip_ai": "الذكاء الاصطناعي",
+  "tooltip_cleaner": "منظف الملفات",
+  
+  "doc_manage_title": "إدارة المستندات",
+  "scan_document_action": "مسح مستند",
+  "create_pdf_action": "إنشاء PDF",
+  "digital_signature_action": "توقيع رقمي",
+  "merge_files_action": "دمج ملفات",
+  "tab_images": "الصور",
+  "tab_documents": "المستندات",
+  "tab_signatures": "التوقيعات",
+  "empty_images": "لا توجد صور ممسوحة",
+  "empty_documents": "لا توجد مستندات",
+  "empty_signatures": "لا توجد توقيعات",
+  "empty_hint_add_content": "استخدم الأزرار أعلاه لإضافة محتوى جديد",
+  "snack_document_added": "تم إضافة المستند بنجاح!",
+  "delete_document_title": "حذف المستند",
+  "delete_document_message": "هل أنت متأكد من حذف هذا المستند؟",
+  "delete_signature_title": "حذف التوقيع",
+  "delete_signature_message": "هل أنت متأكد من حذف هذا التوقيع؟",
+  "snack_document_deleted": "تم حذف المستند",
+  "snack_signature_deleted": "تم حذف التوقيع",
+  "snack_pdf_created": "تم إنشاء ملف المستند بنجاح!",
+  "error_merge_min_files": "يجب وجود ملفين على الأقل للدمج",
+  "snack_merge_success": "تم دمج الملفات بنجاح!",
+  "snack_watermark_added": "تم إضافة العلامة المائية بنجاح!",
+  "digital_signature_title": "إنشاء توقيع رقمي",
+  "enter_signature_text": "أدخل نص التوقيع:",
+  "signature_hint_example": "مثال: محمد أحمد",
+  "create_action": "إنشاء",
+  "document_n": "مستند {n}",
+  "@document_n": {"placeholders": {"n": {}}},
+  "signature_n": "توقيع {n}",
+  "@signature_n": {"placeholders": {"n": {}}},
+  "view_action": "عرض",
+  "share_action": "مشاركة",
+  "watermark_action": "علامة مائية",
+  "view_document_title": "عرض المستند",
+  "view_file_title": "عرض {name}",
+  "@view_file_title": {"placeholders": {"name": {}}},
+  "share_prepared_prefix": "تم تحضير الملف للمشاركة:",
+  "file_size": "الحجم",
+  "file_date": "التاريخ",
   "since": "منذ"
 }

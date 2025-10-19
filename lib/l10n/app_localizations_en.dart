@@ -417,5 +417,237 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get deleteConfirmTitle => 'Delete';
+
+  @override
+  String get deleteConfirmBody =>
+      'Are you sure you want to delete this item? This action cannot be undone.';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get keepAction => 'Keep';
+
+  @override
+  String get choose_image_source => 'Choose image source';
+
+  @override
+  String get snack_extraction_done => 'Text extracted successfully!';
+
+  @override
+  String get snack_translation_done => 'Text translated successfully!';
+
+  @override
+  String get snack_summary_done => 'Text summarized successfully!';
+
+  @override
+  String get snack_copy_done => 'Text copied';
+
+  @override
+  String get copy_action => 'Copy';
+
+  @override
+  String get ai_features_title => 'AI Features';
+
+  @override
+  String get ai_extract_title => 'Extract text from images';
+
+  @override
+  String get ai_extract_desc => 'Convert images into editable text';
+
+  @override
+  String get ai_extracted_text_title => 'Extracted text';
+
+  @override
+  String get ai_translate_action => 'Translate text';
+
+  @override
+  String get ai_summary_action => 'Summarize text';
+
+  @override
+  String get ai_translated_text_title => 'Translated text';
+
+  @override
+  String get ai_summary_text_title => 'Text summary';
+
+  @override
+  String get ai_features_list_title => 'Available AI features';
+
+  @override
+  String get ai_feature_extract_title => '📷 Extract text from images';
+
+  @override
+  String get ai_feature_extract_desc =>
+      'Convert scanned images and documents into editable text';
+
+  @override
+  String get ai_feature_translate_title => '🌐 Translate documents';
+
+  @override
+  String get ai_feature_translate_desc =>
+      'Automatically translate texts between Arabic and English';
+
+  @override
+  String get ai_feature_summarize_title => '📝 Summarize documents';
+
+  @override
+  String get ai_feature_summarize_desc =>
+      'Generate smart summaries for long texts';
+
+  @override
+  String get ai_feature_smart_organize_title => '🤖 Smart organization';
+
+  @override
+  String get ai_feature_smart_organize_desc =>
+      'Automatic suggestions to classify and organize files';
+
+  @override
+  String get ai_feature_smart_search_title => '🔍 Smart search';
+
+  @override
+  String get ai_feature_smart_search_desc =>
+      'Search within file and image contents';
+
+  @override
+  String get coming_soon => 'Coming soon';
+
+  @override
+  String get start_action => 'Start';
+
+  @override
+  String get processing_ellipsis => 'Processing...';
+
+  @override
+  String get tooltip_scanner => 'Scanner';
+
+  @override
+  String get tooltip_ai => 'AI Features';
+
+  @override
+  String get tooltip_cleaner => 'File Cleaner';
+
+  @override
+  String get doc_manage_title => 'Document Management';
+
+  @override
+  String get scan_document_action => 'Scan Document';
+
+  @override
+  String get create_pdf_action => 'Create PDF';
+
+  @override
+  String get digital_signature_action => 'Digital Signature';
+
+  @override
+  String get merge_files_action => 'Merge Files';
+
+  @override
+  String get tab_images => 'Images';
+
+  @override
+  String get tab_documents => 'Documents';
+
+  @override
+  String get tab_signatures => 'Signatures';
+
+  @override
+  String get empty_images => 'No scanned images';
+
+  @override
+  String get empty_documents => 'No documents';
+
+  @override
+  String get empty_signatures => 'No signatures';
+
+  @override
+  String get empty_hint_add_content =>
+      'Use the buttons above to add new content';
+
+  @override
+  String get snack_document_added => 'Document added successfully!';
+
+  @override
+  String get delete_document_title => 'Delete document';
+
+  @override
+  String get delete_document_message =>
+      'Are you sure you want to delete this document?';
+
+  @override
+  String get delete_signature_title => 'Delete signature';
+
+  @override
+  String get delete_signature_message =>
+      'Are you sure you want to delete this signature?';
+
+  @override
+  String get snack_document_deleted => 'Document deleted';
+
+  @override
+  String get snack_signature_deleted => 'Signature deleted';
+
+  @override
+  String get snack_pdf_created => 'Document file created successfully!';
+
+  @override
+  String get error_merge_min_files =>
+      'At least two files are required to merge';
+
+  @override
+  String get snack_merge_success => 'Files merged successfully!';
+
+  @override
+  String get snack_watermark_added => 'Watermark added successfully!';
+
+  @override
+  String get digital_signature_title => 'Create Digital Signature';
+
+  @override
+  String get enter_signature_text => 'Enter signature text:';
+
+  @override
+  String get signature_hint_example => 'Example: John Doe';
+
+  @override
+  String get create_action => 'Create';
+
+  @override
+  String document_n(Object n) {
+    return 'Document $n';
+  }
+
+  @override
+  String signature_n(Object n) {
+    return 'Signature $n';
+  }
+
+  @override
+  String get view_action => 'View';
+
+  @override
+  String get share_action => 'Share';
+
+  @override
+  String get watermark_action => 'Watermark';
+
+  @override
+  String get view_document_title => 'View Document';
+
+  @override
+  String view_file_title(Object name) {
+    return 'View $name';
+  }
+
+  @override
+  String get share_prepared_prefix => 'File prepared for sharing:';
+
+  @override
+  String get file_size => 'Size';
+
+  @override
+  String get file_date => 'Date';
+
+  @override
   String get since => 'since';
 }

@@ -46,8 +46,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const _channel = MethodChannel('com.werewolf.office_archiving/open_file');
-  static final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  static const _channel =
+      MethodChannel('com.werewolf.office_archiving/open_file');
+  static final GlobalKey<NavigatorState> _navigatorKey =
+      GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -83,10 +85,14 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => SectionCubit(DatabaseService.instance)),
-        BlocProvider(create: (context) => ItemSectionCubit(DatabaseService.instance)),
-        BlocProvider(create: (context) => LocaleCubit(initial: widget.initialLocale)),
-        BlocProvider(create: (context) => ThemeCubit(initial: widget.initialTheme)),
+        BlocProvider(
+            create: (context) => SectionCubit(DatabaseService.instance)),
+        BlocProvider(
+            create: (context) => ItemSectionCubit(DatabaseService.instance)),
+        BlocProvider(
+            create: (context) => LocaleCubit(initial: widget.initialLocale)),
+        BlocProvider(
+            create: (context) => ThemeCubit(initial: widget.initialTheme)),
       ],
       child: Builder(builder: (context) {
         final locale = context.select((LocaleCubit c) => c.state);
@@ -112,10 +118,12 @@ class _MyAppState extends State<MyApp> {
           switchInCurve: Curves.easeOutCubic,
           switchOutCurve: Curves.easeInCubic,
           transitionBuilder: (child, animation) {
-            final fade = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-            final offset = Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)
-                .chain(CurveTween(curve: Curves.easeOutCubic))
-                .animate(animation);
+            final fade =
+                CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+            final offset =
+                Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)
+                    .chain(CurveTween(curve: Curves.easeOutCubic))
+                    .animate(animation);
             return FadeTransition(
               opacity: fade,
               child: SlideTransition(position: offset, child: child),
@@ -127,5 +135,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-

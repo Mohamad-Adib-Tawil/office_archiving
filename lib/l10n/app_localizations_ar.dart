@@ -414,5 +414,231 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get deleteConfirmTitle => 'حذف';
+
+  @override
+  String get deleteConfirmBody =>
+      'هل أنت متأكد أنك تريد حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get deleteAction => 'حذف';
+
+  @override
+  String get keepAction => 'إبقاء';
+
+  @override
+  String get choose_image_source => 'اختر مصدر الصورة';
+
+  @override
+  String get snack_extraction_done => 'تم استخراج النص بنجاح!';
+
+  @override
+  String get snack_translation_done => 'تم ترجمة النص بنجاح!';
+
+  @override
+  String get snack_summary_done => 'تم تلخيص النص بنجاح!';
+
+  @override
+  String get snack_copy_done => 'تم نسخ النص';
+
+  @override
+  String get copy_action => 'نسخ';
+
+  @override
+  String get ai_features_title => 'ميزات الذكاء الاصطناعي';
+
+  @override
+  String get ai_extract_title => 'استخراج النص من الصور';
+
+  @override
+  String get ai_extract_desc => 'قم بتحويل الصور إلى نص قابل للتحرير';
+
+  @override
+  String get ai_extracted_text_title => 'النص المستخرج';
+
+  @override
+  String get ai_translate_action => 'ترجمة النص';
+
+  @override
+  String get ai_summary_action => 'تلخيص النص';
+
+  @override
+  String get ai_translated_text_title => 'النص المترجم';
+
+  @override
+  String get ai_summary_text_title => 'ملخص النص';
+
+  @override
+  String get ai_features_list_title => 'ميزات الذكاء الاصطناعي المتاحة';
+
+  @override
+  String get ai_feature_extract_title => '📷 استخراج النص من الصور';
+
+  @override
+  String get ai_feature_extract_desc =>
+      'تحويل الصور والمستندات الممسوحة إلى نص قابل للتحرير';
+
+  @override
+  String get ai_feature_translate_title => '🌐 ترجمة المستندات';
+
+  @override
+  String get ai_feature_translate_desc =>
+      'ترجمة النصوص تلقائياً بين العربية والإنجليزية';
+
+  @override
+  String get ai_feature_summarize_title => '📝 تلخيص المستندات';
+
+  @override
+  String get ai_feature_summarize_desc => 'إنشاء ملخصات ذكية للنصوص الطويلة';
+
+  @override
+  String get ai_feature_smart_organize_title => '🤖 التنظيم الذكي';
+
+  @override
+  String get ai_feature_smart_organize_desc =>
+      'اقتراحات تلقائية لتصنيف وتنظيم الملفات';
+
+  @override
+  String get ai_feature_smart_search_title => '🔍 البحث الذكي';
+
+  @override
+  String get ai_feature_smart_search_desc => 'البحث في محتوى الملفات والصور';
+
+  @override
+  String get coming_soon => 'قريباً';
+
+  @override
+  String get start_action => 'ابدأ';
+
+  @override
+  String get processing_ellipsis => 'جاري المعالجة...';
+
+  @override
+  String get tooltip_scanner => 'الماسح الضوئي';
+
+  @override
+  String get tooltip_ai => 'الذكاء الاصطناعي';
+
+  @override
+  String get tooltip_cleaner => 'منظف الملفات';
+
+  @override
+  String get doc_manage_title => 'إدارة المستندات';
+
+  @override
+  String get scan_document_action => 'مسح مستند';
+
+  @override
+  String get create_pdf_action => 'إنشاء PDF';
+
+  @override
+  String get digital_signature_action => 'توقيع رقمي';
+
+  @override
+  String get merge_files_action => 'دمج ملفات';
+
+  @override
+  String get tab_images => 'الصور';
+
+  @override
+  String get tab_documents => 'المستندات';
+
+  @override
+  String get tab_signatures => 'التوقيعات';
+
+  @override
+  String get empty_images => 'لا توجد صور ممسوحة';
+
+  @override
+  String get empty_documents => 'لا توجد مستندات';
+
+  @override
+  String get empty_signatures => 'لا توجد توقيعات';
+
+  @override
+  String get empty_hint_add_content => 'استخدم الأزرار أعلاه لإضافة محتوى جديد';
+
+  @override
+  String get snack_document_added => 'تم إضافة المستند بنجاح!';
+
+  @override
+  String get delete_document_title => 'حذف المستند';
+
+  @override
+  String get delete_document_message => 'هل أنت متأكد من حذف هذا المستند؟';
+
+  @override
+  String get delete_signature_title => 'حذف التوقيع';
+
+  @override
+  String get delete_signature_message => 'هل أنت متأكد من حذف هذا التوقيع؟';
+
+  @override
+  String get snack_document_deleted => 'تم حذف المستند';
+
+  @override
+  String get snack_signature_deleted => 'تم حذف التوقيع';
+
+  @override
+  String get snack_pdf_created => 'تم إنشاء ملف المستند بنجاح!';
+
+  @override
+  String get error_merge_min_files => 'يجب وجود ملفين على الأقل للدمج';
+
+  @override
+  String get snack_merge_success => 'تم دمج الملفات بنجاح!';
+
+  @override
+  String get snack_watermark_added => 'تم إضافة العلامة المائية بنجاح!';
+
+  @override
+  String get digital_signature_title => 'إنشاء توقيع رقمي';
+
+  @override
+  String get enter_signature_text => 'أدخل نص التوقيع:';
+
+  @override
+  String get signature_hint_example => 'مثال: محمد أحمد';
+
+  @override
+  String get create_action => 'إنشاء';
+
+  @override
+  String document_n(Object n) {
+    return 'مستند $n';
+  }
+
+  @override
+  String signature_n(Object n) {
+    return 'توقيع $n';
+  }
+
+  @override
+  String get view_action => 'عرض';
+
+  @override
+  String get share_action => 'مشاركة';
+
+  @override
+  String get watermark_action => 'علامة مائية';
+
+  @override
+  String get view_document_title => 'عرض المستند';
+
+  @override
+  String view_file_title(Object name) {
+    return 'عرض $name';
+  }
+
+  @override
+  String get share_prepared_prefix => 'تم تحضير الملف للمشاركة:';
+
+  @override
+  String get file_size => 'الحجم';
+
+  @override
+  String get file_date => 'التاريخ';
+
+  @override
   String get since => 'منذ';
 }

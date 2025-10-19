@@ -44,7 +44,8 @@ class SectionListView extends StatelessWidget {
                     child: EmptyState(
                       asset: kLogoOffice,
                       title: null,
-                      message: AppLocalizations.of(context).empty_sections_message,
+                      message:
+                          AppLocalizations.of(context).empty_sections_message,
                     ),
                   ),
                 )
@@ -210,7 +211,8 @@ class SectionListView extends StatelessWidget {
   }
 
   void _showOptionsDialog(BuildContext context, int index) {
-    final rootContext = context; // capture root context to use after sheet dismissal
+    final rootContext =
+        context; // capture root context to use after sheet dismissal
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     showModalBottomSheet(
@@ -267,7 +269,7 @@ class SectionListView extends StatelessWidget {
                     await Future.delayed(const Duration(milliseconds: 220));
 
                     String? imagePath;
-                    
+
                     // عرض خيارات للمستخدم لاختيار مصدر الصورة
                     if (!rootContext.mounted) return;
                     final source = await _showImageSourceDialog(rootContext);
@@ -283,9 +285,13 @@ class SectionListView extends StatelessWidget {
                     }
 
                     if (imagePath != null) {
-                      await sectionCubit.updateSectionCover(sections[index].id, imagePath);
+                      await sectionCubit.updateSectionCover(
+                          sections[index].id, imagePath);
                       if (rootContext.mounted) {
-                        UIFeedback.success(rootContext, AppLocalizations.of(rootContext).snackbar_cover_set);
+                        UIFeedback.success(
+                            rootContext,
+                            AppLocalizations.of(rootContext)
+                                .snackbar_cover_set);
                       }
                     }
                   },
@@ -299,7 +305,8 @@ class SectionListView extends StatelessWidget {
                     await sectionCubit.updateSectionCover(
                         sections[index].id, null);
                     if (context.mounted) {
-                      UIFeedback.info(context, AppLocalizations.of(context).snackbar_cover_cleared);
+                      UIFeedback.info(context,
+                          AppLocalizations.of(context).snackbar_cover_cleared);
                     }
                   },
                 ),
@@ -333,7 +340,8 @@ class SectionListView extends StatelessWidget {
     );
   }
 
-  static Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
+  static Future<ImageSource?> _showImageSourceDialog(
+      BuildContext context) async {
     return showDialog<ImageSource>(
       context: context,
       builder: (BuildContext context) {

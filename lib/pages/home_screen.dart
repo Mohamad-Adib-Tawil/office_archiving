@@ -12,6 +12,7 @@ import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
 import 'package:office_archiving/pages/file_cleanup_page.dart';
 import 'package:office_archiving/widgets/settings_sheet.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 import '../service/sqlite_service.dart';
 
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     // Scanner
                     IconButton(
-                      tooltip: 'الماسح الضوئي',
+                      tooltip: AppLocalizations.of(context).tooltip_scanner,
                       icon: const Icon(Icons.document_scanner_rounded),
                       color: scheme.primary,
                       onPressed: () {
@@ -109,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     // AI
                     IconButton(
-                      tooltip: 'الذكاء الاصطناعي',
+                      tooltip: AppLocalizations.of(context).tooltip_ai,
                       icon: const Icon(Icons.psychology_rounded),
                       color: scheme.primary,
                       onPressed: () {
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 72), // space reserved for center button
                     // Cleaner
                     IconButton(
-                      tooltip: 'منظف الملفات',
+                      tooltip: AppLocalizations.of(context).tooltip_cleaner,
                       icon: const Icon(Icons.cleaning_services_rounded),
                       color: scheme.primary,
                       onPressed: () {
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     // Settings
                     IconButton(
-                      tooltip: 'الإعدادات',
+                      tooltip: AppLocalizations.of(context).settings_tooltip,
                       icon: const Icon(Icons.settings_rounded),
                       color: scheme.primary,
                       onPressed: () {
