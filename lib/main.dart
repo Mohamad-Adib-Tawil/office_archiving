@@ -25,7 +25,7 @@ void main() async {
   if (saved != null) {
     initialTheme = AppTheme.values.firstWhere(
       (e) => e.name == saved,
-      orElse: () => AppTheme.indigo,
+      orElse: () => AppTheme.midnight,
     );
   }
   if (savedLocale != null) {

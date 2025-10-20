@@ -101,27 +101,25 @@ class _ThemeGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final items = <_ThemeItemData>[
-      _ThemeItemData(AppTheme.system, AppLocalizations.of(context).theme_system, scheme.primary,
-          Icons.brightness_auto),
+      _ThemeItemData(
+          AppTheme.system, AppLocalizations.of(context).theme_system, scheme.primary, Icons.brightness_auto),
       _ThemeItemData(
           AppTheme.light, AppLocalizations.of(context).theme_light, scheme.primary, Icons.wb_sunny_outlined),
       _ThemeItemData(
           AppTheme.dark, AppLocalizations.of(context).theme_dark, scheme.primary, Icons.nightlight_round),
-      _ThemeItemData(AppTheme.blue, AppLocalizations.of(context).theme_blue, Colors.blue, Icons.circle),
-      _ThemeItemData(AppTheme.purple, AppLocalizations.of(context).theme_purple, Colors.purple, Icons.circle),
-      _ThemeItemData(AppTheme.teal, AppLocalizations.of(context).theme_teal, Colors.teal, Icons.circle),
-      _ThemeItemData(AppTheme.orange, AppLocalizations.of(context).theme_orange, Colors.orange, Icons.circle),
-      _ThemeItemData(AppTheme.pink, AppLocalizations.of(context).theme_pink, Colors.pink, Icons.circle),
-      _ThemeItemData(AppTheme.indigo, AppLocalizations.of(context).theme_indigo, Colors.indigo, Icons.circle),
-      _ThemeItemData(
-          AppTheme.coral, AppLocalizations.of(context).theme_coral, const Color(0xFFFF6F61), Icons.circle),
-      _ThemeItemData(AppTheme.yellow, AppLocalizations.of(context).theme_yellow, Colors.amber, Icons.circle),
-      // New gradient themes
-      _ThemeItemData(AppTheme.oceanBlue, AppLocalizations.of(context).theme_ocean_blue, const Color(0xFF0099CC), Icons.waves),
-      _ThemeItemData(AppTheme.sunsetOrange, AppLocalizations.of(context).theme_sunset_orange, const Color(0xFFF7931E), Icons.wb_sunny),
-      _ThemeItemData(AppTheme.forestGreen, AppLocalizations.of(context).theme_forest_green, const Color(0xFF4F7942), Icons.forest),
-      _ThemeItemData(AppTheme.royalPurple, AppLocalizations.of(context).theme_royal_purple, const Color(0xFF9A031E), Icons.diamond),
-      _ThemeItemData(AppTheme.roseGold, AppLocalizations.of(context).theme_rose_gold, const Color(0xFFD4AF37), Icons.auto_awesome),
+      _ThemeItemData(AppTheme.midnight, 'Midnight', const Color(0xFF0B2239), Icons.circle),
+      _ThemeItemData(AppTheme.midnightAurora, 'Midnight Aurora', const Color(0xFF1B5E78), Icons.circle),
+      _ThemeItemData(AppTheme.glacierBlue, 'Glacier Blue', const Color(0xFF2F6DE1), Icons.circle),
+      _ThemeItemData(AppTheme.royalRed, 'Royal Red', const Color(0xFF8B0F24), Icons.circle),
+      _ThemeItemData(AppTheme.rubyBloom, 'Ruby Bloom', const Color(0xFFC2185B), Icons.circle),
+      _ThemeItemData(AppTheme.victorianGold, 'Victorian Gold', const Color(0xFFC6A15B), Icons.circle),
+      _ThemeItemData(AppTheme.sunsetAmber, 'Sunset Amber', const Color(0xFFFF8C42), Icons.circle),
+      _ThemeItemData(AppTheme.champagneGlow, 'Champagne Glow', const Color(0xFFF2D16B), Icons.circle),
+      _ThemeItemData(AppTheme.platinumSilver, 'Platinum Silver', const Color(0xFFB0BEC5), Icons.circle),
+      _ThemeItemData(AppTheme.onyxGraphite, 'Onyx Graphite', const Color(0xFF1C1F26), Icons.circle),
+      _ThemeItemData(AppTheme.jadeForest, 'Jade Forest', const Color(0xFF0F3D2E), Icons.circle),
+      _ThemeItemData(AppTheme.emeraldLuxe, 'Emerald Luxe', const Color(0xFF2BB673), Icons.circle),
+      _ThemeItemData(AppTheme.pearlMoon, 'Pearl Moon', const Color(0xFFECE5D9), Icons.circle),
     ];
 
     return GridView.builder(
