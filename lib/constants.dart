@@ -6,7 +6,6 @@ const kFontGTSectraFine = 'GT Sectra Fine';
 
 const Color kPrimaryColor =  Color(0xFF0B2239);
 
-const Color kPOpacityColor = Color(0xffAEFFBF);
 
 const Color kWhiteColor = Color(0xffffffff);
 
