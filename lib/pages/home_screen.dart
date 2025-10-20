@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     log('.............................Building HomeScreen......................................');
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: const CustomAppBarWidgetApp(showActions: false),
       bottomNavigationBar: _buildBottomBar(context),
       body: BlocBuilder<SectionCubit, SectionState>(
@@ -50,9 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is SectionLoaded) {
             log('Sections loaded successfully: ${state.sections}');
             return SectionListView(
-              sections: state.sections, 
-              sectionCubit: sectionCubit
-            );
+                sections: state.sections, sectionCubit: sectionCubit);
           } else if (state is SectionError) {
             log('Failed to load sections: ${state.message}');
             return Center(
@@ -88,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       offset: const Offset(0, -4),
                     ),
                   ],
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(24)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    const SizedBox(width: 72), // space reserved for center button
+                    const SizedBox(
+                        width: 72), // space reserved for center button
                     // Cleaner
                     IconButton(
                       tooltip: AppLocalizations.of(context).tooltip_cleaner,
@@ -150,7 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           context: context,
                           isScrollControlled: true,
                           shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
                           ),
                           builder: (_) => const SettingsSheet(),
                         );
@@ -167,7 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GestureDetector(
                 onTap: () {
                   HapticFeedback.mediumImpact();
-                  showAddSectionDialog(context, sectionNameController, sectionCubit);
+                  showAddSectionDialog(
+                      context, sectionNameController, sectionCubit);
                 },
                 child: Container(
                   width: 64,
@@ -188,7 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: const Icon(Icons.add_rounded, color: Colors.white, size: 32),
+                  child: const Icon(Icons.add_rounded,
+                      color: Colors.white, size: 32),
                 ),
               ),
             ),
