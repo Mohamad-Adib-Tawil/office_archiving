@@ -2,56 +2,161 @@ import 'package:flutter/material.dart';
 import 'package:office_archiving/constants.dart';
 
 class AppThemes {
-  static final ThemeData light =
-      _baseTheme(Brightness.light, seed: Colors.white)
-          .copyWith(scaffoldBackgroundColor: Colors.white);
+  static final ThemeData light = _buildTheme(
+    brightness: Brightness.light,
+    seed: kPrimaryColor,
+    surfaceLight: const Color(0xFFF6F7FB),
+  );
 
-  static final ThemeData dark =
-      _baseTheme(Brightness.dark, seed: kPrimaryColor);
+  static final ThemeData dark = _buildTheme(
+    brightness: Brightness.dark,
+    seed: kPrimaryColor,
+    surfaceDark: const Color(0xFF0E1218),
+  );
 
-  static final ThemeData yellow =
-      _baseTheme(Brightness.light, seed: Colors.amber);
-  static final ThemeData blue = _baseTheme(Brightness.light, seed: Colors.blue);
-  static final ThemeData purple =
-      _baseTheme(Brightness.light, seed: Colors.purple);
-  static final ThemeData teal = _baseTheme(Brightness.light, seed: Colors.teal);
-  static final ThemeData orange =
-      _baseTheme(Brightness.light, seed: Colors.orange);
-  static final ThemeData pink = _baseTheme(Brightness.light, seed: Colors.pink);
-  static final ThemeData indigo =
-      _baseTheme(Brightness.light, seed: Colors.indigo);
-  static final ThemeData coral =
-      _baseTheme(Brightness.light, seed: const Color(0xFFFF6F61));
+  static final ThemeData midnight = _buildTheme(
+    brightness: Brightness.dark,
+    seed: const Color(0xFF0B2239),
+    secondary: const Color(0xFF15375C),
+    tertiary: const Color(0xFF3A6EA5),
+    surfaceDark: const Color(0xFF0B1725),
+  );
 
-  // New gradient themes with beautiful colors
-  static final ThemeData oceanBlue =
-      _gradientTheme(const Color(0xFF006994), const Color(0xFF0099CC));
-  static final ThemeData sunsetOrange =
-      _gradientTheme(const Color(0xFFFF6B35), const Color(0xFFF7931E));
-  static final ThemeData forestGreen =
-      _gradientTheme(const Color(0xFF2D5016), const Color(0xFF4F7942));
-  static final ThemeData royalPurple =
-      _gradientTheme(const Color(0xFF6A0572), const Color(0xFF9A031E));
-  static final ThemeData roseGold =
-      _gradientTheme(const Color(0xFFE8B4B8), const Color(0xFFD4AF37));
+  static final ThemeData midnightAurora = _buildTheme(
+    brightness: Brightness.dark,
+    seed: const Color(0xFF10394F),
+    secondary: const Color(0xFF1B5E78),
+    tertiary: const Color(0xFF34A0A4),
+    surfaceDark: const Color(0xFF102431),
+  );
 
-  static ThemeData _baseTheme(Brightness brightness, {required Color seed}) {
-    var scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
+  static final ThemeData glacierBlue = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFF2F6DE1),
+    secondary: const Color(0xFF6EA8FE),
+    tertiary: const Color(0xFF133E87),
+    surfaceLight: const Color(0xFFF2F6FF),
+  );
+
+  static final ThemeData royalRed = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFF8B0F24),
+    secondary: const Color(0xFFD7263D),
+    tertiary: const Color(0xFF5C0011),
+    surfaceLight: const Color(0xFFFDF7F8),
+  );
+
+  static final ThemeData rubyBloom = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFFC2185B),
+    secondary: const Color(0xFFFF7597),
+    tertiary: const Color(0xFF8C1737),
+    surfaceLight: const Color(0xFFFDF3F6),
+  );
+
+  static final ThemeData victorianGold = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFFC6A15B),
+    secondary: const Color(0xFFE7C888),
+    tertiary: const Color(0xFF8C6D2F),
+    surfaceLight: const Color(0xFFFBF5EA),
+  );
+
+  static final ThemeData sunsetAmber = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFFFF8C42),
+    secondary: const Color(0xFFFFB347),
+    tertiary: const Color(0xFFCC5A1C),
+    surfaceLight: const Color(0xFFFFF7EF),
+  );
+
+  static final ThemeData champagneGlow = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFFF2D16B),
+    secondary: const Color(0xFFFFE8A3),
+    tertiary: const Color(0xFFBFA14A),
+    surfaceLight: const Color(0xFFFFFBF1),
+  );
+
+  static final ThemeData platinumSilver = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFFB0BEC5),
+    secondary: const Color(0xFFCFD8DC),
+    tertiary: const Color(0xFF7B8795),
+    surfaceLight: const Color(0xFFF6F7F8),
+  );
+
+  static final ThemeData onyxGraphite = _buildTheme(
+    brightness: Brightness.dark,
+    seed: const Color(0xFF1C1F26),
+    secondary: const Color(0xFF2A3039),
+    tertiary: const Color(0xFF4E5968),
+    surfaceDark: const Color(0xFF151920),
+  );
+
+  static final ThemeData jadeForest = _buildTheme(
+    brightness: Brightness.dark,
+    seed: const Color(0xFF0F3D2E),
+    secondary: const Color(0xFF1E6050),
+    tertiary: const Color(0xFF2E8A6D),
+    surfaceDark: const Color(0xFF0E201A),
+  );
+
+  static final ThemeData emeraldLuxe = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFF2BB673),
+    secondary: const Color(0xFF1E9E64),
+    tertiary: const Color(0xFF0B6B44),
+    surfaceLight: const Color(0xFFF1F9F4),
+  );
+
+  static final ThemeData pearlMoon = _buildTheme(
+    brightness: Brightness.light,
+    seed: const Color(0xFFECE5D9),
+    secondary: const Color(0xFFFFFFFF),
+    tertiary: const Color(0xFFC9C0B1),
+    surfaceLight: const Color(0xFFFCFAF7),
+  );
+
+  static ThemeData _buildTheme({
+    required Brightness brightness,
+    required Color seed,
+    Color? secondary,
+    Color? tertiary,
+    Color? surfaceLight,
+    Color? surfaceDark,
+  }) {
     final isDark = brightness == Brightness.dark;
 
-    if (isDark) {
-      // Tune dark palette for professional look
-      scheme = scheme.copyWith(
-        surface: const Color(0xFF13161B),
-        surfaceContainerHighest: const Color(0xFF1E2228),
-        outlineVariant: const Color(0xFF2A2F37),
-        primary: scheme.primary, // keep seed-derived primary
-        onPrimary: Colors.white,
-        onSurface: Colors.white.withValues(alpha: 0.92),
-      );
-    }
+    var scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
+    scheme = scheme.copyWith(
+      secondary: secondary ?? scheme.secondary,
+      tertiary: tertiary ?? scheme.tertiary,
+    );
 
-    final surface = scheme.surface;
+    final backgroundSurface = isDark
+        ? (surfaceDark ?? const Color(0xFF10151C))
+        : (surfaceLight ?? const Color(0xFFF8F9FB));
+
+    scheme = scheme.copyWith(
+      surface: backgroundSurface,
+      background: backgroundSurface,
+      onSurface:
+          isDark ? Colors.white.withOpacity(0.92) : scheme.onSurface,
+      onPrimary: isDark ? Colors.white : scheme.onPrimary,
+    );
+
+    final cardColor = isDark
+        ? Color.alphaBlend(Colors.white.withOpacity(0.06), backgroundSurface)
+        : Colors.white;
+    final inputFill = isDark
+        ? Color.alphaBlend(Colors.white.withOpacity(0.04), backgroundSurface)
+        : const Color(0xFFF3F5F7);
+
+    final baseTypography = isDark
+        ? Typography.material2021(platform: TargetPlatform.android).white
+        : Typography.material2021(platform: TargetPlatform.android).black;
+
     final onSurface = scheme.onSurface;
 
     return ThemeData(
@@ -59,12 +164,11 @@ class AppThemes {
       brightness: brightness,
       colorScheme: scheme,
       fontFamily: kFontGTSectraFine,
-      scaffoldBackgroundColor:
-          isDark ? scheme.surface : const Color(0xFFFAFAFA),
+      scaffoldBackgroundColor: backgroundSurface,
       appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: true,
-        backgroundColor: surface,
+        backgroundColor: backgroundSurface,
         foregroundColor: onSurface,
         titleTextStyle: TextStyle(
           fontFamily: kFontGTSectraFine,
@@ -73,23 +177,19 @@ class AppThemes {
           color: onSurface,
         ),
       ),
-      cardTheme: const CardThemeData(
+      cardTheme: CardThemeData(
+        color: cardColor,
         elevation: 2,
-        margin: EdgeInsets.all(8),
-      ).copyWith(
-        color: isDark ? const Color(0xFF1A1D22) : Colors.white,
+        margin: const EdgeInsets.all(8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      textTheme: (isDark
-              ? Typography.material2021(platform: TargetPlatform.android).white
-              : Typography.material2021(platform: TargetPlatform.android).black)
+      textTheme: baseTypography
           .apply(
-            bodyColor: onSurface.withValues(alpha: isDark ? 0.92 : 0.95),
+            bodyColor:
+                isDark ? Colors.white.withOpacity(0.9) : onSurface,
             displayColor: onSurface,
           )
           .copyWith(
-            bodyLarge:
-                TextStyle(height: 1.5, color: onSurface.withValues(alpha: 0.9)),
             titleMedium:
                 TextStyle(fontWeight: FontWeight.w600, color: onSurface),
           ),
@@ -103,15 +203,23 @@ class AppThemes {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: scheme.primary,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: scheme.primary,
         foregroundColor: scheme.onPrimary,
-        elevation: 2,
+        elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? const Color(0xFF15191E) : const Color(0xFFF3F5F7),
+        fillColor: inputFill,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
@@ -128,7 +236,7 @@ class AppThemes {
         thickness: 1,
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: isDark ? surface : Colors.white,
+        backgroundColor: cardColor,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
@@ -137,25 +245,6 @@ class AppThemes {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
-    );
-  }
-
-  // New gradient theme builder for beautiful gradient themes
-  static ThemeData _gradientTheme(Color primaryColor, Color secondaryColor) {
-    final gradientColor = Color.lerp(primaryColor, secondaryColor, 0.5)!;
-    return _baseTheme(Brightness.light, seed: gradientColor).copyWith(
-      // Add gradient customizations here
-      appBarTheme: AppBarTheme(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: gradientColor,
-        foregroundColor: Colors.white,
-      ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: gradientColor,
-        foregroundColor: Colors.white,
-        elevation: 4,
-      ),
     );
   }
 }

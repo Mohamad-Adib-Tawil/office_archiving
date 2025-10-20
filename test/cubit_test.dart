@@ -17,13 +17,13 @@ void main() {
       themeCubit.close();
     });
 
-    test('initial state is AppTheme.indigo', () {
-      expect(themeCubit.state, AppTheme.indigo);
+    test('initial state is AppTheme.midnight', () {
+      expect(themeCubit.state, AppTheme.midnight);
     });
 
     test('setTheme changes state', () async {
-      await themeCubit.setTheme(AppTheme.blue);
-      expect(themeCubit.state, AppTheme.blue);
+      await themeCubit.setTheme(AppTheme.glacierBlue);
+      expect(themeCubit.state, AppTheme.glacierBlue);
     });
 
     test('cycle changes theme', () {
@@ -33,12 +33,12 @@ void main() {
     });
 
     test('theme persistence works', () async {
-      await themeCubit.setTheme(AppTheme.coral);
+      await themeCubit.setTheme(AppTheme.sunsetAmber);
       
       // Create new cubit to test loading
       final newCubit = ThemeCubit();
       await Future.delayed(const Duration(milliseconds: 100)); // Wait for async load
-      expect(newCubit.state, AppTheme.coral);
+      expect(newCubit.state, AppTheme.sunsetAmber);
       newCubit.close();
     });
   });

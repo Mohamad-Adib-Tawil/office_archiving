@@ -3,16 +3,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/theme/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AppTheme { 
-  system, light, dark, yellow, blue, purple, teal, orange, pink, indigo, coral,
-  // New gradient themes
-  oceanBlue, sunsetOrange, forestGreen, royalPurple, roseGold
+enum AppTheme {
+  system,
+  light,
+  dark,
+  midnight,
+  midnightAurora,
+  glacierBlue,
+  royalRed,
+  rubyBloom,
+  victorianGold,
+  sunsetAmber,
+  champagneGlow,
+  platinumSilver,
+  onyxGraphite,
+  jadeForest,
+  emeraldLuxe,
+  pearlMoon,
 }
 
 class ThemeCubit extends Cubit<AppTheme> {
   static const _prefKey = 'app_theme';
 
-  ThemeCubit({AppTheme? initial}) : super(initial ?? AppTheme.indigo) {
+  ThemeCubit({AppTheme? initial}) : super(initial ?? AppTheme.midnight) {
     if (initial == null) {
       _loadTheme();
     }
@@ -40,32 +53,32 @@ class ThemeCubit extends Cubit<AppTheme> {
         return AppThemes.light;
       case AppTheme.dark:
         return AppThemes.dark;
-      case AppTheme.yellow:
-        return AppThemes.yellow;
-      case AppTheme.blue:
-        return AppThemes.blue;
-      case AppTheme.purple:
-        return AppThemes.purple;
-      case AppTheme.teal:
-        return AppThemes.teal;
-      case AppTheme.orange:
-        return AppThemes.orange;
-      case AppTheme.pink:
-        return AppThemes.pink;
-      case AppTheme.indigo:
-        return AppThemes.indigo;
-      case AppTheme.coral:
-        return AppThemes.coral;
-      case AppTheme.oceanBlue:
-        return AppThemes.oceanBlue;
-      case AppTheme.sunsetOrange:
-        return AppThemes.sunsetOrange;
-      case AppTheme.forestGreen:
-        return AppThemes.forestGreen;
-      case AppTheme.royalPurple:
-        return AppThemes.royalPurple;
-      case AppTheme.roseGold:
-        return AppThemes.roseGold;
+      case AppTheme.midnight:
+        return AppThemes.midnight;
+      case AppTheme.midnightAurora:
+        return AppThemes.midnightAurora;
+      case AppTheme.glacierBlue:
+        return AppThemes.glacierBlue;
+      case AppTheme.royalRed:
+        return AppThemes.royalRed;
+      case AppTheme.rubyBloom:
+        return AppThemes.rubyBloom;
+      case AppTheme.victorianGold:
+        return AppThemes.victorianGold;
+      case AppTheme.sunsetAmber:
+        return AppThemes.sunsetAmber;
+      case AppTheme.champagneGlow:
+        return AppThemes.champagneGlow;
+      case AppTheme.platinumSilver:
+        return AppThemes.platinumSilver;
+      case AppTheme.onyxGraphite:
+        return AppThemes.onyxGraphite;
+      case AppTheme.jadeForest:
+        return AppThemes.jadeForest;
+      case AppTheme.emeraldLuxe:
+        return AppThemes.emeraldLuxe;
+      case AppTheme.pearlMoon:
+        return AppThemes.pearlMoon;
     }
   }
 
@@ -78,32 +91,32 @@ class ThemeCubit extends Cubit<AppTheme> {
         return AppThemes.light;
       case AppTheme.dark:
         return AppThemes.dark;
-      case AppTheme.yellow:
-        return AppThemes.yellow;
-      case AppTheme.blue:
-        return AppThemes.blue;
-      case AppTheme.purple:
-        return AppThemes.purple;
-      case AppTheme.teal:
-        return AppThemes.teal;
-      case AppTheme.orange:
-        return AppThemes.orange;
-      case AppTheme.pink:
-        return AppThemes.pink;
-      case AppTheme.indigo:
-        return AppThemes.indigo;
-      case AppTheme.coral:
-        return AppThemes.coral;
-      case AppTheme.oceanBlue:
-        return AppThemes.oceanBlue;
-      case AppTheme.sunsetOrange:
-        return AppThemes.sunsetOrange;
-      case AppTheme.forestGreen:
-        return AppThemes.forestGreen;
-      case AppTheme.royalPurple:
-        return AppThemes.royalPurple;
-      case AppTheme.roseGold:
-        return AppThemes.roseGold;
+      case AppTheme.midnight:
+        return AppThemes.midnight;
+      case AppTheme.midnightAurora:
+        return AppThemes.midnightAurora;
+      case AppTheme.glacierBlue:
+        return AppThemes.glacierBlue;
+      case AppTheme.royalRed:
+        return AppThemes.royalRed;
+      case AppTheme.rubyBloom:
+        return AppThemes.rubyBloom;
+      case AppTheme.victorianGold:
+        return AppThemes.victorianGold;
+      case AppTheme.sunsetAmber:
+        return AppThemes.sunsetAmber;
+      case AppTheme.champagneGlow:
+        return AppThemes.champagneGlow;
+      case AppTheme.platinumSilver:
+        return AppThemes.platinumSilver;
+      case AppTheme.onyxGraphite:
+        return AppThemes.onyxGraphite;
+      case AppTheme.jadeForest:
+        return AppThemes.jadeForest;
+      case AppTheme.emeraldLuxe:
+        return AppThemes.emeraldLuxe;
+      case AppTheme.pearlMoon:
+        return AppThemes.pearlMoon;
     }
   }
 
@@ -111,11 +124,42 @@ class ThemeCubit extends Cubit<AppTheme> {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getString(_prefKey);
     if (saved != null) {
-      final parsed = AppTheme.values.firstWhere(
-        (e) => e.name == saved,
-        orElse: () => AppTheme.indigo,
-      );
-      emit(parsed);
+      try {
+        final parsed = AppTheme.values.firstWhere((e) => e.name == saved);
+        emit(parsed);
+        return;
+      } catch (_) {
+        emit(_legacyThemeFromString(saved));
+      }
+    }
+  }
+
+  AppTheme _legacyThemeFromString(String value) {
+    switch (value) {
+      case 'blue':
+      case 'indigo':
+      case 'oceanBlue':
+        return AppTheme.midnightAurora;
+      case 'teal':
+      case 'forestGreen':
+        return AppTheme.jadeForest;
+      case 'emerald':
+      case 'emeraldLuxe':
+        return AppTheme.emeraldLuxe;
+      case 'purple':
+      case 'royalPurple':
+        return AppTheme.royalRed;
+      case 'pink':
+      case 'roseGold':
+        return AppTheme.rubyBloom;
+      case 'coral':
+      case 'sunsetOrange':
+        return AppTheme.sunsetAmber;
+      case 'yellow':
+      case 'orange':
+        return AppTheme.champagneGlow;
+      default:
+        return AppTheme.midnight;
     }
   }
 }
