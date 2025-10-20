@@ -52,9 +52,9 @@ class SectionListView extends StatelessWidget {
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.8,
+                    crossAxisSpacing: 18,
+                    mainAxisSpacing: 18,
+                    childAspectRatio: 0.86,
                   ),
                   itemCount: sections.length,
                   itemBuilder: (context, index) {
@@ -90,70 +90,104 @@ class SectionListView extends StatelessWidget {
                             name: sections[index].name,
                           ),
                         ),
-                        closedBuilder: (context, open) => GestureDetector(
-                          onTap: open,
-                          onLongPress: () => _showOptionsDialog(context, index),
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      theme.colorScheme.primary
-                                          .withValues(alpha: 0.1),
-                                      theme.colorScheme.primary
-                                          .withValues(alpha: 0.05),
-                                    ],
-                                  ),
+                        closedBuilder: (context, open) => Material(
+                          type: MaterialType.transparency,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: open,
+                            onLongPress: () => _showOptionsDialog(context, index),
+                            child: Card(
+                              elevation: 6,
+                              shadowColor: theme.colorScheme.shadow.withOpacity(0.12),
+                              surfaceTintColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(
+                                  color: theme.colorScheme.outlineVariant.withOpacity(0.15),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Stack(
                                   children: [
-                                    Expanded(
-                                      child: FutureBuilder<String?>(
-                                        future: DatabaseService.instance
-                                            .getSectionCoverOrLatest(
-                                                sections[index].id),
-                                        builder: (context, snap) {
-                                          final path = snap.data;
-                                          if (path != null &&
-                                              path.isNotEmpty &&
-                                              File(path).existsSync()) {
-                                            return ClipRRect(
-                                              borderRadius: BorderRadius.zero,
-                                              child: Image.file(
-                                                File(path),
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (ctx, _, __) =>
-                                                    _buildSectionFallback(ctx),
-                                              ),
-                                            );
-                                          }
-                                          return _buildSectionFallback(context);
-                                        },
+                                    // Background decorative gradient
+                                    Positioned.fill(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              theme.colorScheme.primaryContainer.withValues(alpha: 0.18),
+                                              theme.colorScheme.primary.withValues(alpha: 0.06),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Text(
-                                        sections[index].name,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                          overflow: TextOverflow.ellipsis,
+                                    // Content
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(
+                                          child: FutureBuilder<String?>(
+                                            future: DatabaseService.instance
+                                                .getSectionCoverOrLatest(sections[index].id),
+                                            builder: (context, snap) {
+                                              final path = snap.data;
+                                              if (path != null && path.isNotEmpty && File(path).existsSync()) {
+                                                return Image.file(
+                                                  File(path),
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (ctx, _, __) => _buildSectionFallback(ctx),
+                                                );
+                                              }
+                                              return _buildSectionFallback(context);
+                                            },
+                                          ),
                                         ),
-                                        maxLines: 2,
+                                        Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Text(
+                                            sections[index].name,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: Theme.of(context).colorScheme.onSurface,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            maxLines: 2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Options overlay button
+                                    Positioned(
+                                      top: 10,
+                                      right: 10,
+                                      child: InkWell(
+                                        onTap: () => _showOptionsDialog(context, index),
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: theme.colorScheme.surface.withOpacity(0.65),
+                                            borderRadius: BorderRadius.circular(12),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: theme.colorScheme.shadow.withOpacity(0.08),
+                                                blurRadius: 10,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Icon(
+                                            Icons.more_horiz_rounded,
+                                            size: 18,
+                                            color: theme.colorScheme.onSurface.withOpacity(0.65),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],

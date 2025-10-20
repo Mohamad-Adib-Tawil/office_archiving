@@ -83,6 +83,7 @@ class GridViewItemsSuccess extends StatelessWidget {
     final isArabic = item.name.contains(RegExp(
         r'[\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\uFE70-\uFEFF\uFB50-\uFDFF\uFEE0-\uFEFF]'));
 
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Text(
@@ -91,15 +92,20 @@ class GridViewItemsSuccess extends StatelessWidget {
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurface,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           item.fileType?.toUpperCase() ?? AppLocalizations.of(context).unknown_file_type,
           style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.bold),
+            fontSize: 11,
+            color: scheme.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );
@@ -153,16 +159,18 @@ class GridViewItemsSuccess extends StatelessWidget {
   }
 
   Widget _buildFileThumbnail(BuildContext context, ItemSection item) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: scheme.surface,
+        border: Border.all(color: scheme.outlineVariant.withOpacity(0.20)),
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
+            color: scheme.shadow.withOpacity(0.08),
+            spreadRadius: 0,
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
