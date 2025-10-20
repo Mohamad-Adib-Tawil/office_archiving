@@ -113,24 +113,7 @@ class _MyAppState extends State<MyApp> {
           home: const SplashView(),
         );
 
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 350),
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (child, animation) {
-            final fade =
-                CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-            final offset =
-                Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)
-                    .chain(CurveTween(curve: Curves.easeOutCubic))
-                    .animate(animation);
-            return FadeTransition(
-              opacity: fade,
-              child: SlideTransition(position: offset, child: child),
-            );
-          },
-          child: app,
-        );
+        return app;
       }),
     );
   }
