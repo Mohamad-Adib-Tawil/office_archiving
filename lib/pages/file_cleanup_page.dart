@@ -603,11 +603,15 @@ class _FileCleanupPageState extends State<FileCleanupPage>
                     const Icon(Icons.check_circle,
                         color: Colors.green, size: 20),
                     const SizedBox(width: 8),
-                    Text(
-                      AppLocalizations.of(context).no_issues_found,
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context).no_issues_found,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
