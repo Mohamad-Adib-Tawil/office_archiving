@@ -27,7 +27,7 @@ dependencies:
   shimmer: ^3.0.0
   
   # AI Features Dependencies (temporarily disabled due to network issues)
-  # google_mlkit_text_recognition: ^0.12.0
+  google_mlkit_text_recognition: ^0.12.0
   # google_mlkit_language_id: ^0.10.0
   http: ^1.1.0
   translator: ^1.0.0

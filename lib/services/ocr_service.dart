@@ -1,19 +1,18 @@
-// import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart'; // Temporarily disabled
+import 'dart:developer';
+
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class OCRService {
   static final OCRService _instance = OCRService._internal();
   factory OCRService() => _instance;
   OCRService._internal();
-  // late final TextRecognizer _textRecognizer; // Temporarily disabled
+  late final TextRecognizer _textRecognizer;
   bool _isInitialized = false;
 
   Future<void> initialize() async {
     if (_isInitialized) return;
-    
-    // Temporarily disabled ML Kit initialization
-    // _textRecognizer = TextRecognizer(
-    //   script: TextRecognitionScript.latin,
-    // );
+    // Initialize ML Kit Text Recognizer (Latin script works for most English docs)
+    _textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     _isInitialized = true;
   }
 
@@ -23,9 +22,11 @@ class OCRService {
     }
 
     try {
-      // Temporarily return mock text for testing
-      return "OCR temporarily disabled - ML Kit libraries not available.\nImage path: $imagePath\nThis is a placeholder text for testing image picker functionality.";
+      final inputImage = InputImage.fromFilePath(imagePath);
+      final recognizedText = await _textRecognizer.processImage(inputImage);
+      return recognizedText.text;
     } catch (e) {
+      log('OCR extractTextFromImage failed: $e');
       throw Exception('فشل في استخراج النص: $e');
     }
   }
@@ -36,30 +37,35 @@ class OCRService {
     }
 
     try {
-      final text = await extractTextFromImage(imagePath);
-      
+      final inputImage = InputImage.fromFilePath(imagePath);
+      final recognizedText = await _textRecognizer.processImage(inputImage);
+
+      final blocks = recognizedText.blocks
+          .map((b) => {
+                'text': b.text,
+                'lines': b.lines.map((l) => {'text': l.text}).toList(),
+              })
+          .toList();
+
       return {
-        'fullText': text,
-        'blocks': [
-          {
-            'text': text,
-            'confidence': 0.9,
-            'lines': text.split('\n').map((line) => {'text': line}).toList(),
-          }
-        ],
-        'totalBlocks': 1,
-        'hasText': text.isNotEmpty,
+        'fullText': recognizedText.text,
+        'blocks': blocks,
+        'totalBlocks': blocks.length,
+        'hasText': recognizedText.text.trim().isNotEmpty,
       };
     } catch (e) {
+      log('OCR extractTextWithDetails failed: $e');
       throw Exception('فشل في تحليل الصورة: $e');
     }
   }
 
   Future<bool> isTextDetected(String imagePath) async {
     try {
-      final result = await extractTextFromImage(imagePath);
-      return result.trim().isNotEmpty;
+      final inputImage = InputImage.fromFilePath(imagePath);
+      final recognizedText = await _textRecognizer.processImage(inputImage);
+      return recognizedText.text.trim().isNotEmpty;
     } catch (e) {
+      log('OCR isTextDetected failed: $e');
       return false;
     }
   }
@@ -81,12 +87,14 @@ class OCRService {
       
       return words.take(10).toList(); // أفضل 10 كلمات مفتاحية
     } catch (e) {
+      log('OCR extractKeywords failed: $e');
       return [];
     }
   }
 
   void dispose() {
     if (_isInitialized) {
+      _textRecognizer.close();
       _isInitialized = false;
     }
   }
