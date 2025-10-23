@@ -39,6 +39,127 @@ class _FileCleanupPageState extends State<FileCleanupPage>
     _animationController.forward();
   }
 
+  // Auto cleanup: ensure scan is run, then clean broken entries.
+  Future<void> _autoCleanup() async {
+    // If user didn't scan yet, run a quick scan first
+    if (_totalFilesScanned == 0 && !_isScanning) {
+      await _scanForIssues();
+    }
+
+    if (_brokenFiles.isNotEmpty) {
+      await _cleanupBrokenFiles();
+    } else if (_duplicateFiles.isNotEmpty) {
+      // Ask confirmation to remove duplicates
+      if (!mounted) return;
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(AppLocalizations.of(context).deleteConfirmTitle),
+          content: Text(AppLocalizations.of(context).deleteConfirmBody),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(AppLocalizations.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(AppLocalizations.of(context).deleteAction),
+            ),
+          ],
+        ),
+      );
+      if (confirm == true) {
+        await _cleanupDuplicatesKeepLargest();
+        if (mounted) {
+          HapticFeedback.mediumImpact();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context).snackbar_item_deleted),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+        await _scanForIssues();
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).no_issues_found),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    }
+  }
+
+  // Remove duplicates by file name, keep the largest file per name
+  Future<void> _cleanupDuplicatesKeepLargest() async {
+    try {
+      setState(() {
+        _isCleaningUp = true;
+      });
+      final allItems = await DatabaseService.instance.getAllItems();
+      final Map<String, List<Map<String, dynamic>>> byName = {};
+      for (final item in allItems) {
+        final name = item['name'] as String?;
+        if (name == null) continue;
+        (byName[name] ??= []).add(item);
+      }
+
+      double saved = 0;
+      for (final entry in byName.entries) {
+        final list = entry.value;
+        if (list.length <= 1) continue;
+        // compute sizes
+        final withSizes = list.map((m) {
+          final path = m['filePath'] as String?;
+          int size = 0;
+          if (path != null) {
+            final f = File(path);
+            if (f.existsSync()) size = f.lengthSync();
+          }
+          return {
+            'id': m['id'],
+            'path': path,
+            'size': size,
+          };
+        }).toList();
+
+        // keep largest
+        withSizes.sort((a, b) => (b['size'] as int).compareTo(a['size'] as int));
+        final removeList = withSizes.skip(1);
+        for (final r in removeList) {
+          final id = r['id'] as int;
+          final path = r['path'] as String?;
+          final size = r['size'] as int;
+          await DatabaseService.instance.deleteItem(id);
+          if (path != null) {
+            final f = File(path);
+            if (f.existsSync()) {
+              try {
+                await f.delete();
+                saved += size.toDouble();
+              } catch (_) {}
+            }
+          }
+        }
+      }
+
+      setState(() {
+        _spaceSaved += saved;
+        _isCleaningUp = false;
+      });
+    } catch (e) {
+      if (mounted) {
+        _isCleaningUp = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context).cleanup_error}: $e')),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -539,9 +660,7 @@ class _FileCleanupPageState extends State<FileCleanupPage>
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: (_brokenFiles.isNotEmpty && !_isCleaningUp)
-                  ? _cleanupBrokenFiles
-                  : null,
+              onPressed: !_isCleaningUp ? _autoCleanup : null,
               icon: _isCleaningUp
                   ? const SizedBox(
                       width: 20,
@@ -554,8 +673,7 @@ class _FileCleanupPageState extends State<FileCleanupPage>
                   ? AppLocalizations.of(context).cleaning
                   : AppLocalizations.of(context).auto_cleanup),
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    _brokenFiles.isNotEmpty ? Colors.green : Colors.grey,
+                backgroundColor: hasIssues ? Colors.green : Colors.grey,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
