@@ -11,6 +11,7 @@ import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/widgets/empty_state.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/constants.dart';
+import 'package:office_archiving/screens/editor/internal_editor_page.dart';
 
 class GridViewItemsSuccess extends StatelessWidget {
   const GridViewItemsSuccess({
@@ -205,6 +206,17 @@ class GridViewItemsSuccess extends StatelessWidget {
 
     if (fileType == null || filePath == null || !File(filePath).existsSync()) {
       _showErrorDialog(context);
+      return;
+    }
+
+    // فتح الصور داخل المحرر الداخلي كامل الميزات
+    if (_imageTypes.contains(fileType)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => InternalEditorPage(initialImagePath: filePath),
+        ),
+      );
       return;
     }
 

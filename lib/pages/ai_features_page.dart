@@ -7,7 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 
 class AIFeaturesPage extends StatefulWidget {
-  const AIFeaturesPage({super.key});
+  final String? initialText; // نص أولي يتم تمريره من المحرر الداخلي
+  const AIFeaturesPage({super.key, this.initialText});
 
   @override
   State<AIFeaturesPage> createState() => _AIFeaturesPageState();
@@ -39,6 +40,10 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
     _summarizationService = AISummarizationService();
     _ocrService = OCRService();
     _animationController.forward();
+    // تهيئة النص المستخرج إن تم تمريره من شاشة أخرى (مثل المحرر الداخلي)
+    if (widget.initialText != null && widget.initialText!.trim().isNotEmpty) {
+      _extractedText = widget.initialText!.trim();
+    }
   }
 
   @override

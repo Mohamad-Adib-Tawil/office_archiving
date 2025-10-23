@@ -5,6 +5,7 @@ import 'package:office_archiving/cubit/locale_cubit/locale_cubit.dart';
 import 'package:office_archiving/cubit/theme_cubit/theme_cubit.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsSheet extends StatelessWidget {
   const SettingsSheet({super.key});
@@ -85,6 +86,80 @@ class SettingsSheet extends StatelessWidget {
                     ?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             _ThemeGrid(themeState: themeState),
+            const SizedBox(height: 8),
+            InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () async {
+                final uri = Uri.parse('https://mohamad-adib-tawil.github.io/CV/');
+                bool opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+                if (!opened) {
+                  opened = await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+                }
+                if (!opened) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('تعذّر فتح الرابط')),
+                  );
+                }
+              },
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 18,
+                            backgroundColor: theme.colorScheme.primary.withOpacity(.12),
+                            backgroundImage: const NetworkImage(
+                              'https://avatars.githubusercontent.com/u/223110350?s=400&u=75cb795be7688812bda8863968c8139a0fe6a96a&v=4',
+                            ),
+                            onBackgroundImageError: (_, __) {},
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  locale.languageCode == 'ar'
+                                      ? 'تم تصميم التطبيق بواسطة المبرمج'
+                                      : 'Designed by the developer',
+                                  style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'محمد أديب طويل',
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
+                                Text(
+                                  'Mohamad Adib Tawil',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'اضغط لفتح السيرة الذاتية',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.primary.withOpacity(.8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 8),
           ],
         ),

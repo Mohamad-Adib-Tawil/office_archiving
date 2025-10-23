@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart'; // لم نعد نحتاجها هنا بعد ربط ScanService
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/services/pdf_service.dart';
+import 'package:office_archiving/services/scan_service.dart';
+import 'package:office_archiving/screens/editor/signature_pad.dart';
+import 'package:office_archiving/helper/pdf_viwer.dart';
 
 class DocumentManagementPage extends StatefulWidget {
   const DocumentManagementPage({super.key});
@@ -77,7 +81,14 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                       Text(AppLocalizations.of(context).view_action),
                     ],
                   ),
-                  onTap: () => _viewTextFile(filePath),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MyPdfViewer(filePath: filePath),
+                      ),
+                    );
+                  },
                 ),
                 PopupMenuItem(
                   child: Row(
@@ -107,22 +118,17 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
   Future<void> _scanDocument() async {
     try {
       setState(() => _isProcessing = true);
-
-      final source = await _showImageSourceDialog();
-      if (source == null) return;
-
-      final picker = ImagePicker();
-      final image = await picker.pickImage(
-        source: source,
-        imageQuality: 90,
-      );
-
-      if (image != null) {
-        setState(() {
-          _documentImages.add(image.path);
-        });
-        if (!mounted) return;
-        _showSuccessSnackBar(AppLocalizations.of(context).snack_document_added);
+      // استخدام خدمة المسح الذكي
+      final scanned = await ScanService().scanDocument(pageLimit: 1);
+      if (scanned != null) {
+        setState(() => _documentImages.add(scanned.path));
+        if (mounted) {
+          _showSuccessSnackBar(AppLocalizations.of(context).snack_document_added);
+        }
+      } else {
+        if (mounted) {
+          _showErrorSnackBar(AppLocalizations.of(context).no_image_selected);
+        }
       }
     } catch (e) {
       if (!mounted) return;
@@ -132,38 +138,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     }
   }
 
-  // عرض خيارات مصدر الصورة
-  Future<ImageSource?> _showImageSourceDialog() async {
-    return showDialog<ImageSource>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context).choose_image_source),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt, color: Colors.blue),
-                title: Text(AppLocalizations.of(context).from_camera),
-                onTap: () => Navigator.of(context).pop(ImageSource.camera),
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library, color: Colors.green),
-                title: Text(AppLocalizations.of(context).from_gallery),
-                onTap: () => Navigator.of(context).pop(ImageSource.gallery),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context).cancel),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // تم استبدال خيارات المصدر بخدمة ScanService
 
   // حذف مستند
   void _deleteDocument(int index) {
@@ -230,8 +205,8 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                colorScheme.primary.withOpacity(0.1),
-                colorScheme.secondary.withOpacity(0.05),
+                colorScheme.primary.withValues(alpha: 0.1),
+                colorScheme.secondary.withValues(alpha: 0.05),
               ],
             ),
           ),
@@ -248,14 +223,14 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    colorScheme.primary.withOpacity(0.1),
-                    colorScheme.secondary.withOpacity(0.05),
+                    colorScheme.primary.withValues(alpha: 0.1),
+                    colorScheme.secondary.withValues(alpha: 0.05),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),
@@ -266,7 +241,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -498,7 +473,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
@@ -744,26 +719,9 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
 
     try {
       setState(() => _isProcessing = true);
-
-      // إنشاء ملف PDF بسيط (نص فقط لأننا لا نملك مكتبة PDF)
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'document_${DateTime.now().millisecondsSinceEpoch}.txt';
-      final file = File('${directory.path}/$fileName');
-
-      String content =
-          'مستند PDF تم إنشاؤه من ${_documentImages.length} صورة\n';
-      content += 'تاريخ الإنشاء: ${DateTime.now()}\n\n';
-
-      for (int i = 0; i < _documentImages.length; i++) {
-        content += 'الصورة ${i + 1}: ${_documentImages[i].split('/').last}\n';
-      }
-
-      await file.writeAsString(content);
-
-      setState(() {
-        _pdfFiles.add(file.path);
-      });
-
+      // استخدام خدمة PDF لإنشاء ملف فعلي من الصور
+      final pdfFile = await PdfService().createPdfFromImages(_documentImages);
+      setState(() => _pdfFiles.add(pdfFile.path));
       _showSuccessSnackBar(AppLocalizations.of(context).snack_pdf_created);
     } catch (e) {
       _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
@@ -781,30 +739,12 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
 
     try {
       setState(() => _isProcessing = true);
-
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'merged_${DateTime.now().millisecondsSinceEpoch}.txt';
-      final file = File('${directory.path}/$fileName');
-
-      String mergedContent = 'مستند مدمج\n';
-      mergedContent += 'تاريخ الدمج: ${DateTime.now()}\n';
-      mergedContent += 'عدد الملفات المدمجة: ${_pdfFiles.length}\n\n';
-
-      for (int i = 0; i < _pdfFiles.length; i++) {
-        mergedContent += '--- الملف ${i + 1} ---\n';
-        final sourceFile = File(_pdfFiles[i]);
-        if (await sourceFile.exists()) {
-          final content = await sourceFile.readAsString();
-          mergedContent += content + '\n\n';
-        }
-      }
-
-      await file.writeAsString(mergedContent);
-
-      setState(() {
-        _pdfFiles.add(file.path);
-      });
-
+      final pdfList = _pdfFiles
+          .where((p) => p.toLowerCase().endsWith('.pdf'))
+          .map((p) => File(p))
+          .toList();
+      final merged = await PdfService().mergePdfs(pdfList);
+      setState(() => _pdfFiles.add(merged.path));
       _showSuccessSnackBar(AppLocalizations.of(context).snack_merge_success);
     } catch (e) {
       _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
@@ -823,25 +763,13 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
         _showErrorSnackBar(AppLocalizations.of(context).file_not_found);
         return;
       }
-
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName =
-          'watermarked_${DateTime.now().millisecondsSinceEpoch}.txt';
-      final newFile = File('${directory.path}/$fileName');
-
-      String content = await sourceFile.readAsString();
-      String watermarkedContent =
-          '*** أرشيف المكتب - ${DateTime.now().year} ***\n';
-      watermarkedContent += '*** مستند محمي بعلامة مائية ***\n\n';
-      watermarkedContent += content;
-      watermarkedContent += '\n\n*** نهاية المستند المحمي ***';
-
-      await newFile.writeAsString(watermarkedContent);
-
-      setState(() {
-        _pdfFiles.add(newFile.path);
-      });
-
+      if (!filePath.toLowerCase().endsWith('.pdf')) {
+        _showErrorSnackBar(AppLocalizations.of(context).unknown_file_type);
+        return;
+      }
+      final wm = await PdfService().addWatermark(sourceFile,
+          watermark: 'أرشيف المكتب ${DateTime.now().year}');
+      setState(() => _pdfFiles.add(wm.path));
       _showSuccessSnackBar(AppLocalizations.of(context).snack_watermark_added);
     } catch (e) {
       _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
@@ -852,61 +780,22 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
 
   // إنشاء توقيع رقمي (فعلي)
   Future<void> _createDigitalSignature() async {
-    final TextEditingController signatureController = TextEditingController();
-
-    final signature = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).digital_signature_title),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(AppLocalizations.of(context).enter_signature_text),
-            const SizedBox(height: 16),
-            TextField(
-              controller: signatureController,
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).signature_hint_example,
-                border: const OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context).cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, signatureController.text),
-            child: Text(AppLocalizations.of(context).create_action),
-          ),
-        ],
-      ),
-    );
-
-    if (signature == null || signature.isEmpty) return;
-
     try {
       setState(() => _isProcessing = true);
-
+      // فتح لوحة التوقيع وحفظ الناتج كصورة
+      final bytes = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const SignaturePad()),
+      );
+      if (bytes == null) {
+        setState(() => _isProcessing = false);
+        return;
+      }
       final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'signature_${DateTime.now().millisecondsSinceEpoch}.txt';
+      final fileName = 'signature_${DateTime.now().millisecondsSinceEpoch}.png';
       final file = File('${directory.path}/$fileName');
-
-      String signatureContent = 'توقيع رقمي\n';
-      signatureContent += '================\n';
-      signatureContent += 'الاسم: $signature\n';
-      signatureContent += 'التاريخ: ${DateTime.now()}\n';
-      signatureContent += 'الوقت: ${DateTime.now().toLocal()}\n';
-      signatureContent += '================\n';
-
-      await file.writeAsString(signatureContent);
-
-      setState(() {
-        _signatures.add(file.path);
-      });
-
+      await file.writeAsBytes(bytes);
+      setState(() => _signatures.add(file.path));
       _showSuccessSnackBar(AppLocalizations.of(context).snack_document_added);
     } catch (e) {
       _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
