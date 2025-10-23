@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_tesseract_ocr/flutter_tesseract_ocr.dart';
 import 'package:image/image.dart' as img;
+import 'package:printing/printing.dart';
+import 'package:office_archiving/service/sqlite_service.dart';
 
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
@@ -18,6 +20,75 @@ class OCRService {
     // Initialize ML Kit Text Recognizer (Latin script works for most English docs)
     _textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     _isInitialized = true;
+  }
+
+  /// OCR for multi-page PDF -> concatenated text
+  Future<String> recognizePdfToText(String pdfPath, {String lang = 'auto'}) async {
+    try {
+      final data = await File(pdfPath).readAsBytes();
+      final pages = Printing.raster(data, dpi: 144);
+      final buffer = StringBuffer();
+      int index = 1;
+      await for (final page in pages) {
+        final pngBytes = await page.toPng();
+        final tmp = await _writeTempFile(pngBytes, suffix: '_pdf_$index.png');
+        final t = await recognizeTextAdvanced(tmp.path, lang: lang);
+        if (t.trim().isNotEmpty) {
+          buffer.writeln('--- Page $index ---');
+          buffer.writeln(t);
+          buffer.writeln();
+        }
+        index++;
+      }
+      return buffer.toString();
+    } catch (e) {
+      log('recognizePdfToText failed: $e');
+      rethrow;
+    }
+  }
+
+  /// Detect file type and save OCR text to DB for given item
+  Future<void> processItemAndSaveOcr({
+    required int id,
+    required String filePath,
+    required String fileType,
+    String lang = 'auto',
+  }) async {
+    String text;
+    final t = fileType.toLowerCase();
+    if (t == 'pdf') {
+      text = await recognizePdfToText(filePath, lang: lang);
+    } else {
+      text = await recognizeTextAdvanced(filePath, lang: lang);
+    }
+    await DatabaseService.instance.updateItemOcr(
+      id,
+      ocrText: text,
+      ocrLang: lang,
+      hasText: text.trim().isNotEmpty,
+      processedAt: DateTime.now(),
+    );
+  }
+
+  /// Batch OCR for items missing OCR text
+  Future<int> batchProcessMissingOcr({
+    String lang = 'auto',
+    int? limit,
+    void Function(int processed, int total)? onProgress,
+  }) async {
+    final rows = await DatabaseService.instance.getItemsMissingOcr(limit: limit);
+    int processed = 0;
+    final total = rows.length;
+    for (final row in rows) {
+      final id = row['id'] as int;
+      final path = row['filePath'] as String?;
+      final type = (row['fileType'] as String?) ?? '';
+      if (path == null || path.isEmpty) continue;
+      await processItemAndSaveOcr(id: id, filePath: path, fileType: type, lang: lang);
+      processed++;
+      if (onProgress != null) onProgress(processed, total);
+    }
+    return processed;
   }
 
   // --------- Internal helpers ---------
@@ -121,8 +192,8 @@ class OCRService {
       // 1) Preprocess
       final preprocessedPath = await _preprocessForOcr(imagePath);
 
-      // 2) Try rotations 0/90/180/270 and pick best result
-      final angles = [0, 90, 180, 270];
+      // 2) Try rotations with slight deskew around 0 and 90/180/270 if needed
+      final angles = [0, -5, 5, 90, 180, 270];
       String bestText = '';
       int bestScore = -1;
 
