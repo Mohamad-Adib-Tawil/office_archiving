@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 
 class FileCleanupPage extends StatefulWidget {
   const FileCleanupPage({super.key});
@@ -133,7 +135,7 @@ class _FileCleanupPageState extends State<FileCleanupPage>
           final id = r['id'] as int;
           final path = r['path'] as String?;
           final size = r['size'] as int;
-          await DatabaseService.instance.deleteItem(id);
+          await DatabaseService.instance.deleteItemAndFixSection(id);
           if (path != null) {
             final f = File(path);
             if (f.existsSync()) {
@@ -157,6 +159,12 @@ class _FileCleanupPageState extends State<FileCleanupPage>
           SnackBar(content: Text('${AppLocalizations.of(context).cleanup_error}: $e')),
         );
       }
+    }
+    // Refresh sections UI (covers/counts) after duplicates cleanup
+    if (mounted) {
+      try {
+        context.read<SectionCubit>().loadSections();
+      } catch (_) {}
     }
   }
 
@@ -305,7 +313,8 @@ class _FileCleanupPageState extends State<FileCleanupPage>
       int cleanedCount = 0;
 
       for (var brokenFile in _brokenFiles) {
-        await DatabaseService.instance.deleteItem(brokenFile['id']);
+        await DatabaseService.instance
+            .deleteItemAndFixSection(brokenFile['id']);
         cleanedCount++;
         _spaceSaved += 1024;
       }
@@ -332,6 +341,12 @@ class _FileCleanupPageState extends State<FileCleanupPage>
     });
 
     await _scanForIssues();
+    // Refresh sections UI (covers/counts) after cleanup
+    if (mounted) {
+      try {
+        context.read<SectionCubit>().loadSections();
+      } catch (_) {}
+    }
   }
 
   String _formatBytes(double bytes) {
