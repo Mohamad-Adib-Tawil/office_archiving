@@ -48,6 +48,28 @@ class DatabaseService {
         FOREIGN KEY(sectionId) REFERENCES section(id)
       )
     ''');
+    // Migration: add OCR columns if missing
+    try {
+      final columns = await db.rawQuery("PRAGMA table_info('items')");
+      bool hasOcrText = columns.any((c) => c['name'] == 'ocrText');
+      bool hasOcrLang = columns.any((c) => c['name'] == 'ocrLang');
+      bool hasOcrProcessedAt = columns.any((c) => c['name'] == 'ocrProcessedAt');
+      bool hasOcrHasText = columns.any((c) => c['name'] == 'ocrHasText');
+      if (!hasOcrText) {
+        await db.execute("ALTER TABLE items ADD COLUMN ocrText TEXT");
+      }
+      if (!hasOcrLang) {
+        await db.execute("ALTER TABLE items ADD COLUMN ocrLang TEXT");
+      }
+      if (!hasOcrProcessedAt) {
+        await db.execute("ALTER TABLE items ADD COLUMN ocrProcessedAt TEXT");
+      }
+      if (!hasOcrHasText) {
+        await db.execute("ALTER TABLE items ADD COLUMN ocrHasText INTEGER DEFAULT 0");
+      }
+    } catch (e) {
+      log('items OCR columns migration error: $e');
+    }
     
     _isInitialized = true;
     log('Database initialized successfully');
@@ -210,6 +232,54 @@ class DatabaseService {
       'items',
       where: 'name LIKE ?',
       whereArgs: ['%$query%'],
+    );
+  }
+
+  // Save OCR result for an item
+  Future<void> updateItemOcr(
+    int id, {
+    required String ocrText,
+    String? ocrLang,
+    bool? hasText,
+    DateTime? processedAt,
+  }) async {
+    await db.update(
+      'items',
+      {
+        'ocrText': ocrText,
+        'ocrLang': ocrLang,
+        'ocrHasText': (hasText ?? ocrText.trim().isNotEmpty) ? 1 : 0,
+        'ocrProcessedAt': (processedAt ?? DateTime.now()).toIso8601String(),
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // Items missing OCR (either null or empty text)
+  Future<List<Map<String, dynamic>>> getItemsMissingOcr({int? limit}) async {
+    return await db.query(
+      'items',
+      where: '(ocrText IS NULL OR ocrText = "")',
+      limit: limit,
+    );
+  }
+
+  // Search within OCR text
+  Future<List<Map<String, dynamic>>> searchByOcrText(String query) async {
+    return await db.query(
+      'items',
+      where: 'ocrText LIKE ?',
+      whereArgs: ['%$query%'],
+    );
+  }
+
+  // Search by name or OCR text
+  Future<List<Map<String, dynamic>>> searchByNameOrOcr(String query) async {
+    return await db.query(
+      'items',
+      where: 'name LIKE ? OR ocrText LIKE ?',
+      whereArgs: ['%$query%', '%$query%'],
     );
   }
 
