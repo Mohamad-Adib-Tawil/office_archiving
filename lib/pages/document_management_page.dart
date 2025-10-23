@@ -7,6 +7,7 @@ import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/services/scan_service.dart';
 import 'package:office_archiving/screens/editor/signature_pad.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
+import 'package:office_archiving/service/sqlite_service.dart';
 
 class DocumentManagementPage extends StatefulWidget {
   const DocumentManagementPage({super.key});
@@ -36,6 +37,8 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
+    // تحميل جميع العناصر من كل الأقسام لعرضها في الصفحة
+    _loadAllItemsFromDb();
   }
 
   Widget _buildSignaturesList() {
@@ -85,7 +88,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => MyPdfViewer(filePath: filePath),
+                        builder: (_) => DocumentViewerPage(imagePath: filePath),
                       ),
                     );
                   },
@@ -199,6 +202,13 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
         title: Text(AppLocalizations.of(context).doc_manage_title),
         elevation: 0,
         backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            tooltip: 'Reload',
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadAllItemsFromDb,
+          ),
+        ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -497,7 +507,14 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
                       Text(AppLocalizations.of(context).view_action),
                     ],
                   ),
-                  onTap: () => _viewTextFile(filePath),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MyPdfViewer(filePath: filePath),
+                      ),
+                    );
+                  },
                 ),
                 PopupMenuItem(
                   child: Row(
@@ -524,15 +541,6 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
           ),
         );
       },
-    );
-  }
-
-  void _viewTextFile(String filePath) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TextFileViewerPage(filePath: filePath),
-      ),
     );
   }
 
@@ -820,12 +828,55 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
       _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     }
   }
+
+  // تحميل جميع العناصر من قاعدة البيانات وتقسيمها ودمجها مع القوائم الحالية
+  Future<void> _loadAllItemsFromDb() async {
+    try {
+      final rows = await DatabaseService.instance.getAllItems();
+      final imageSet = _documentImages.toSet();
+      final pdfSet = _pdfFiles.toSet();
+      final signatureSet = _signatures.toSet();
+
+      for (final row in rows) {
+        final path = row['filePath'] as String?;
+        final type = (row['fileType'] as String?)?.toLowerCase();
+        final name = (row['name'] as String?) ?? '';
+        if (path == null || path.isEmpty || type == null) continue;
+
+        if (type == 'pdf') {
+          if (File(path).existsSync()) pdfSet.add(path);
+        } else if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'image'].contains(type)) {
+          if (type == 'png' && name.toLowerCase().startsWith('signature_')) {
+            if (File(path).existsSync()) signatureSet.add(path);
+          } else {
+            if (File(path).existsSync()) imageSet.add(path);
+          }
+        }
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _documentImages
+          ..clear()
+          ..addAll(imageSet);
+        _pdfFiles
+          ..clear()
+          ..addAll(pdfSet);
+        _signatures
+          ..clear()
+          ..addAll(signatureSet);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
+    }
+  }
 }
 
 // صفحة عرض المستند
 class DocumentViewerPage extends StatelessWidget {
   final String imagePath;
-
+  // Image document viewer
   const DocumentViewerPage({super.key, required this.imagePath});
 
   @override
