@@ -25,7 +25,7 @@ void addItemFromCamera(
       log('addItemFromCamera pickedFile $pickedFile -- ');
 
       if (flow == _CameraFlow.directSave) {
-        processImageAndAddItem(File(filePath), idSection, itemCubit);
+        await processImageAndAddItem(File(filePath), idSection, itemCubit);
       } else {
         // فتح المحرر الداخلي مع الصورة الملتقطة
         final String? resultPath = await Navigator.push(
@@ -34,7 +34,7 @@ void addItemFromCamera(
         );
         if (!context.mounted) return;
         if (resultPath != null) {
-          processImageAndAddItem(File(resultPath), idSection, itemCubit);
+          await processImageAndAddItem(File(resultPath), idSection, itemCubit);
         }
       }
     } else {

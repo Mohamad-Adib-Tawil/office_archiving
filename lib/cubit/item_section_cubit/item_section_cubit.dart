@@ -68,7 +68,7 @@ class ItemSectionCubit extends Cubit<ItemSectionState> {
   Future<void> searchItems(String query, int sectionId) async {
     emit(ItemSectionLoading());
     try {
-      final itemsData = await _databaseService.searchItemsByNameInSection(query, sectionId);
+      final itemsData = await _databaseService.searchByNameOrOcrInSection(query, sectionId);
 
       List<ItemSection> items = [];
       for (var itemData in itemsData) {

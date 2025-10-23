@@ -4,6 +4,7 @@ import 'package:office_archiving/services/ocr_service.dart';
 import 'package:office_archiving/services/translation_service.dart';
 import 'package:office_archiving/services/ai_summarization_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 
 class AIFeaturesPage extends StatefulWidget {
@@ -26,6 +27,9 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
   String _summary = '';
   bool _isProcessing = false;
   String _ocrLang = 'auto'; // 'auto' | 'ar' | 'en'
+  bool _batchRunning = false;
+  int _batchProcessed = 0;
+  int _batchTotal = 0;
 
   @override
   void initState() {
@@ -44,6 +48,79 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
     // تهيئة النص المستخرج إن تم تمريره من شاشة أخرى (مثل المحرر الداخلي)
     if (widget.initialText != null && widget.initialText!.trim().isNotEmpty) {
       _extractedText = widget.initialText!.trim();
+    }
+  }
+
+  Future<void> _pickPdfAndExtractText() async {
+    try {
+      setState(() {
+        _isProcessing = true;
+        _extractedText = '';
+      });
+
+      final res = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+      if (res == null || res.files.isEmpty || res.files.first.path == null) {
+        if (!mounted) return;
+        setState(() => _isProcessing = false);
+        return;
+      }
+      final path = res.files.first.path!;
+
+      final text = await _ocrService.recognizePdfToText(path, lang: _ocrLang);
+
+      if (!mounted) return;
+      setState(() {
+        _extractedText = text;
+        _isProcessing = false;
+      });
+      if (text.trim().isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context).snack_extraction_done), backgroundColor: Colors.green),
+        );
+      }
+    } catch (e) {
+      setState(() => _isProcessing = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${AppLocalizations.of(context).generic_error}: $e')),
+      );
+    }
+  }
+
+  Future<void> _runBatchOcr() async {
+    if (_batchRunning) return;
+    setState(() {
+      _batchRunning = true;
+      _batchProcessed = 0;
+      _batchTotal = 0;
+    });
+    try {
+      final count = await _ocrService.batchProcessMissingOcr(
+        lang: _ocrLang,
+        onProgress: (p, t) {
+          if (!mounted) return;
+          setState(() {
+            _batchProcessed = p;
+            _batchTotal = t;
+          });
+        },
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('تمت معالجة $count عنصر OCR')), // static Arabic text
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${AppLocalizations.of(context).generic_error}: $e')),
+      );
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        _batchRunning = false;
+      });
     }
   }
 
@@ -283,6 +360,24 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                 Icons.text_fields,
                 Colors.blue,
                 _pickImageAndExtractText,
+              ),
+              const SizedBox(height: 16),
+              _buildFeatureCard(
+                'OCR للملفات PDF (عدّة صفحات)',
+                'استخراج نص من PDF عبر تحويل الصفحات إلى صور ومعالجتها (AR/EN)',
+                Icons.picture_as_pdf,
+                Colors.red,
+                _pickPdfAndExtractText,
+              ),
+              const SizedBox(height: 16),
+              _buildFeatureCard(
+                'Batch OCR (العناصر الناقصة)',
+                _batchRunning
+                    ? 'جاري المعالجة: $_batchProcessed/$_batchTotal'
+                    : 'شغّل OCR لكل العناصر التي لا تحتوي نص OCR محفوظ',
+                Icons.task,
+                Colors.purple,
+                _runBatchOcr,
               ),
               const SizedBox(height: 16),
               if (_extractedText.isNotEmpty) ...[

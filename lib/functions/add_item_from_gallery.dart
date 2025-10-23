@@ -26,7 +26,7 @@ void addItemFromGallery(
       );
       if (!context.mounted) return;
       if (pickedFile != null) {
-        processImageAndAddItem(File(pickedFile.path), idSection, itemCubit);
+        await processImageAndAddItem(File(pickedFile.path), idSection, itemCubit);
       } else {
         showSnackBar(context, AppLocalizations.of(context).no_image_picked);
       }
@@ -38,7 +38,7 @@ void addItemFromGallery(
       );
       if (!context.mounted) return;
       if (resultPath != null) {
-        processImageAndAddItem(File(resultPath), idSection, itemCubit);
+        await processImageAndAddItem(File(resultPath), idSection, itemCubit);
       }
     }
   } catch (e) {
