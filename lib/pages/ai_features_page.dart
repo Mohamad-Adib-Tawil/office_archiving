@@ -25,6 +25,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
   String _translatedText = '';
   String _summary = '';
   bool _isProcessing = false;
+  String _ocrLang = 'auto'; // 'auto' | 'ar' | 'en'
 
   @override
   void initState() {
@@ -109,7 +110,10 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
         
         HapticFeedback.lightImpact();
         
-        final extractedText = await _ocrService.extractTextFromImage(imagePath);
+        final extractedText = await _ocrService.recognizeTextAdvanced(
+          imagePath,
+          lang: _ocrLang,
+        );
         
         if (!mounted) return;
         setState(() {
@@ -234,6 +238,45 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // لغة OCR: تلقائي / العربية / الإنجليزية
+              Text(
+                'لغة OCR',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: [
+                  ChoiceChip(
+                    label: const Text('تلقائي'),
+                    selected: _ocrLang == 'auto',
+                    onSelected: (v) {
+                      if (!v) return;
+                      setState(() => _ocrLang = 'auto');
+                      HapticFeedback.selectionClick();
+                    },
+                  ),
+                  ChoiceChip(
+                    label: const Text('العربية'),
+                    selected: _ocrLang == 'ar',
+                    onSelected: (v) {
+                      if (!v) return;
+                      setState(() => _ocrLang = 'ar');
+                      HapticFeedback.selectionClick();
+                    },
+                  ),
+                  ChoiceChip(
+                    label: const Text('الإنجليزية'),
+                    selected: _ocrLang == 'en',
+                    onSelected: (v) {
+                      if (!v) return;
+                      setState(() => _ocrLang = 'en');
+                      HapticFeedback.selectionClick();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
               _buildFeatureCard(
                 AppLocalizations.of(context).ai_extract_title,
                 AppLocalizations.of(context).ai_extract_desc,
