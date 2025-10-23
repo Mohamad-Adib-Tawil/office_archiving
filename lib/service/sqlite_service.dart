@@ -152,6 +152,59 @@ class DatabaseService {
     await db.delete('items', where: 'id = ?', whereArgs: [id]);
   }
 
+  /// Delete an item and fix its section metadata.
+  /// - Removes the item row.
+  /// - If the section's coverPath equals the item's filePath, clears the coverPath.
+  Future<void> deleteItemAndFixSection(int id) async {
+    log('deleteItemAndFixSection id=$id');
+    try {
+      // Read item before deletion to get sectionId and filePath
+      final rows = await db.query(
+        'items',
+        columns: ['sectionId', 'filePath'],
+        where: 'id = ?',
+        whereArgs: [id],
+        limit: 1,
+      );
+
+      int? sectionId;
+      String? filePath;
+      if (rows.isNotEmpty) {
+        sectionId = rows.first['sectionId'] as int?;
+        filePath = rows.first['filePath'] as String?;
+      }
+
+      // Delete the item
+      await db.delete('items', where: 'id = ?', whereArgs: [id]);
+
+      // If section cover equals this file, clear it
+      if (sectionId != null && filePath != null) {
+        final coverRows = await db.query(
+          'section',
+          columns: ['coverPath'],
+          where: 'id = ?',
+          whereArgs: [sectionId],
+          limit: 1,
+        );
+        if (coverRows.isNotEmpty) {
+          final cover = coverRows.first['coverPath'] as String?;
+          if (cover == filePath) {
+            await db.update(
+              'section',
+              {'coverPath': null},
+              where: 'id = ?',
+              whereArgs: [sectionId],
+            );
+            log('Cleared section($sectionId) coverPath because file was deleted');
+          }
+        }
+      }
+    } catch (e) {
+      log('deleteItemAndFixSection error: $e');
+      rethrow;
+    }
+  }
+
   Future<List<Map<String, dynamic>>> searchItemsByName(String query) async {
     return await db.query(
       'items',
