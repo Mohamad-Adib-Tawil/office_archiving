@@ -283,6 +283,20 @@ class DatabaseService {
     );
   }
 
+  Future<Map<String, dynamic>?> getItemByFilePath(String filePath) async {
+    final rows = await db.query('items', where: 'filePath = ?', whereArgs: [filePath], limit: 1);
+    if (rows.isEmpty) return null;
+    return rows.first;
+  }
+
+  Future<List<Map<String, dynamic>>> searchByNameOrOcrInSection(String query, int sectionId) async {
+    return await db.query(
+      'items',
+      where: '(name LIKE ? OR ocrText LIKE ?) AND sectionId = ?',
+      whereArgs: ['%$query%', '%$query%', sectionId],
+    );
+  }
+
   /// Search items by name within a specific section
   Future<List<Map<String, dynamic>>> searchItemsByNameInSection(
       String query, int sectionId) async {
