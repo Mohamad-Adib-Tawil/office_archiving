@@ -9,7 +9,7 @@ import 'package:office_archiving/widgets/shimmers.dart';
 import 'package:office_archiving/functions/show_add_section_dialog.dart';
 import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
-import 'package:office_archiving/widgets/settings_sheet.dart';
+import 'package:office_archiving/pages/settings_page.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/pages/storage_center_page.dart';
 
@@ -284,14 +284,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: scheme.primary,
                       onPressed: () {
                         HapticFeedback.lightImpact();
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(20)),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SettingsPage(),
                           ),
-                          builder: (_) => const SettingsSheet(),
                         );
                       },
                     ),
