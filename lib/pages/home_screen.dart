@@ -35,11 +35,20 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    sectionNameController.dispose();
+    super.dispose();
+  }
+
   Widget _buildStorageSummary(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return FutureBuilder<Map<String, dynamic>>(
-      future: DatabaseService.instance.getStorageAnalytics(),
-      builder: (context, snapshot) {
+    return StreamBuilder<void>(
+      stream: DatabaseService.instance.changes,
+      builder: (context, _) {
+        return FutureBuilder<Map<String, dynamic>>(
+          future: DatabaseService.instance.getStorageAnalytics(),
+          builder: (context, snapshot) {
         final loading = snapshot.connectionState == ConnectionState.waiting;
         final data = snapshot.data;
         final totalFiles = data != null ? (data['totalFiles'] as int? ?? 0) : 0;
@@ -149,6 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 8),
             card(AppLocalizations.of(context).storage_size, formatBytes(totalSize), Colors.orange, Icons.storage),
           ],
+        );
+          },
         );
       },
     );
