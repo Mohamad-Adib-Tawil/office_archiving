@@ -16,23 +16,26 @@ class AISummarizationService {
     _apiKey = (key != null && key.trim().isNotEmpty) ? key.trim() : null;
   }
 
+  // التحقق من وجود مفتاح API
+  bool get hasApiKey => _apiKey != null && _apiKey!.isNotEmpty;
+
   // تلخيص باستخدام AI حقيقي أو خوارزميات محلية
   Future<String> summarizeText(String text, {int maxSentences = 3}) async {
     if (text.trim().isEmpty) return '';
     
     try {
-      // محاولة استخدام Hugging Face API أولاً
-      if (text.length > 100 && text.split(' ').length > 50) {
+      // محاولة استخدام Hugging Face API أولاً (إذا كان متوفراً)
+      if (_apiKey != null && text.length > 100 && text.split(' ').length > 50) {
         try {
           final aiSummary = await _summarizeWithAI(text);
           if (aiSummary.isNotEmpty) return aiSummary;
         } catch (e) {
           // في حالة فشل AI، نستخدم الخوارزمية المحلية
-          // فشل في التلخيص بالذكاء الاصطناعي، استخدام الخوارزمية المحلية
+          // لا نرمي خطأ، فقط نتابع للخوارزمية المحلية
         }
       }
       
-      // تلخيص محلي كبديل
+      // تلخيص محلي (يعمل دائماً حتى بدون API key)
       return await _summarizeLocally(text, maxSentences);
     } catch (e) {
       throw Exception('فشل في تلخيص النص: $e');

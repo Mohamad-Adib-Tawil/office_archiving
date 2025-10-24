@@ -316,8 +316,13 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            tooltip: 'مفتاح Hugging Face',
-            icon: const Icon(Icons.vpn_key_outlined),
+            tooltip: 'مفتاح Hugging Face (اختياري)',
+            icon: Icon(
+              Icons.vpn_key_outlined,
+              color: _summarizationService.hasApiKey 
+                ? Colors.green 
+                : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
             onPressed: _showApiKeyDialog,
           ),
         ],
@@ -329,6 +334,37 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // رسالة ترحيبية
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.info_outline, color: Colors.blue, size: 20),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'ميزات الذكاء الاصطناعي',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '• جميع الميزات تعمل محلياً بدون إنترنت\n• OCR متقدم للعربية والإنجليزية\n• تلخيص ذكي للنصوص\n• ترجمة فورية\n• مفتاح Hugging Face اختياري للتحسين',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              
               // لغة OCR: تلقائي / العربية / الإنجليزية
               Text(
                 'لغة OCR',
@@ -522,14 +558,26 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('إعداد مفتاح Hugging Face'),
-          content: TextField(
-            controller: controller,
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Bearer Token',
-              hintText: 'hf_...'
-            ),
+          title: const Text('إعداد مفتاح Hugging Face (اختياري)'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'ملاحظة: جميع الميزات تعمل بدون مفتاح API، لكن مع مفتاح ستحصل على تلخيص أفضل للنصوص الطويلة.',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: controller,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Bearer Token (اختياري)',
+                  hintText: 'hf_...',
+                  helperText: 'اتركه فارغاً للاستخدام المحلي فقط',
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(onPressed: () => Navigator.pop(ctx, null), child: Text(AppLocalizations.of(context).cancel)),

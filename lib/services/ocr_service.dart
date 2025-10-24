@@ -102,20 +102,25 @@ class OCRService {
   }
 
   Future<String> _extractWithTesseract(String imagePath, {required String languages}) async {
-    // languages like 'ara' or 'ara+eng'
-    // Use bundled tessdata inside assets
-    final args = {
-      'psm': '3', // default page segmentation
-      'oem': '1', // LSTM only
-      'tessdata': 'assets/tessdata',
-      'preserve_interword_spaces': '1',
-    };
-    final text = await FlutterTesseractOcr.extractText(
-      imagePath,
-      language: languages,
-      args: args,
-    );
-    return text;
+    try {
+      // languages like 'ara' or 'ara+eng'
+      // Use bundled tessdata inside assets without config file
+      final args = {
+        'psm': '6', // single uniform block
+        'oem': '3', // default engine mode
+        'preserve_interword_spaces': '1',
+      };
+      final text = await FlutterTesseractOcr.extractText(
+        imagePath,
+        language: languages,
+        args: args,
+      );
+      return text;
+    } catch (e) {
+      log('Tesseract OCR failed: $e');
+      // Fallback to ML Kit only
+      return await _extractWithMlkit(imagePath);
+    }
   }
 
   String _chooseAuto(String tesseractText, String mlkitText) {
