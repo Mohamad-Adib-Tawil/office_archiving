@@ -8,6 +8,7 @@ import 'package:office_archiving/services/scan_service.dart';
 import 'package:office_archiving/screens/editor/signature_pad.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/helper/open_file.dart' as opener;
 
 class DocumentManagementPage extends StatefulWidget {
   const DocumentManagementPage({super.key});
@@ -40,7 +41,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     // تحميل جميع العناصر من كل الأقسام لعرضها في الصفحة
     _loadAllItemsFromDb();
   }
-
+ 
   Widget _buildSignaturesList() {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -60,7 +61,7 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
@@ -203,6 +204,16 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
+          IconButton(
+            tooltip: AppLocalizations.of(context).searchLabel,
+            icon: const Icon(Icons.search),
+            onPressed: () async {
+              await showSearch(
+                context: context,
+                delegate: _GlobalItemSearchDelegate(context),
+              );
+            },
+          ),
           IconButton(
             tooltip: 'Reload',
             icon: const Icon(Icons.refresh),
@@ -419,12 +430,12 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
             if (_isProcessing)
               Container(
                 padding: const EdgeInsets.all(16),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
                     SizedBox(width: 16),
-                    Text(AppLocalizations.of(context).processing_ellipsis),
+                    Text('جاري المعالجة...'),
                   ],
                 ),
               ),
@@ -692,8 +703,9 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     try {
       final bytes = file.lengthSync();
       if (bytes < 1024) return '$bytes ب';
-      if (bytes < 1024 * 1024)
+      if (bytes < 1024 * 1024) {
         return '${(bytes / 1024).toStringAsFixed(1)} ك.ب';
+      }
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} م.ب';
     } catch (e) {
       return 'غير معروف';
@@ -870,6 +882,91 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
       if (!mounted) return;
       _showErrorSnackBar('${AppLocalizations.of(context).generic_error}: $e');
     }
+  }
+}
+
+// مندوب البحث العام عن العناصر عبر الاسم أو نص OCR
+class _GlobalItemSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
+  final BuildContext rootContext;
+  _GlobalItemSearchDelegate(this.rootContext);
+
+  @override
+  String? get searchFieldLabel => AppLocalizations.of(rootContext).searchLabel;
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      if (query.isNotEmpty)
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () => query = '',
+        ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    if (query.trim().length < 2) {
+      return const Center(
+        child: Text('أدخل حرفين على الأقل'),
+      );
+    }
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: DatabaseService.instance.searchByNameOrOcr(query.trim()),
+      builder: (ctx, snap) {
+        if (snap.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final results = snap.data ?? [];
+        if (results.isEmpty) {
+          return Center(child: Text(AppLocalizations.of(rootContext).noItemsFound));
+        }
+        return ListView.separated(
+          itemCount: results.length,
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (ctx, i) {
+            final r = results[i];
+            final name = (r['name'] as String?) ?? 'بدون اسم';
+            final type = (r['fileType'] as String?)?.toLowerCase() ?? '';
+            final path = (r['filePath'] as String?) ?? '';
+            IconData icon;
+            if (type == 'pdf') {
+              icon = Icons.picture_as_pdf;
+            } else if (['jpg','jpeg','png','gif','webp','image'].contains(type)) {
+              icon = Icons.image;
+            } else {
+              icon = Icons.insert_drive_file;
+            }
+            return ListTile(
+              leading: Icon(icon),
+              title: Text(name),
+              subtitle: Text(type.toUpperCase()),
+              onTap: () async {
+                if (path.isEmpty) return;
+                await opener.openFile(pathFile: path, context: rootContext);
+                close(context, r);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    if (query.isEmpty) {
+      return const Center(child: Text('ابحث باسم الملف أو نص OCR'));
+    }
+    return buildResults(context);
   }
 }
 

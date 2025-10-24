@@ -1106,6 +1106,30 @@ abstract class AppLocalizations {
   /// **'File Cleaner'**
   String get tooltip_cleaner;
 
+  /// No description provided for @tooltip_storage_center.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Center'**
+  String get tooltip_storage_center;
+
+  /// No description provided for @storage_center_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Center'**
+  String get storage_center_title;
+
+  /// No description provided for @accent_color_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent color'**
+  String get accent_color_label;
+
+  /// No description provided for @reset_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset_action;
+
   /// No description provided for @doc_manage_title.
   ///
   /// In en, this message translates to:

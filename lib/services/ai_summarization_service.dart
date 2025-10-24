@@ -9,6 +9,12 @@ class AISummarizationService {
 
   // يمكن استخدام Hugging Face API للتلخيص المجاني
   static const String _huggingFaceUrl = 'https://api-inference.huggingface.co/models/facebook/bart-large-cnn';
+  static String? _apiKey; // مفتاح API اختياري
+
+  // تعيين أو إزالة مفتاح API
+  void setApiKey(String? key) {
+    _apiKey = (key != null && key.trim().isNotEmpty) ? key.trim() : null;
+  }
 
   // تلخيص باستخدام AI حقيقي أو خوارزميات محلية
   Future<String> summarizeText(String text, {int maxSentences = 3}) async {
@@ -40,8 +46,7 @@ class AISummarizationService {
         Uri.parse(_huggingFaceUrl),
         headers: {
           'Content-Type': 'application/json',
-          // يمكن إضافة API key هنا للحصول على خدمة أفضل
-          // 'Authorization': 'Bearer YOUR_HUGGING_FACE_TOKEN',
+          if (_apiKey != null) 'Authorization': 'Bearer ' + _apiKey!,
         },
         body: jsonEncode({
           'inputs': text,

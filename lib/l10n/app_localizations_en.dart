@@ -528,6 +528,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tooltip_cleaner => 'File Cleaner';
 
   @override
+  String get tooltip_storage_center => 'Storage Center';
+
+  @override
+  String get storage_center_title => 'Storage Center';
+
+  @override
+  String get accent_color_label => 'Accent color';
+
+  @override
+  String get reset_action => 'Reset';
+
+  @override
   String get doc_manage_title => 'Document Management';
 
   @override
