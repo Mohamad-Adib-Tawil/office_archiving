@@ -334,7 +334,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             // رسالة ترحيبية
+              // رسالة ترحيبية
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -357,7 +357,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      '• جميع الميزات تعمل محلياً بدون إنترنت\n• OCR متقدم للعربية والإنجليزية\n• تلخيص ذكي للنصوص\n• ترجمة فورية\n• مفتاح Hugging Face اختياري للتحسين',
+                      '• OCR متقدم محلي للعربية والإنجليزية\n• تلخيص ذكي محلي للنصوص\n• ترجمة فورية (تحتاج إنترنت) 🌐\n• تنظيم ذكي محلي للملفات\n• مفتاح Hugging Face اختياري للتحسين',
                       style: TextStyle(fontSize: 13),
                     ),
                   ],
