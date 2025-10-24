@@ -1,18 +1,29 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 class DatabaseService {
   static late Database db;
   static final DatabaseService _instance = DatabaseService._();
   static bool _isInitialized = false;
   DatabaseService._();
+
   static DatabaseService get instance {
     if (!_isInitialized) {
       log('DatabaseService accessed before initialization!');
     }
     return _instance;
+  }
+
+  // Change notification stream for UI to react to DB mutations
+  final StreamController<void> _changeController =
+      StreamController<void>.broadcast();
+  Stream<void> get changes => _changeController.stream;
+  void _notifyChange() {
+    if (!_changeController.isClosed) {
+      _changeController.add(null);
+    }
   }
 
   static Future<void> initDatabase() async {
@@ -95,7 +106,9 @@ class DatabaseService {
       log('existingSections.isNotEmpty ${existingSections.isNotEmpty}');
       return -1;
     } else {
-      return await db.insert('section', {'name': name});
+      final id = await db.insert('section', {'name': name});
+      _notifyChange();
+      return id;
     }
   }
 
@@ -106,11 +119,13 @@ class DatabaseService {
     log('updateSectionName :::  index = $index');
     log('updateSectionName ::: new name $newName');
     await getAllSections();
+    _notifyChange();
   }
 
   Future<void> updateSectionCover(int id, String? coverPath) async {
     log('updateSectionCover id=$id coverPath=$coverPath');
     await db.update('section', {'coverPath': coverPath}, where: 'id = ?', whereArgs: [id]);
+    _notifyChange();
   }
 
   Future<void> deleteSection(int id) async {
@@ -119,6 +134,7 @@ class DatabaseService {
     await db.delete('items', where: 'sectionId = ?', whereArgs: [id]);
     // Then delete the section itself
     await db.delete('section', where: 'id = ?', whereArgs: [id]);
+    _notifyChange();
   }
 
   Future<List<Map<String, dynamic>>> getItemsBySectionId(int sectionId) async {
@@ -155,23 +171,27 @@ class DatabaseService {
 
   Future<int> insertItem(
       String name, String filePath, String fileType, int sectionId) async {
-    return await db.insert('items', {
+    final id = await db.insert('items', {
       'name': name,
       'filePath': filePath,
       'fileType': fileType,
       'sectionId': sectionId
     });
+    _notifyChange();
+    return id;
   }
 
   Future<void> updateItemName(int id, String newName) async {
     log('updateItemName');
     await db.update('items', {'name': newName},
         where: 'id = ?', whereArgs: [id]);
+    _notifyChange();
   }
 
   Future<void> deleteItem(int id) async {
     log('deleteItem');
     await db.delete('items', where: 'id = ?', whereArgs: [id]);
+    _notifyChange();
   }
 
   /// Delete an item and fix its section metadata.
@@ -221,6 +241,7 @@ class DatabaseService {
           }
         }
       }
+      _notifyChange();
     } catch (e) {
       log('deleteItemAndFixSection error: $e');
       rethrow;
@@ -254,6 +275,7 @@ class DatabaseService {
       where: 'id = ?',
       whereArgs: [id],
     );
+    _notifyChange();
   }
 
   // Items missing OCR (either null or empty text)
@@ -369,5 +391,6 @@ class DatabaseService {
   Future<void> dispose() async {
     log('dispose DataBase');
     await db.close();
+    await _changeController.close();
   }
 }
