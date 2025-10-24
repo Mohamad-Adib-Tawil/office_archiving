@@ -6,6 +6,9 @@ import 'package:office_archiving/services/ai_summarization_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/services/smart_organization_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as p;
 
 class AIFeaturesPage extends StatefulWidget {
   final String? initialText; // نص أولي يتم تمريره من المحرر الداخلي
@@ -21,6 +24,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
   late TranslationService _translationService;
   late AISummarizationService _summarizationService;
   late OCRService _ocrService;
+  final SmartOrganizationService _smartOrg = SmartOrganizationService();
   
   String _extractedText = '';
   String _translatedText = '';
@@ -30,6 +34,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
   bool _batchRunning = false;
   int _batchProcessed = 0;
   int _batchTotal = 0;
+  OrganizationSuggestion? _orgSuggestion;
 
   @override
   void initState() {
@@ -49,6 +54,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
     if (widget.initialText != null && widget.initialText!.trim().isNotEmpty) {
       _extractedText = widget.initialText!.trim();
     }
+    _loadSavedApiKey();
   }
 
   Future<void> _pickPdfAndExtractText() async {
@@ -117,10 +123,11 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
         SnackBar(content: Text('${AppLocalizations.of(context).generic_error}: $e')),
       );
     } finally {
-      if (!mounted) return;
-      setState(() {
-        _batchRunning = false;
-      });
+      if (mounted) {
+        setState(() {
+          _batchRunning = false;
+        });
+      }
     }
   }
 
@@ -307,6 +314,13 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
         title: Text(AppLocalizations.of(context).ai_features_title),
         elevation: 0,
         backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            tooltip: 'مفتاح Hugging Face',
+            icon: const Icon(Icons.vpn_key_outlined),
+            onPressed: _showApiKeyDialog,
+          ),
+        ],
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -380,6 +394,14 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                 _runBatchOcr,
               ),
               const SizedBox(height: 16),
+              _buildFeatureCard(
+                'تنظيم ذكي للملفات',
+                'اختر ملف (صورة/‏PDF/‏TXT) للحصول على تصنيف، علامات، واسم مقترح',
+                Icons.auto_awesome,
+                Colors.teal,
+                _runSmartOrganization,
+              ),
+              const SizedBox(height: 16),
               if (_extractedText.isNotEmpty) ...[
                 _buildResultCard(AppLocalizations.of(context).ai_extracted_text_title, _extractedText, Colors.blue),
                 const SizedBox(height: 16),
@@ -414,12 +436,113 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                 _buildResultCard(AppLocalizations.of(context).ai_summary_text_title, _summary, Colors.orange),
                 const SizedBox(height: 16),
               ],
+              if (_orgSuggestion != null) ...[
+                _buildOrgResultCard(_orgSuggestion!),
+                const SizedBox(height: 16),
+              ],
               _buildFeaturesList(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  // بطاقة نتيجة التنظيم الذكي
+  Widget _buildOrgResultCard(OrganizationSuggestion s) {
+    final chips = s.suggestedTags.map((t) => Chip(label: Text(t))).toList();
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.teal.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('نتيجة التنظيم الذكي', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal)),
+          const SizedBox(height: 8),
+          Text('الاسم المقترح: ${s.suggestedName}'),
+          Text('التصنيف: ${s.suggestedCategory}'),
+          Text('الأولوية: ${s.priority} • الثقة: ${(s.confidence * 100).toStringAsFixed(0)}%'),
+          const SizedBox(height: 8),
+          Wrap(spacing: 6, runSpacing: 6, children: chips),
+          const SizedBox(height: 8),
+          Text('المبررات: ${s.reasoning}'),
+        ],
+      ),
+    );
+  }
+
+  // تشغيل التنظيم الذكي
+  Future<void> _runSmartOrganization() async {
+    try {
+      setState(() => _isProcessing = true);
+      final res = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'txt'],
+      );
+      if (res == null || res.files.isEmpty || res.files.first.path == null) {
+        if (mounted) setState(() => _isProcessing = false);
+        return;
+      }
+      final path = res.files.first.path!;
+      final name = p.basename(path);
+      final suggestion = await _smartOrg.suggestOrganization(path, name);
+      if (!mounted) return;
+      setState(() {
+        _orgSuggestion = suggestion;
+        _isProcessing = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تم إنشاء اقتراح التنظيم')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isProcessing = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${AppLocalizations.of(context).generic_error}: $e')),
+      );
+    }
+  }
+
+  // إدارة مفتاح API
+  Future<void> _loadSavedApiKey() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getString('huggingface_api_key');
+    _summarizationService.setApiKey(saved);
+  }
+
+  Future<void> _showApiKeyDialog() async {
+    final prefs = await SharedPreferences.getInstance();
+    final initial = prefs.getString('huggingface_api_key') ?? '';
+    final controller = TextEditingController(text: initial);
+    final key = await showDialog<String?>(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('إعداد مفتاح Hugging Face'),
+          content: TextField(
+            controller: controller,
+            obscureText: true,
+            decoration: const InputDecoration(
+              labelText: 'Bearer Token',
+              hintText: 'hf_...'
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx, null), child: Text(AppLocalizations.of(context).cancel)),
+            TextButton(onPressed: () => Navigator.pop(ctx, controller.text.trim()), child: const Text('حفظ')),
+          ],
+        );
+      },
+    );
+    if (key == null) return;
+    await prefs.setString('huggingface_api_key', key);
+    _summarizationService.setApiKey(key);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم حفظ مفتاح API')));
   }
 
   Widget _buildFeatureCard(
@@ -602,7 +725,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
           _buildFeatureItem(
             AppLocalizations.of(context).ai_feature_smart_organize_title,
             AppLocalizations.of(context).ai_feature_smart_organize_desc,
-            false,
+            true,
           ),
           _buildFeatureItem(
             AppLocalizations.of(context).ai_feature_smart_search_title,

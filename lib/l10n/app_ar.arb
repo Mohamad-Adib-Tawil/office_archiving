@@ -170,6 +170,10 @@
   "tooltip_scanner": "الماسح الضوئي",
   "tooltip_ai": "الذكاء الاصطناعي",
   "tooltip_cleaner": "منظف الملفات",
+  "tooltip_storage_center": "مركز التخزين",
+  "storage_center_title": "مركز التخزين",
+  "accent_color_label": "لون التمييز",
+  "reset_action": "إعادة ضبط",
   
   "doc_manage_title": "إدارة المستندات",
   "scan_document_action": "مسح مستند",

@@ -24,11 +24,19 @@ enum AppTheme {
 
 class ThemeCubit extends Cubit<AppTheme> {
   static const _prefKey = 'app_theme';
+  static const _prefPrimaryKey = 'custom_primary_color';
+
+  Color? _customPrimary;
+  Color? get customPrimary => _customPrimary;
+
+  // ValueNotifier للتحديث الفوري للألوان المخصصة
+  final ValueNotifier<Color?> customPrimaryNotifier = ValueNotifier<Color?>(null);
 
   ThemeCubit({AppTheme? initial}) : super(initial ?? AppTheme.midnight) {
     if (initial == null) {
       _loadTheme();
     }
+    _loadCustomPrimary();
   }
 
   Future<void> setTheme(AppTheme theme) async {
@@ -45,79 +53,129 @@ class ThemeCubit extends Cubit<AppTheme> {
   }
 
   ThemeData themeDataFor(BuildContext context) {
+    ThemeData base;
     switch (state) {
       case AppTheme.system:
         final brightness = MediaQuery.of(context).platformBrightness;
-        return brightness == Brightness.dark ? AppThemes.dark : AppThemes.light;
+        base = brightness == Brightness.dark ? AppThemes.dark : AppThemes.light;
+        break;
       case AppTheme.light:
-        return AppThemes.light;
+        base = AppThemes.light;
+        break;
       case AppTheme.dark:
-        return AppThemes.dark;
+        base = AppThemes.dark;
+        break;
       case AppTheme.midnight:
-        return AppThemes.midnight;
+        base = AppThemes.midnight;
+        break;
       case AppTheme.midnightAurora:
-        return AppThemes.midnightAurora;
+        base = AppThemes.midnightAurora;
+        break;
       case AppTheme.glacierBlue:
-        return AppThemes.glacierBlue;
+        base = AppThemes.glacierBlue;
+        break;
       case AppTheme.royalRed:
-        return AppThemes.royalRed;
+        base = AppThemes.royalRed;
+        break;
       case AppTheme.rubyBloom:
-        return AppThemes.rubyBloom;
+        base = AppThemes.rubyBloom;
+        break;
       case AppTheme.victorianGold:
-        return AppThemes.victorianGold;
+        base = AppThemes.victorianGold;
+        break;
       case AppTheme.sunsetAmber:
-        return AppThemes.sunsetAmber;
+        base = AppThemes.sunsetAmber;
+        break;
       case AppTheme.champagneGlow:
-        return AppThemes.champagneGlow;
+        base = AppThemes.champagneGlow;
+        break;
       case AppTheme.platinumSilver:
-        return AppThemes.platinumSilver;
+        base = AppThemes.platinumSilver;
+        break;
       case AppTheme.onyxGraphite:
-        return AppThemes.onyxGraphite;
+        base = AppThemes.onyxGraphite;
+        break;
       case AppTheme.jadeForest:
-        return AppThemes.jadeForest;
+        base = AppThemes.jadeForest;
+        break;
       case AppTheme.emeraldLuxe:
-        return AppThemes.emeraldLuxe;
+        base = AppThemes.emeraldLuxe;
+        break;
       case AppTheme.pearlMoon:
-        return AppThemes.pearlMoon;
+        base = AppThemes.pearlMoon;
+        break;
     }
+    if (_customPrimary != null) {
+      final cs = base.colorScheme;
+      final modified = cs.copyWith(
+        primary: _customPrimary,
+        // keep onPrimary readable
+      );
+      base = base.copyWith(colorScheme: modified,
+        appBarTheme: base.appBarTheme.copyWith(foregroundColor: modified.onSurface),
+      );
+    }
+    return base;
   }
 
   // Legacy getter - defaults to light theme for system
   ThemeData get themeData {
+    ThemeData base;
     switch (state) {
       case AppTheme.system:
-        return AppThemes.light; // Fallback when no context available
+        base = AppThemes.light; // Fallback when no context available
+        break;
       case AppTheme.light:
-        return AppThemes.light;
+        base = AppThemes.light;
+        break;
       case AppTheme.dark:
-        return AppThemes.dark;
+        base = AppThemes.dark;
+        break;
       case AppTheme.midnight:
-        return AppThemes.midnight;
+        base = AppThemes.midnight;
+        break;
       case AppTheme.midnightAurora:
-        return AppThemes.midnightAurora;
+        base = AppThemes.midnightAurora;
+        break;
       case AppTheme.glacierBlue:
-        return AppThemes.glacierBlue;
+        base = AppThemes.glacierBlue;
+        break;
       case AppTheme.royalRed:
-        return AppThemes.royalRed;
+        base = AppThemes.royalRed;
+        break;
       case AppTheme.rubyBloom:
-        return AppThemes.rubyBloom;
+        base = AppThemes.rubyBloom;
+        break;
       case AppTheme.victorianGold:
-        return AppThemes.victorianGold;
+        base = AppThemes.victorianGold;
+        break;
       case AppTheme.sunsetAmber:
-        return AppThemes.sunsetAmber;
+        base = AppThemes.sunsetAmber;
+        break;
       case AppTheme.champagneGlow:
-        return AppThemes.champagneGlow;
+        base = AppThemes.champagneGlow;
+        break;
       case AppTheme.platinumSilver:
-        return AppThemes.platinumSilver;
+        base = AppThemes.platinumSilver;
+        break;
       case AppTheme.onyxGraphite:
-        return AppThemes.onyxGraphite;
+        base = AppThemes.onyxGraphite;
+        break;
       case AppTheme.jadeForest:
-        return AppThemes.jadeForest;
+        base = AppThemes.jadeForest;
+        break;
       case AppTheme.emeraldLuxe:
-        return AppThemes.emeraldLuxe;
+        base = AppThemes.emeraldLuxe;
+        break;
       case AppTheme.pearlMoon:
-        return AppThemes.pearlMoon;
+        base = AppThemes.pearlMoon;
+        break;
     }
+    if (_customPrimary != null) {
+      final cs = base.colorScheme;
+      base = base.copyWith(colorScheme: cs.copyWith(primary: _customPrimary));
+    }
+    return base;
   }
 
   Future<void> _loadTheme() async {
@@ -132,6 +190,29 @@ class ThemeCubit extends Cubit<AppTheme> {
         emit(_legacyThemeFromString(saved));
       }
     }
+  }
+
+  Future<void> _loadCustomPrimary() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getInt(_prefPrimaryKey);
+    if (value != null) {
+      _customPrimary = Color(value);
+      customPrimaryNotifier.value = _customPrimary;
+      // re-emit to refresh listeners
+      emit(state);
+    }
+  }
+
+  Future<void> setCustomPrimary(Color? color) async {
+    _customPrimary = color;
+    customPrimaryNotifier.value = color; // تحديث ValueNotifier فوراً - هذا يحدث التطبيق مباشرة
+    final prefs = await SharedPreferences.getInstance();
+    if (color == null) {
+      await prefs.remove(_prefPrimaryKey);
+    } else {
+      await prefs.setInt(_prefPrimaryKey, color.toARGB32());
+    }
+    // لا حاجة لـ emit لأن ValueNotifier يتولى التحديث الفوري
   }
 
   AppTheme _legacyThemeFromString(String value) {

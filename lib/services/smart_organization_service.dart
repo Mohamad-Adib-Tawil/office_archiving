@@ -16,6 +16,9 @@ class SmartOrganizationService {
       // استخراج المحتوى حسب نوع الملف
       if (_isImageFile(filePath)) {
         content = await _ocrService.extractTextFromImage(filePath);
+      } else if (_isPdfFile(filePath)) {
+        // دعم PDF عبر تحويل الصفحات إلى صور ومعالجة OCR
+        content = await _ocrService.recognizePdfToText(filePath, lang: 'auto');
       } else if (_isTextFile(filePath)) {
         content = await File(filePath).readAsString();
       }
@@ -55,6 +58,11 @@ class SmartOrganizationService {
     const textExtensions = ['txt', 'md', 'rtf'];
     final extension = _getFileType(filePath);
     return textExtensions.contains(extension);
+  }
+
+  bool _isPdfFile(String filePath) {
+    final extension = _getFileType(filePath);
+    return extension == 'pdf';
   }
 
   String _categorizeContent(String content, String fileName) {

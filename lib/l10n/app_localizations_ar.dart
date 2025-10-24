@@ -523,6 +523,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tooltip_cleaner => 'منظف الملفات';
 
   @override
+  String get tooltip_storage_center => 'مركز التخزين';
+
+  @override
+  String get storage_center_title => 'مركز التخزين';
+
+  @override
+  String get accent_color_label => 'لون التمييز';
+
+  @override
+  String get reset_action => 'إعادة ضبط';
+
+  @override
   String get doc_manage_title => 'إدارة المستندات';
 
   @override

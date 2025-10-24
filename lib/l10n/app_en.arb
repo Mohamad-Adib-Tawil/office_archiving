@@ -169,6 +169,10 @@
   "tooltip_scanner": "Scanner",
   "tooltip_ai": "AI Features",
   "tooltip_cleaner": "File Cleaner",
+  "tooltip_storage_center": "Storage Center",
+  "storage_center_title": "Storage Center",
+  "accent_color_label": "Accent color",
+  "reset_action": "Reset",
   
   "doc_manage_title": "Document Management",
   "scan_document_action": "Scan Document",

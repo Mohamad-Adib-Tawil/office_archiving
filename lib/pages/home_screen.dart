@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
-import 'package:office_archiving/widgets/custom_appbar_widget_app.dart';
 import 'package:office_archiving/widgets/section_list_view.dart';
 import 'package:office_archiving/widgets/shimmers.dart';
 import 'package:office_archiving/functions/show_add_section_dialog.dart';
 import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
-import 'package:office_archiving/pages/file_cleanup_page.dart';
 import 'package:office_archiving/widgets/settings_sheet.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/pages/storage_center_page.dart';
 
 import '../service/sqlite_service.dart';
 
@@ -36,31 +35,169 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  Widget _buildStorageSummary(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return FutureBuilder<Map<String, dynamic>>(
+      future: DatabaseService.instance.getStorageAnalytics(),
+      builder: (context, snapshot) {
+        final loading = snapshot.connectionState == ConnectionState.waiting;
+        final data = snapshot.data;
+        final totalFiles = data != null ? (data['totalFiles'] as int? ?? 0) : 0;
+        final totalSections = data != null ? (data['totalSections'] as int? ?? 0) : 0;
+        final totalSize = data != null ? (data['totalSizeBytes'] as num? ?? 0).toDouble() : 0.0;
+
+        Widget card(String title, String value, Color color, IconData icon) {
+          return Expanded(
+            child: Container(
+              height: 76,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: color.withValues(alpha: 0.25)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontSize: 11,
+                          height: 1.2,
+                          fontWeight: FontWeight.w600,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, color: color, size: 20),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          value,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            height: 1.1,
+                            fontWeight: FontWeight.w800,
+                          ),
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        String formatBytes(double bytes) {
+          if (bytes < 1024) return '${bytes.toInt()} B';
+          if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+          if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+          return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
+        }
+
+        if (loading) {
+          return Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 76, // نفس ارتفاع البطاقات
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  height: 76,
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  height: 76,
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            card(AppLocalizations.of(context).total_files, '$totalFiles', Colors.blue, Icons.description),
+            const SizedBox(width: 8),
+            card(AppLocalizations.of(context).sections, '$totalSections', Colors.green, Icons.folder),
+            const SizedBox(width: 8),
+            card(AppLocalizations.of(context).storage_size, formatBytes(totalSize), Colors.orange, Icons.storage),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     log('.............................Building HomeScreen......................................');
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: const CustomAppBarWidgetApp(showActions: false),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          AppLocalizations.of(context).appTitle,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
+        elevation: 2,
+      ),
       bottomNavigationBar: _buildBottomBar(context),
-      body: BlocBuilder<SectionCubit, SectionState>(
-        builder: (context, state) {
-          if (state is SectionLoading) {
-            log('HomeScreen SectionLoading Received state');
-            return buildSectionsShimmerGrid(context);
-          } else if (state is SectionLoaded) {
-            log('Sections loaded successfully: ${state.sections}');
-            return SectionListView(
-                sections: state.sections, sectionCubit: sectionCubit);
-          } else if (state is SectionError) {
-            log('Failed to load sections: ${state.message}');
-            return Center(
-                child: Text('Failed to load sections: ${state.message}'));
-          } else {
-            log('else  $state');
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+      body: Column(
+        children: [
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: _buildStorageSummary(context),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: BlocBuilder<SectionCubit, SectionState>(
+              builder: (context, state) {
+                if (state is SectionLoading) {
+                  log('HomeScreen SectionLoading Received state');
+                  return buildSectionsShimmerGrid(context);
+                } else if (state is SectionLoaded) {
+                  log('Sections loaded successfully: ${state.sections}');
+                  return SectionListView(
+                      sections: state.sections, sectionCubit: sectionCubit);
+                } else if (state is SectionError) {
+                  log('Failed to load sections: ${state.message}');
+                  return Center(
+                      child: Text('Failed to load sections: ${state.message}'));
+                } else {
+                  log('else  $state');
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -125,17 +262,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(
                         width: 72), // space reserved for center button
-                    // Cleaner
+                    // Storage Center (Analytics + Cleanup)
                     IconButton(
-                      tooltip: AppLocalizations.of(context).tooltip_cleaner,
-                      icon: const Icon(Icons.cleaning_services_rounded),
+                      tooltip: AppLocalizations.of(context).tooltip_storage_center,
+                      icon: const Icon(Icons.storage_rounded),
                       color: scheme.primary,
                       onPressed: () {
                         HapticFeedback.lightImpact();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const FileCleanupPage(),
+                            builder: (_) => const StorageCenterPage(),
                           ),
                         );
                       },

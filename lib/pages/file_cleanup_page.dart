@@ -7,7 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 
 class FileCleanupPage extends StatefulWidget {
-  const FileCleanupPage({super.key});
+  final bool embedded;
+  const FileCleanupPage({super.key, this.embedded = false});
 
   @override
   State<FileCleanupPage> createState() => _FileCleanupPageState();
@@ -360,11 +361,13 @@ class _FileCleanupPageState extends State<FileCleanupPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).file_cleanup_title),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
+      appBar: widget.embedded
+          ? null
+          : AppBar(
+              title: Text(AppLocalizations.of(context).file_cleanup_title),
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+            ),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(

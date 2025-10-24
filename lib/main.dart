@@ -98,10 +98,15 @@ class _MyAppState extends State<MyApp> {
         final locale = context.select((LocaleCubit c) => c.state);
         final themeState = context.select((ThemeCubit c) => c.state);
         final themeCubit = context.read<ThemeCubit>();
-        final theme = themeCubit.themeDataFor(context);
+        
+        return ValueListenableBuilder<Color?>(
+          valueListenable: themeCubit.customPrimaryNotifier,
+          builder: (context, customColor, child) {
+            final theme = themeCubit.themeDataFor(context);
+            final customColorKey = customColor?.toARGB32().toString() ?? 'default';
 
-        final app = MaterialApp(
-          key: ValueKey('app-${locale.languageCode}-${themeState.name}'),
+            final app = MaterialApp(
+              key: ValueKey('app-${locale.languageCode}-${themeState.name}-$customColorKey'),
           navigatorKey: _navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: theme,
@@ -113,7 +118,9 @@ class _MyAppState extends State<MyApp> {
           home: const SplashView(),
         );
 
-        return app;
+            return app;
+          },
+        );
       }),
     );
   }

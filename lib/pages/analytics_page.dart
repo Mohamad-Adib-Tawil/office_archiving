@@ -5,7 +5,8 @@ import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 
 class AnalyticsPage extends StatefulWidget {
-  const AnalyticsPage({super.key});
+  final bool embedded;
+  const AnalyticsPage({super.key, this.embedded = false});
 
   @override
   State<AnalyticsPage> createState() => _AnalyticsPageState();
@@ -110,15 +111,17 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).analytics_title),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      appBar: widget.embedded
+          ? null
+          : AppBar(
+              title: Text(AppLocalizations.of(context).analytics_title),
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : FadeTransition(

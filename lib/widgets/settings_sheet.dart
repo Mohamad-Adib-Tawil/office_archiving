@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/locale_cubit/locale_cubit.dart';
 import 'package:office_archiving/cubit/theme_cubit/theme_cubit.dart';
-import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class SettingsSheet extends StatelessWidget {
   const SettingsSheet({super.key});
@@ -19,10 +19,11 @@ class SettingsSheet extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: Container(
@@ -37,7 +38,7 @@ class SettingsSheet extends StatelessWidget {
             ),
             Row(
               children: [
-                Icon(AppIcons.more, color: scheme.primary),
+                Icon(Icons.settings, color: scheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   AppLocalizations.of(context).app_settings_title,
@@ -48,7 +49,7 @@ class SettingsSheet extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(AppIcons.close),
+                  icon: const Icon(Icons.close),
                 )
               ],
             ),
@@ -86,7 +87,13 @@ class SettingsSheet extends StatelessWidget {
                     ?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             _ThemeGrid(themeState: themeState),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
+            Text(AppLocalizations.of(context).accent_color_label,
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
+            _AccentColorRow(),
+            const SizedBox(height: 6),
             InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () async {
@@ -112,7 +119,7 @@ class SettingsSheet extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 18,
-                            backgroundColor: theme.colorScheme.primary.withOpacity(.12),
+                            backgroundColor: theme.colorScheme.primary.withValues(alpha: .12),
                             backgroundImage: const NetworkImage(
                               'https://avatars.githubusercontent.com/u/223110350?s=400&u=75cb795be7688812bda8863968c8139a0fe6a96a&v=4',
                             ),
@@ -147,7 +154,7 @@ class SettingsSheet extends StatelessWidget {
                                 Text(
                                   'اضغط لفتح السيرة الذاتية',
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.primary.withOpacity(.8),
+                                    color: theme.colorScheme.primary.withValues(alpha: .8),
                                   ),
                                 ),
                               ],
@@ -162,6 +169,7 @@ class SettingsSheet extends StatelessWidget {
             ),
             const SizedBox(height: 8),
           ],
+          ),
         ),
       ),
     );
@@ -286,4 +294,265 @@ class _ThemeItemData {
   final Color color;
   final IconData icon;
   const _ThemeItemData(this.theme, this.label, this.color, this.icon);
+}
+
+class _AccentColorRow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final themeCubit = context.read<ThemeCubit>();
+    
+    return ValueListenableBuilder<Color?>(
+      valueListenable: themeCubit.customPrimaryNotifier,
+      builder: (context, current, child) {
+
+    return Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () => _showColorPicker(context, themeCubit),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  height: 48,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: current ?? Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: (current ?? Theme.of(context).colorScheme.primary).withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.palette,
+                        color: _getContrastColor(current ?? Theme.of(context).colorScheme.primary),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          current != null ? 'لون مخصص مُحدد' : 'اختر لون التمييز',
+                          style: TextStyle(
+                            color: _getContrastColor(current ?? Theme.of(context).colorScheme.primary),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: _getContrastColor(current ?? Theme.of(context).colorScheme.primary),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            if (current != null)
+              IconButton(
+                onPressed: () => themeCubit.setCustomPrimary(null),
+                icon: const Icon(Icons.refresh),
+                tooltip: AppLocalizations.of(context).reset_action,
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Color _getContrastColor(Color color) {
+    // حساب اللون المتباين (أبيض أو أسود) بناءً على سطوع اللون
+    final luminance = color.computeLuminance();
+    return luminance > 0.5 ? Colors.black87 : Colors.white;
+  }
+
+  void _showColorPicker(BuildContext context, ThemeCubit themeCubit) {
+    showDialog(
+      context: context,
+      builder: (context) => _ColorPickerDialog(
+        currentColor: themeCubit.customPrimary ?? Theme.of(context).colorScheme.primary,
+        onColorSelected: (color) {
+          themeCubit.setCustomPrimary(color);
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+}
+
+class _ColorPickerDialog extends StatefulWidget {
+  final Color currentColor;
+  final Function(Color) onColorSelected;
+
+  const _ColorPickerDialog({
+    required this.currentColor,
+    required this.onColorSelected,
+  });
+
+  @override
+  State<_ColorPickerDialog> createState() => _ColorPickerDialogState();
+}
+
+class _ColorPickerDialogState extends State<_ColorPickerDialog> {
+  late Color selectedColor;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedColor = widget.currentColor;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('اختر لون التمييز'),
+      content: SizedBox(
+        width: 300,
+        height: 520,
+        child: Column(
+          children: [
+            // معاينة اللون المحدد
+            Container(
+              width: double.infinity,
+              height: 50,
+              decoration: BoxDecoration(
+                color: selectedColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Center(
+                child: Text(
+                  '#${selectedColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}',
+                  style: TextStyle(
+                    color: _getContrastColor(selectedColor),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // لوحة الألوان الدائرية الاحترافية
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // لوحة الألوان الدائرية
+                    ColorPicker(
+                      pickerColor: selectedColor,
+                      onColorChanged: (color) {
+                        setState(() {
+                          selectedColor = color;
+                        });
+                        HapticFeedback.selectionClick();
+                      },
+                      colorPickerWidth: 250,
+                      pickerAreaHeightPercent: 0.8,
+                      enableAlpha: false,
+                      displayThumbColor: true,
+                      paletteType: PaletteType.hueWheel,
+                      labelTypes: const [],
+                      pickerAreaBorderRadius: BorderRadius.circular(12),
+                      hexInputBar: true,
+                      portraitOnly: true,
+                    ),
+                    const SizedBox(height: 12),
+                    // شريط إضافي للألوان المحفوظة مسبقاً
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ألوان سريعة',
+                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            children: [
+                              Colors.blue,
+                              Colors.red,
+                              Colors.green,
+                              Colors.orange,
+                              Colors.purple,
+                              Colors.teal,
+                              Colors.pink,
+                              Colors.indigo,
+                            ].map((color) => GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedColor = color;
+                                });
+                                HapticFeedback.selectionClick();
+                              },
+                              child: Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: color,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: selectedColor == color 
+                                        ? Colors.white 
+                                        : Colors.transparent,
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: color.withValues(alpha: 0.3),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: selectedColor == color
+                                    ? const Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                        size: 16,
+                                      )
+                                    : null,
+                              ),
+                            )).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(AppLocalizations.of(context).cancel),
+        ),
+        ElevatedButton(
+          onPressed: () => widget.onColorSelected(selectedColor),
+          child: Text(AppLocalizations.of(context).addAction),
+        ),
+      ],
+    );
+  }
+
+  Color _getContrastColor(Color color) {
+    final luminance = color.computeLuminance();
+    return luminance > 0.5 ? Colors.black87 : Colors.white;
+  }
 }
