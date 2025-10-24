@@ -334,7 +334,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // رسالة ترحيبية
+             // رسالة ترحيبية
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
