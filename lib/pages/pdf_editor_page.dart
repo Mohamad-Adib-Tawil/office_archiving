@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -65,7 +64,7 @@ class _PdfEditorPageState extends State<PdfEditorPage> {
       ),
       child: Row(
         children: [
-          _buildToolButton('select', Icons.cursor_default, 'تحديد'),
+          _buildToolButton('select', Icons.touch_app, 'تحديد'),
           _buildToolButton('highlight', Icons.highlight, 'تمييز'),
           _buildToolButton('text', Icons.text_fields, 'نص'),
           _buildToolButton('draw', Icons.draw, 'رسم'),

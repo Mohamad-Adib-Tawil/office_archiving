@@ -7,13 +7,11 @@ import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
 import 'package:office_archiving/widgets/section_list_view.dart';
 import 'package:office_archiving/widgets/shimmers.dart';
 import 'package:office_archiving/functions/show_add_section_dialog.dart';
-import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
 import 'package:office_archiving/pages/settings_page.dart';
 import 'package:office_archiving/pages/document_scanner_page.dart';
 import 'package:office_archiving/pages/professional_tools_page.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
-import 'package:office_archiving/pages/storage_center_page.dart';
 
 import '../service/sqlite_service.dart';
 

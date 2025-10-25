@@ -375,7 +375,7 @@ class _DocumentScannerPageState extends State<DocumentScannerPage> {
       
       if (_autoEnhance) {
         image = img.adjustColor(image, contrast: 1.2, brightness: 1.05);
-        image = img.smooth(image, 1);
+        image = img.smooth(image, weight: 1);
       }
       
       image = _applyFilter(image, _currentFilter);

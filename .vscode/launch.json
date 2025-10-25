@@ -71,6 +71,13 @@
         "flutterMode": "debug"
       },
       {
+        "name": "Pixel 9 Emulator",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "emulator-5556",
+        "flutterMode": "debug"
+      },
+      {
         "name": "emulator-5554 Android 16 (API 36)",
         "request": "launch",
         "type": "dart",

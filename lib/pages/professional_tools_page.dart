@@ -5,6 +5,7 @@ import 'package:office_archiving/pages/qr_barcode_scanner.dart';
 import 'package:office_archiving/pages/business_card_scanner.dart';
 import 'package:office_archiving/pages/pdf_security_page.dart';
 import 'package:office_archiving/pages/pdf_editor_page.dart';
+import 'package:office_archiving/pages/document_management_page.dart';
 
 class ProfessionalToolsPage extends StatelessWidget {
   const ProfessionalToolsPage({super.key});
@@ -78,11 +79,11 @@ class ProfessionalToolsPage extends StatelessWidget {
                 page: const PdfEditorPage(pdfPath: ''),
               ),
               ToolItem(
-                title: 'دمج وتقسيم PDF',
-                subtitle: 'أدوات متقدمة لإدارة PDF',
+                title: 'دمج PDF',
+                subtitle: 'دمج عدة ملفات PDF في ملف واحد',
                 icon: Icons.merge,
                 color: Colors.teal,
-                onTap: () => _showComingSoon(context),
+                page: const DocumentManagementPage(),
               ),
             ]),
             
@@ -178,7 +179,7 @@ class ProfessionalToolsPage extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 1.1,
+        childAspectRatio: 0.85,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
@@ -207,12 +208,13 @@ class ProfessionalToolsPage extends StatelessWidget {
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: tool.color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -220,25 +222,29 @@ class ProfessionalToolsPage extends StatelessWidget {
                 child: Icon(
                   tool.icon,
                   color: tool.color,
-                  size: 32,
+                  size: 28,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Text(
                 tool.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 15,
+                  height: 1.2,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 4),
-              Expanded(
-                child: Text(
-                  tool.subtitle,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+              Text(
+                tool.subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11,
+                  height: 1.3,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
             ],
