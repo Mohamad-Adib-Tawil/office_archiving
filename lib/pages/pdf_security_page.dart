@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:signature/signature.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
@@ -576,10 +574,6 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
     setState(() => _isProcessing = true);
     
     try {
-      // قراءة PDF الأصلي
-      final originalFile = File(widget.inputPdfPath!);
-      final originalBytes = await originalFile.readAsBytes();
-      
       // إنشاء PDF جديد محمي
       final pdf = pw.Document();
       
@@ -604,7 +598,7 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                     _watermarkText!,
                     style: pw.TextStyle(
                       fontSize: 48,
-                      color: PdfColor.fromInt(_watermarkColor.value).flatten(_watermarkOpacity),
+                      color: PdfColor.fromInt(_watermarkColor.value),
                     ),
                   ),
                 ),
