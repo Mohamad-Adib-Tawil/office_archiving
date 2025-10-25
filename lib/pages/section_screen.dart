@@ -30,6 +30,7 @@ class _SectionScreenState extends State<SectionScreen> {
   late DatabaseService sqlDB;
   late ItemSectionCubit itemCubit;
   bool _isProcessing = false;
+  late String _sectionName;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _SectionScreenState extends State<SectionScreen> {
     itemCubit = BlocProvider.of<ItemSectionCubit>(context);
     log('SectionScreen widget.section.id ${widget.section.id}');
     itemCubit.fetchItemsBySectionId(widget.section.id);
+    _sectionName = widget.section.name;
     super.initState();
   }
 
@@ -80,7 +82,7 @@ class _SectionScreenState extends State<SectionScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(widget.section.name),
+                Text(_sectionName),
                 const SizedBox(width: 8),
                 const Icon(Icons.edit, size: 18),
               ],
@@ -290,7 +292,7 @@ class _SectionScreenState extends State<SectionScreen> {
   }
 
   Future<void> _editSectionName() async {
-    final controller = TextEditingController(text: widget.section.name);
+    final controller = TextEditingController(text: _sectionName);
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -316,10 +318,10 @@ class _SectionScreenState extends State<SectionScreen> {
       ),
     );
     
-    if (result != null && result.isNotEmpty && result != widget.section.name) {
+    if (result != null && result.isNotEmpty && result != _sectionName) {
       await sqlDB.updateSectionName(widget.section.id, result);
       if (mounted) {
-        setState(() {});
+        setState(() => _sectionName = result);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('تم تحديث اسم القسم')),
         );
@@ -353,7 +355,7 @@ class _SectionScreenState extends State<SectionScreen> {
   }
 
   Future<void> _showShareOptions() async {
-    final nameController = TextEditingController(text: widget.section.name);
+    final nameController = TextEditingController(text: _sectionName);
     
     await showModalBottomSheet(
       context: context,
@@ -556,7 +558,7 @@ class _SectionScreenState extends State<SectionScreen> {
       
       final pdfFile = await PdfService().createPdfFromImages(
         imagePaths,
-        fileName: '${widget.section.name}_merged.pdf',
+        fileName: '${_sectionName}_merged.pdf',
       );
       
       _showSnackBar('تم الدمج: ${pdfFile.path}');
@@ -598,7 +600,7 @@ class _SectionScreenState extends State<SectionScreen> {
       
       // حفظ النص في ملف
       final dir = await getApplicationDocumentsDirectory();
-      final textFile = File('${dir.path}/${widget.section.name}_extracted.txt');
+      final textFile = File('${dir.path}/${_sectionName}_extracted.txt');
       await textFile.writeAsString(allText.toString());
       
       _showSnackBar('تم استخراج النص: ${textFile.path}');
