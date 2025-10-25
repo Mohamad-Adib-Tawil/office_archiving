@@ -11,6 +11,7 @@ import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
 import 'package:office_archiving/pages/settings_page.dart';
 import 'package:office_archiving/pages/document_scanner_page.dart';
+import 'package:office_archiving/pages/professional_tools_page.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/pages/storage_center_page.dart';
 
@@ -274,17 +275,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(
                         width: 72), // space reserved for center button
-                    // Storage Center (Analytics + Cleanup)
+                    // Professional Tools
                     IconButton(
-                      tooltip: AppLocalizations.of(context).tooltip_storage_center,
-                      icon: const Icon(Icons.storage_rounded),
+                      tooltip: 'أدوات احترافية',
+                      icon: const Icon(Icons.construction_rounded),
                       color: scheme.primary,
                       onPressed: () {
                         HapticFeedback.lightImpact();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const StorageCenterPage(),
+                            builder: (_) => const ProfessionalToolsPage(),
                           ),
                         );
                       },
