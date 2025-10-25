@@ -17,6 +17,9 @@ import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/services/ocr_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:printing/printing.dart' as printing_pkg;
+import 'package:image/image.dart' as img;
 
 class SectionScreen extends StatefulWidget {
   final Section section;
