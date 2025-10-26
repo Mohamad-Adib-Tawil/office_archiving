@@ -84,6 +84,19 @@ class SectionListView extends StatelessWidget {
     );
   }
 
+  // Determine text direction based on name language
+  // Rules: Arabic -> RTL, English -> LTR, Others/Mixed -> RTL
+  TextDirection _dirFor(String text) {
+    // Arabic ranges: Arabic, Arabic Supplement, Arabic Extended-A/B, Presentation Forms
+    final hasArabic = RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]')
+        .hasMatch(text);
+    final hasEnglish = RegExp(r'[A-Za-z]').hasMatch(text);
+    if (hasArabic && !hasEnglish) return TextDirection.rtl;
+    if (hasEnglish && !hasArabic) return TextDirection.ltr;
+    // Mixed or other languages default to RTL per requirement
+    return TextDirection.rtl;
+  }
+
   Widget _buildModernSectionCard(BuildContext context, int index) {
     final section = sections[index];
     
@@ -199,76 +212,73 @@ class SectionListView extends StatelessWidget {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // اسم القسم
-                        Text(
-                          section.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black26,
-                                blurRadius: 8,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 8),
-                        // إحصائيات القسم
-                        FutureBuilder<int>(
-                          future: DatabaseService.instance.getDocumentCountBySection(section.id),
-                          builder: (context, snapshot) {
-                            final count = snapshot.data ?? 0;
-                            return Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.25),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.white.withOpacity(0.3),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(
-                                        Icons.description_outlined,
-                                        size: 14,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        '$count',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                  child: Directionality(
+                    textDirection: _dirFor(section.name),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // اسم القسم
+                          Text(
+                            section.name,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black26,
+                                  blurRadius: 8,
+                                  offset: Offset(0, 2),
                                 ),
                               ],
-                            );
-                          },
-                        ),
-                      ],
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 8),
+                          // إحصائيات القسم
+                          FutureBuilder<int>(
+                            future: DatabaseService.instance.getDocumentCountBySection(section.id),
+                            builder: (context, snapshot) {
+                              final count = snapshot.data ?? 0;
+                              return Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.25),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.3),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.description_outlined, size: 14, color: Colors.white),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '$count',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
