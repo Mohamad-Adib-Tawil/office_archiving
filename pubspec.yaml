@@ -17,6 +17,7 @@ dependencies:
   flutter_bloc: ^9.1.0
   flutter_pdfview: ^1.3.2
   image_picker: ^1.1.2
+  camera: ^0.11.0+2
   animations: ^2.0.11
   open_file: ^3.5.7
   path: ^1.8.0
@@ -25,6 +26,7 @@ dependencies:
   shared_preferences: ^2.3.2
   sqflite: ^2.0.0+4
   shimmer: ^3.0.0
+  intl: ^0.20.2
   
   # AI Features Dependencies (temporarily disabled due to network issues)
   google_mlkit_text_recognition: ^0.12.0
@@ -45,6 +47,9 @@ dependencies:
   url_launcher: ^6.3.0
   flutter_colorpicker: ^1.1.0
   qr_flutter: ^4.1.0
+  
+  # Professional Document Scanner
+  flutter_doc_scanner: ^0.0.16
 
 dev_dependencies:
   build_runner: ^2.3.3

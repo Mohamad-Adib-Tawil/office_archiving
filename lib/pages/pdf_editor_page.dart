@@ -17,7 +17,6 @@ class _PdfEditorPageState extends State<PdfEditorPage> {
   String _selectedTool = 'select';
   final List<Annotation> _annotations = [];
   bool _isProcessing = false;
-  double _zoom = 1.0;
   
   final _textController = TextEditingController();
   Color _selectedColor = Colors.red;

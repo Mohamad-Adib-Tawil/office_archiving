@@ -3,10 +3,11 @@ import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dar
 import 'package:office_archiving/functions/add_item_from_memory_storage.dart';
 import 'package:office_archiving/functions/add_item_from_camera.dart';
 import 'package:office_archiving/functions/add_item_from_gallery.dart';
+import 'package:office_archiving/pages/flutter_doc_scanner_page.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 
-void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit itemCubit) {
+void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit itemCubit, {String? sectionName}) async {
   final theme = Theme.of(context);
   final primary = theme.colorScheme.primary;
   showModalBottomSheet(
@@ -64,6 +65,26 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                 onTap: () {
                   Navigator.pop(ctx);
                   addItemFromCamera(idSection, itemCubit, context);
+                },
+              ),
+              _ActionTile(
+                icon: Icons.document_scanner,
+                color: Colors.deepPurple,
+                title: 'ماسح المستندات الاحترافي',
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => FlutterDocScannerPage(
+                        sectionId: idSection,
+                        sectionName: sectionName ?? 'قسم',
+                        multiPage: true,
+                      ),
+                    ),
+                  );
+                  // تحديث القائمة بعد العودة
+                  itemCubit.fetchItemsBySectionId(idSection);
                 },
               ),
             ],
