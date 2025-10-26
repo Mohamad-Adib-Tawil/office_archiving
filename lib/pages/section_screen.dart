@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
@@ -113,70 +114,83 @@ class _SectionScreenState extends State<SectionScreen> {
         ),
         body: Column(
           children: [
-            FutureBuilder<String?>(
-              future: DatabaseService.instance
-                  .getSectionCoverOrLatest(widget.section.id),
-              builder: (context, snap) {
-                final scheme = Theme.of(context).colorScheme;
-                final path = snap.data;
-                final hasImage =
-                    path != null && path.isNotEmpty && File(path).existsSync();
-                if (!hasImage) {
-                  return const SizedBox.shrink();
-                }
-                return Container(
-                  height: 200,
-                  margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 14,
-                        offset: const Offset(0, 8),
+            // Listen to DB change stream so the cover updates immediately after updates
+            StreamBuilder<void>(
+              stream: DatabaseService.instance.changes,
+              builder: (context, _) {
+                return FutureBuilder<String?>(
+                  future: DatabaseService.instance
+                      .getSectionCoverOrLatest(widget.section.id),
+                  builder: (context, snap) {
+                    final scheme = Theme.of(context).colorScheme;
+                    final path = snap.data;
+                    final hasImage =
+                        path != null && path.isNotEmpty && File(path).existsSync();
+                    if (!hasImage) {
+                      return const SizedBox.shrink();
+                    }
+                    // Evict any stale cached image for this file path so the new cover shows immediately
+                    try {
+                      final provider = FileImage(File(path));
+                      PaintingBinding.instance.imageCache.evict(provider);
+                    } catch (_) {}
+                    return Container(
+                      key: ValueKey(path),
+                      height: 200,
+                      margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(22),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 14,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.file(
-                        File(path),
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: scheme.primary.withValues(alpha: 0.22),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(AppIcons.image,
-                                    color: Colors.white, size: 16),
-                                const SizedBox(width: 6),
-                                Text(
-                                  AppLocalizations.of(context).cover_badge,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.file(
+                            File(path),
+                            key: ValueKey('cover-$path'),
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: scheme.primary.withValues(alpha: 0.22),
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                              ],
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(AppIcons.image,
+                                        color: Colors.white, size: 16),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      AppLocalizations.of(context).cover_badge,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
             ),
