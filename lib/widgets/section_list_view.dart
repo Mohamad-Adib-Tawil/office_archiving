@@ -27,7 +27,6 @@ class SectionListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,9 +51,9 @@ class SectionListView extends StatelessWidget {
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 18,
-                    mainAxisSpacing: 18,
-                    childAspectRatio: 0.86,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.75,
                   ),
                   itemCount: sections.length,
                   itemBuilder: (context, index) {
@@ -68,135 +67,15 @@ class SectionListView extends StatelessWidget {
                         return Opacity(
                           opacity: value,
                           child: Transform.translate(
-                            offset: Offset(0, 18 * (1 - value)),
+                            offset: Offset(0, 24 * (1 - value)),
                             child: Transform.scale(
-                              scale: 0.98 + (0.02 * value),
+                              scale: 0.96 + (0.04 * value),
                               child: child,
                             ),
                           ),
                         );
                       },
-                      child: OpenContainer(
-                        openElevation: 0,
-                        closedElevation: 4,
-                        closedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        openShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        transitionType: ContainerTransitionType.fadeThrough,
-                        openBuilder: (context, _) => SectionScreen(
-                          section: Section(
-                            id: sections[index].id,
-                            name: sections[index].name,
-                          ),
-                        ),
-                        closedBuilder: (context, open) => Material(
-                          type: MaterialType.transparency,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(20),
-                            onTap: open,
-                            onLongPress: () => _showOptionsDialog(context, index),
-                            child: Card(
-                              elevation: 6,
-                              shadowColor: theme.colorScheme.shadow.withOpacity(0.12),
-                              surfaceTintColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(
-                                  color: theme.colorScheme.outlineVariant.withOpacity(0.15),
-                                ),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Stack(
-                                  children: [
-                                    // Background decorative gradient
-                                    Positioned.fill(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              theme.colorScheme.primaryContainer.withValues(alpha: 0.18),
-                                              theme.colorScheme.primary.withValues(alpha: 0.06),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    // Content
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Expanded(
-                                          child: FutureBuilder<String?>(
-                                            future: DatabaseService.instance
-                                                .getSectionCoverOrLatest(sections[index].id),
-                                            builder: (context, snap) {
-                                              final path = snap.data;
-                                              if (path != null && path.isNotEmpty && File(path).existsSync()) {
-                                                return Image.file(
-                                                  File(path),
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder: (ctx, _, __) => _buildSectionFallback(ctx),
-                                                );
-                                              }
-                                              return _buildSectionFallback(context);
-                                            },
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: Text(
-                                            sections[index].name,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: Theme.of(context).colorScheme.onSurface,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Options overlay button
-                                    Positioned(
-                                      top: 10,
-                                      right: 10,
-                                      child: InkWell(
-                                        onTap: () => _showOptionsDialog(context, index),
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(6),
-                                          decoration: BoxDecoration(
-                                            color: theme.colorScheme.surface.withOpacity(0.65),
-                                            borderRadius: BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: theme.colorScheme.shadow.withOpacity(0.08),
-                                                blurRadius: 10,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Icon(
-                                            Icons.more_horiz_rounded,
-                                            size: 18,
-                                            color: theme.colorScheme.onSurface.withOpacity(0.65),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      child: _buildModernSectionCard(context, index),
                     );
                   },
                 ),
@@ -205,60 +84,272 @@ class SectionListView extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionFallback(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final maxH = constraints.maxHeight.isFinite ? constraints.maxHeight : 120.0;
-        // Reserve space for spacing + one line of text (~20px at body size)
-        const reservedForTextAndSpacing = 8.0 + 20.0;
-        final imageSize = (maxH - reservedForTextAndSpacing).clamp(56.0, 96.0).toDouble();
-
-        return Container(
+  Widget _buildModernSectionCard(BuildContext context, int index) {
+    final section = sections[index];
+    
+    // تدرجات لونية متنوعة لكل قسم
+    final gradients = [
+      [const Color(0xFF667eea), const Color(0xFF764ba2)],
+      [const Color(0xFFf093fb), const Color(0xFFf5576c)],
+      [const Color(0xFF4facfe), const Color(0xFF00f2fe)],
+      [const Color(0xFF43e97b), const Color(0xFF38f9d7)],
+      [const Color(0xFFfa709a), const Color(0xFFfee140)],
+      [const Color(0xFF30cfd0), const Color(0xFF330867)],
+    ];
+    
+    final gradientColors = gradients[index % gradients.length];
+    
+    return OpenContainer(
+      openElevation: 0,
+      closedElevation: 0,
+      closedShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      openShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      transitionType: ContainerTransitionType.fadeThrough,
+      transitionDuration: const Duration(milliseconds: 500),
+      openBuilder: (context, _) => SectionScreen(
+        section: Section(
+          id: section.id,
+          name: section.name,
+        ),
+      ),
+      closedBuilder: (context, open) => GestureDetector(
+        onTap: open,
+        onLongPress: () => _showOptionsDialog(context, index),
+        child: Container(
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                scheme.primary.withValues(alpha: 0.18),
-                scheme.primary.withValues(alpha: 0.08),
+                gradientColors[0].withOpacity(0.85),
+                gradientColors[1].withOpacity(0.95),
               ],
             ),
+            boxShadow: [
+              BoxShadow(
+                color: gradientColors[0].withOpacity(0.4),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+                spreadRadius: -5,
+              ),
+            ],
           ),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Stack(
               children: [
-                SizedBox(
-                  width: imageSize,
-                  height: imageSize,
-                  child: Image.asset(
-                    kLogoOffice,
-                    fit: BoxFit.contain,
+                // خلفية متحركة بتأثير Glassmorphism
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.white.withOpacity(0.1),
+                          Colors.white.withOpacity(0.05),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    AppLocalizations.of(context).appTitle,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: scheme.onPrimaryContainer.withValues(alpha: 0.9),
+                
+                // الصورة أو الأيقونة الافتراضية
+                Positioned.fill(
+                  child: FutureBuilder<String?>(
+                    future: DatabaseService.instance.getSectionCoverOrLatest(section.id),
+                    builder: (context, snap) {
+                      final path = snap.data;
+                      if (path != null && path.isNotEmpty && File(path).existsSync()) {
+                        return Stack(
+                          children: [
+                            Image.file(
+                              File(path),
+                              fit: BoxFit.cover,
+                              errorBuilder: (ctx, _, __) => _buildModernFallback(context, gradientColors),
+                            ),
+                            // تأثير overlay للصورة
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(0.7),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return _buildModernFallback(context, gradientColors);
+                    },
+                  ),
+                ),
+                
+                // محتوى البطاقة
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // اسم القسم
+                        Text(
+                          section.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black26,
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        // إحصائيات القسم
+                        FutureBuilder<int>(
+                          future: DatabaseService.instance.getDocumentCountBySection(section.id),
+                          builder: (context, snapshot) {
+                            final count = snapshot.data ?? 0;
+                            return Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.25),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.description_outlined,
+                                        size: 14,
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '$count',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                // زر الخيارات
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: GestureDetector(
+                    onTap: () => _showOptionsDialog(context, index),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.25),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.more_vert_rounded,
+                        size: 20,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
+
+  Widget _buildModernFallback(BuildContext context, List<Color> gradientColors) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            gradientColors[0].withOpacity(0.6),
+            gradientColors[1].withOpacity(0.8),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 2,
+                ),
+              ),
+              child: const Icon(
+                Icons.folder_rounded,
+                size: 48,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   void _showOptionsDialog(BuildContext context, int index) {
     final rootContext =
