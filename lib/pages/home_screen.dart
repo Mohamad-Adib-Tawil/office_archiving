@@ -57,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         Widget card(String title, String value, Color color, IconData icon) {
           return Expanded(
+            flex: 3,
             child: Container(
               height: 76,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -94,6 +95,60 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 16,
                             height: 1.1,
                             fontWeight: FontWeight.w800,
+                          ),
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Larger, more prominent card for storage size
+        Widget storageCard(String title, String value, Color color, IconData icon) {
+          return Expanded(
+            flex: 6,
+            child: Container(
+              height: 76,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: color.withValues(alpha: 0.28), width: 1.2),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontSize: 12,
+                          height: 1.2,
+                          fontWeight: FontWeight.w700,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, color: color, size: 22),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          value,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            height: 1.1,
+                            fontWeight: FontWeight.w900,
                           ),
                           overflow: TextOverflow.fade,
                           softWrap: false,
@@ -156,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 8),
             card(AppLocalizations.of(context).sections, '$totalSections', Colors.green, Icons.folder),
             const SizedBox(width: 8),
-            card(AppLocalizations.of(context).storage_size, formatBytes(totalSize), Colors.orange, Icons.storage),
+            storageCard(AppLocalizations.of(context).storage_size, formatBytes(totalSize), Colors.orange, Icons.storage),
           ],
         );
           },
