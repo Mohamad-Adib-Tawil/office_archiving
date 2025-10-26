@@ -329,6 +329,15 @@ class DatabaseService {
     );
   }
 
+  // Get document count for a specific section
+  Future<int> getDocumentCountBySection(int sectionId) async {
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM items WHERE sectionId = ?',
+      [sectionId],
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
   // Analytics methods
   Future<Map<String, dynamic>> getStorageAnalytics() async {
     // Get total files and sections
