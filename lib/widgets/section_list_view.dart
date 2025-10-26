@@ -207,40 +207,56 @@ class SectionListView extends StatelessWidget {
 
   Widget _buildSectionFallback(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            scheme.primary.withValues(alpha: 0.18),
-            scheme.primary.withValues(alpha: 0.08),
-          ],
-        ),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 96,
-              height: 96,
-              child: Image.asset(
-                kLogoOffice,
-                fit: BoxFit.contain,
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxH = constraints.maxHeight.isFinite ? constraints.maxHeight : 120.0;
+        // Reserve space for spacing + one line of text (~20px at body size)
+        const reservedForTextAndSpacing = 8.0 + 20.0;
+        final imageSize = (maxH - reservedForTextAndSpacing).clamp(56.0, 96.0).toDouble();
+
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                scheme.primary.withValues(alpha: 0.18),
+                scheme.primary.withValues(alpha: 0.08),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              AppLocalizations.of(context).appTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                color: scheme.onPrimaryContainer.withValues(alpha: 0.9),
-              ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: imageSize,
+                  height: imageSize,
+                  child: Image.asset(
+                    kLogoOffice,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    AppLocalizations.of(context).appTitle,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: scheme.onPrimaryContainer.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
