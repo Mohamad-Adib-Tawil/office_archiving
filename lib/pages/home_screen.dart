@@ -9,8 +9,8 @@ import 'package:office_archiving/widgets/shimmers.dart';
 import 'package:office_archiving/functions/show_add_section_dialog.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
 import 'package:office_archiving/pages/settings_page.dart';
-import 'package:office_archiving/pages/document_scanner_page.dart';
 import 'package:office_archiving/pages/professional_tools_page.dart';
+import 'package:office_archiving/pages/flutter_doc_scanner_page.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 
 import '../service/sqlite_service.dart';
@@ -301,14 +301,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       tooltip: AppLocalizations.of(context).tooltip_scanner,
                       icon: const Icon(Icons.document_scanner_rounded),
                       color: scheme.primary,
-                      onPressed: () {
+                      onPressed: () async {
                         HapticFeedback.lightImpact();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const DocumentScannerPage(),
-                          ),
-                        );
+                        // عرض قائمة الأقسام لاختيار القسم قبل المسح
+                        await _showSectionSelectionForScanner(context);
                       },
                     ),
                     // AI
@@ -397,6 +393,105 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+  
+  /// عرض قائمة الأقسام لاختيار القسم قبل المسح
+  Future<void> _showSectionSelectionForScanner(BuildContext context) async {
+    final db = DatabaseService.instance;
+    final sections = await db.getAllSections();
+    
+    if (!context.mounted) return;
+    
+    if (sections.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('لا توجد أقسام متاحة. يرجى إنشاء قسم أولاً.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.6,
+        minChildSize: 0.4,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (_, controller) => Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Row(
+                children: [
+                  Icon(Icons.folder_outlined, color: Colors.blue, size: 28),
+                  SizedBox(width: 12),
+                  Text(
+                    'اختر القسم للمسح',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView.builder(
+                  controller: controller,
+                  itemCount: sections.length,
+                  itemBuilder: (context, index) {
+                    final section = sections[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                          child: Icon(
+                            Icons.folder,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        title: Text(
+                          section['name'] ?? 'قسم',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () async {
+                          Navigator.pop(ctx);
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FlutterDocScannerPage(
+                                sectionId: section['id'] as int,
+                                sectionName: section['name'] as String? ?? 'قسم',
+                                multiPage: true,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

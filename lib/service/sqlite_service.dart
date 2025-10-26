@@ -66,6 +66,8 @@ class DatabaseService {
       bool hasOcrLang = columns.any((c) => c['name'] == 'ocrLang');
       bool hasOcrProcessedAt = columns.any((c) => c['name'] == 'ocrProcessedAt');
       bool hasOcrHasText = columns.any((c) => c['name'] == 'ocrHasText');
+      bool hasCreatedAt = columns.any((c) => c['name'] == 'createdAt');
+      
       if (!hasOcrText) {
         await db.execute("ALTER TABLE items ADD COLUMN ocrText TEXT");
       }
@@ -78,8 +80,11 @@ class DatabaseService {
       if (!hasOcrHasText) {
         await db.execute("ALTER TABLE items ADD COLUMN ocrHasText INTEGER DEFAULT 0");
       }
+      if (!hasCreatedAt) {
+        await db.execute("ALTER TABLE items ADD COLUMN createdAt TEXT");
+      }
     } catch (e) {
-      log('items OCR columns migration error: $e');
+      log('items columns migration error: $e');
     }
     
     _isInitialized = true;
@@ -170,12 +175,13 @@ class DatabaseService {
   }
 
   Future<int> insertItem(
-      String name, String filePath, String fileType, int sectionId) async {
+      String name, String filePath, String fileType, int sectionId, {String? createdAt}) async {
     final id = await db.insert('items', {
       'name': name,
       'filePath': filePath,
       'fileType': fileType,
-      'sectionId': sectionId
+      'sectionId': sectionId,
+      'createdAt': createdAt ?? DateTime.now().toIso8601String(),
     });
     _notifyChange();
     return id;
