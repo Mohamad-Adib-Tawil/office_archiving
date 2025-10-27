@@ -12,6 +12,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:media_store_plus/media_store_plus.dart';
+// duplicate import removed
 
 class PdfService {
   PdfService._();
@@ -124,7 +125,7 @@ class PdfService {
       if (!(await f.exists())) continue;
       final data = await f.readAsBytes();
       // Rasterize كل صفحات PDF المصدر ثم إضافتها كصور في مستند جديد
-      final pages = Printing.raster(data, dpi: 144);
+      final pages = Printing.raster(data, dpi: 144.0);
       await for (final page in pages) {
         final Uint8List pngBytes = await page.toPng();
         final img = pw.MemoryImage(pngBytes);
@@ -147,7 +148,7 @@ class PdfService {
     final data = await source.readAsBytes();
     final outDoc = pw.Document();
 
-    final pages = Printing.raster(data, dpi: 144);
+    final pages = Printing.raster(data, dpi: 144.0);
     await for (final page in pages) {
       final Uint8List pngBytes = await page.toPng();
       final img = pw.MemoryImage(pngBytes);
@@ -181,5 +182,42 @@ class PdfService {
     final name = 'watermarked_${DateTime.now().millisecondsSinceEpoch}.pdf';
     final bytes = await outDoc.save();
     return _savePdfBytes(bytes, name);
+  }
+
+  // Rasterize a PDF to PNG images and save them to outputDir (default: Documents/scans)
+  Future<List<File>> rasterizePdfToImages(
+    File pdfFile, {
+    Directory? outputDir,
+    String? namePrefix,
+    int dpi = 144,
+  }) async {
+    try {
+      final dir = outputDir ??
+          Directory(p.join((await getApplicationDocumentsDirectory()).path, 'scans'));
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+
+      if (!(await pdfFile.exists())) return [];
+      final data = await pdfFile.readAsBytes();
+      final stream = Printing.raster(data, dpi: dpi.toDouble());
+      final files = <File>[];
+      int index = 1;
+      final base = namePrefix ?? 'scan_${DateTime.now().millisecondsSinceEpoch}';
+      await for (final page in stream) {
+        final pngBytes = await page.toPng();
+        final outPath = p.join(dir.path, '${base}_p$index.png');
+        final f = File(outPath);
+        await f.writeAsBytes(pngBytes, flush: true);
+        files.add(f);
+        index++;
+      }
+      return files;
+    } catch (e) {
+      if (kDebugMode) {
+        print('PdfService rasterizePdfToImages error: $e');
+      }
+      return [];
+    }
   }
 }

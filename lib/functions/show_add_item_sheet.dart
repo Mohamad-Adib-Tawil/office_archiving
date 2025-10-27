@@ -9,6 +9,7 @@ import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/pdf_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 
@@ -178,6 +179,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                       await scansDir.create(recursive: true);
                     }
 
+                    int savedCount = 0;
                     for (int i = 0; i < paths.length; i++) {
                       String path = paths[i];
                       if (path.startsWith('file://')) {
@@ -189,20 +191,42 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                       }
 
                       final ext = (path.split('.').length > 1) ? path.split('.').last.toLowerCase() : 'jpg';
+                      // في حال عاد المسح كـ PDF: حوله إلى صور واحفظ الصور فقط
+                      if (ext == 'pdf') {
+                        final images = await PdfService().rasterizePdfToImages(
+                          File(path),
+                          outputDir: scansDir,
+                          namePrefix: 'scan_${now.millisecondsSinceEpoch}_$i',
+                        );
+                        for (int p = 0; p < images.length; p++) {
+                          final img = images[p];
+                          final imgExt = (img.path.split('.').last).toLowerCase();
+                          final docName = 'مستند ${sectionName ?? "قسم"} $dateStr ${i + 1}-${p + 1}';
+                          await DatabaseService.instance.insertItem(
+                            docName,
+                            img.path,
+                            imgExt,
+                            idSection,
+                            createdAt: now.toIso8601String(),
+                          );
+                          savedCount++;
+                        }
+                        continue;
+                      }
+
                       final newName = 'scan_${now.millisecondsSinceEpoch}_$i.$ext';
                       final destPath = '${scansDir.path}/$newName';
                       await File(path).copy(destPath);
 
                       final docName = 'مستند ${sectionName ?? "قسم"} $dateStr ${i + 1}';
-                      final fileType = ext;
-                      
                       await DatabaseService.instance.insertItem(
                         docName,
                         destPath,
-                        fileType,
+                        ext,
                         idSection,
                         createdAt: now.toIso8601String(),
                       );
+                      savedCount++;
                     }
                     
                     // تحديث القائمة
@@ -213,7 +237,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'تم حفظ ${paths.length} ${paths.length == 1 ? "مستند" : "مستندات"} بنجاح',
+                            'تم حفظ $savedCount ${savedCount == 1 ? "صورة" : "صور"} بنجاح',
                           ),
                           backgroundColor: Colors.green,
                           behavior: SnackBarBehavior.floating,
