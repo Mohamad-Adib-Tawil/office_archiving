@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:io';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/add_item_from_memory_storage.dart';
 import 'package:office_archiving/functions/add_item_from_camera.dart';
 import 'package:office_archiving/functions/add_item_from_gallery.dart';
-import 'package:office_archiving/pages/flutter_doc_scanner_page.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
+import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 
 void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit itemCubit, {String? sectionName}) async {
   final theme = Theme.of(context);
@@ -73,18 +78,159 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                 title: 'ماسح المستندات الاحترافي',
                 onTap: () async {
                   Navigator.pop(ctx);
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FlutterDocScannerPage(
-                        sectionId: idSection,
-                        sectionName: sectionName ?? 'قسم',
-                        multiPage: true,
-                      ),
-                    ),
-                  );
-                  // تحديث القائمة بعد العودة
-                  itemCubit.fetchItemsBySectionId(idSection);
+                  
+                  try {
+                    // فتح الماسح مباشرة
+                    final result = await FlutterDocScanner().getScanDocuments();
+                    debugPrint('Scanner result type: ${result.runtimeType}');
+                    debugPrint('Scanner raw result: $result');
+                    
+                    // تطبيع النتيجة إلى List<String> آمنة
+                    final paths = <String>[];
+                    if (result is String) {
+                      paths.add(result);
+                    } else if (result is List) {
+                      for (final item in result) {
+                        String? p;
+                        if (item is String) {
+                          p = item;
+                        } else if (item is Map) {
+                          final tmp = item['path'] ?? item['filePath'] ?? item['imagePath'];
+                          if (tmp is String) p = tmp;
+                        } else {
+                          try {
+                            p = (item as dynamic).path as String?;
+                          } catch (_) {}
+                        }
+                        if (p != null && p.isNotEmpty) paths.add(p);
+                      }
+                    } else if (result is Map) {
+                      final maybeList = result['paths'] ?? result['images'] ?? result['files'] ?? result['savedPaths'];
+                      if (maybeList is List) {
+                        for (final item in maybeList) {
+                          String? p;
+                          if (item is String) {
+                            p = item;
+                          } else if (item is Map) {
+                            final tmp = item['path'] ?? item['filePath'] ?? item['imagePath'];
+                            if (tmp is String) p = tmp;
+                          } else {
+                            try {
+                              p = (item as dynamic).path as String?;
+                            } catch (_) {}
+                          }
+                          if (p != null && p.isNotEmpty) paths.add(p);
+                        }
+                      } else {
+                        final single = result['path'] ?? result['filePath'] ?? result['imagePath'] ?? result['pdfUri'];
+                        if (single is String && single.isNotEmpty) paths.add(single);
+                      }
+                    } else {
+                      // محاولة الوصول لخصائص ديناميكية
+                      try {
+                        final dynSaved = (result as dynamic).savedPaths as List?;
+                        if (dynSaved != null) {
+                          for (final item in dynSaved) {
+                            String? p;
+                            if (item is String) p = item; else {
+                              try { p = (item as dynamic).path as String?; } catch (_) {}
+                            }
+                            if (p != null && p.isNotEmpty) paths.add(p);
+                          }
+                        }
+                        final dynList = (result as dynamic).paths as List?;
+                        if (dynList != null) {
+                          for (final item in dynList) {
+                            String? p;
+                            if (item is String) p = item; else {
+                              try { p = (item as dynamic).path as String?; } catch (_) {}
+                            }
+                            if (p != null && p.isNotEmpty) paths.add(p);
+                          }
+                        } else {
+                          final p = (result as dynamic).path as String? ?? (result as dynamic).filePath as String? ?? (result as dynamic).imagePath as String? ?? (result as dynamic).pdfUri as String?;
+                          if (p != null && p.isNotEmpty) paths.add(p);
+                        }
+                      } catch (_) {}
+                    }
+
+                    if (paths.isEmpty) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('لم يتم التقاط أي مستند'),
+                            backgroundColor: Colors.orange,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                      return;
+                    }
+
+                    // إنشاء عناصر جديدة لكل صورة
+                    final now = DateTime.now();
+                    final dateStr = DateFormat('yyyy-MM-dd').format(now);
+                    
+                    // تحضير مجلد scans للنسخ الدائم
+                    final docsDir = await getApplicationDocumentsDirectory();
+                    final scansDir = Directory('${docsDir.path}/scans');
+                    if (!await scansDir.exists()) {
+                      await scansDir.create(recursive: true);
+                    }
+
+                    for (int i = 0; i < paths.length; i++) {
+                      String path = paths[i];
+                      if (path.startsWith('file://')) {
+                        try { path = Uri.parse(path).toFilePath(); } catch (_) { path = path.replaceFirst('file://', ''); }
+                      }
+                      if (!File(path).existsSync()) {
+                        debugPrint('Skipped non-existing file: $path');
+                        continue;
+                      }
+
+                      final ext = (path.split('.').length > 1) ? path.split('.').last.toLowerCase() : 'jpg';
+                      final newName = 'scan_${now.millisecondsSinceEpoch}_$i.$ext';
+                      final destPath = '${scansDir.path}/$newName';
+                      await File(path).copy(destPath);
+
+                      final docName = 'مستند ${sectionName ?? "قسم"} $dateStr ${i + 1}';
+                      final fileType = ext;
+                      
+                      await DatabaseService.instance.insertItem(
+                        docName,
+                        destPath,
+                        fileType,
+                        idSection,
+                        createdAt: now.toIso8601String(),
+                      );
+                    }
+                    
+                    // تحديث القائمة
+                    itemCubit.refreshItems(idSection);
+                    
+                    // رسالة نجاح
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'تم حفظ ${paths.length} ${paths.length == 1 ? "مستند" : "مستندات"} بنجاح',
+                          ),
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('فشل المسح: $e'),
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  }
                 },
               ),
             ],

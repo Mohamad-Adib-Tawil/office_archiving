@@ -28,10 +28,13 @@ class ItemSectionCubit extends Cubit<ItemSectionState> {
     }
   }
 
-  Future<void> fetchItemsBySectionId(int sectionId) async {
+  Future<void> fetchItemsBySectionId(int sectionId, {bool showLoading = true}) async {
     try {
-      final itemsData = await _databaseService.getItemsBySectionId(
-          sectionId); 
+      if (showLoading) {
+        emit(ItemSectionLoading());
+      }
+      
+      final itemsData = await _databaseService.getItemsBySectionId(sectionId); 
 
       List<ItemSection> items = [];
       for (var itemData in itemsData) {
@@ -42,6 +45,11 @@ class ItemSectionCubit extends Cubit<ItemSectionState> {
     } catch (e) {
       emit(ItemSectionError('Failed to load items: $e'));
     }
+  }
+
+  /// تحديث فوري للعناصر بدون عرض loading
+  Future<void> refreshItems(int sectionId) async {
+    await fetchItemsBySectionId(sectionId, showLoading: false);
   }
 
 
