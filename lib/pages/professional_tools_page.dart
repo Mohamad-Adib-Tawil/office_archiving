@@ -11,6 +11,7 @@ import 'package:office_archiving/pages/pdf_editor_page.dart';
 import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:office_archiving/services/pdf_service.dart';
 
 class ProfessionalToolsPage extends StatelessWidget {
   const ProfessionalToolsPage({super.key});
@@ -457,6 +458,7 @@ class ProfessionalToolsPage extends StatelessWidget {
                               await scansDir.create(recursive: true);
                             }
 
+                            int savedCount = 0;
                             for (int i = 0; i < paths.length; i++) {
                               String path = paths[i];
                               if (path.startsWith('file://')) {
@@ -468,26 +470,47 @@ class ProfessionalToolsPage extends StatelessWidget {
                               }
 
                               final ext = (path.split('.').length > 1) ? path.split('.').last.toLowerCase() : 'jpg';
+                              if (ext == 'pdf') {
+                                final images = await PdfService().rasterizePdfToImages(
+                                  File(path),
+                                  outputDir: scansDir,
+                                  namePrefix: 'scan_${now.millisecondsSinceEpoch}_$i',
+                                );
+                                for (int p = 0; p < images.length; p++) {
+                                  final img = images[p];
+                                  final imgExt = (img.path.split('.').last).toLowerCase();
+                                  final docName = 'مستند $sectionName $dateStr ${i + 1}-${p + 1}';
+                                  await DatabaseService.instance.insertItem(
+                                    docName,
+                                    img.path,
+                                    imgExt,
+                                    sectionId,
+                                    createdAt: now.toIso8601String(),
+                                  );
+                                  savedCount++;
+                                }
+                                continue;
+                              }
+
                               final newName = 'scan_${now.millisecondsSinceEpoch}_$i.$ext';
                               final destPath = '${scansDir.path}/$newName';
                               await File(path).copy(destPath);
 
                               final docName = 'مستند $sectionName $dateStr ${i + 1}';
-                              final fileType = ext;
-                              
                               await DatabaseService.instance.insertItem(
                                 docName,
                                 destPath,
-                                fileType,
+                                ext,
                                 sectionId,
                                 createdAt: now.toIso8601String(),
                               );
+                              savedCount++;
                             }
                             
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('تم حفظ ${paths.length} ${paths.length == 1 ? "مستند" : "مستندات"} بنجاح'),
+                                  content: Text('تم حفظ $savedCount ${savedCount == 1 ? "صورة" : "صور"} بنجاح'),
                                   backgroundColor: Colors.green,
                                 ),
                               );
