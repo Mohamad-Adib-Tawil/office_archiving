@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
@@ -254,7 +253,14 @@ class _SectionScreenState extends State<SectionScreen> {
           _buildBottomBarButton(
             icon: Icons.add_circle,
             label: 'إضافة',
-            onTap: () => showAddItemSheet(context, widget.section.id, itemCubit),
+            onTap: () {
+              showAddItemSheet(
+                context,
+                widget.section.id,
+                itemCubit,
+                sectionName: widget.section.name,
+              );
+            },
           ),
           _buildBottomBarButton(
             icon: Icons.edit,

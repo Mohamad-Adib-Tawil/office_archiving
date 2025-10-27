@@ -142,9 +142,15 @@ class DatabaseService {
     _notifyChange();
   }
 
-  Future<List<Map<String, dynamic>>> getItemsBySectionId(int sectionId) async {
-    return await db
-        .query('items', where: 'sectionId = ?', whereArgs: [sectionId]);
+  Future<List<Map<String, dynamic>>> getItemsBySectionId(int sectionId, {int? limit, int? offset}) async {
+    return await db.query(
+      'items',
+      where: 'sectionId = ?',
+      whereArgs: [sectionId],
+      orderBy: 'createdAt DESC', // أحدث أولاً
+      limit: limit,
+      offset: offset,
+    );
   }
 
   Future<List<Map<String, dynamic>>> getAllItems() async {

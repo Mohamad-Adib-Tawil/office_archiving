@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:office_archiving/widgets/empty_state.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/screens/editor/internal_editor_page.dart';
+import 'package:printing/printing.dart';
 
 class GridViewItemsSuccess extends StatelessWidget {
   const GridViewItemsSuccess({
@@ -28,6 +30,9 @@ class GridViewItemsSuccess extends StatelessWidget {
   static const _audioTypes = {'mp3', 'wav', 'ogg', 'aac', 'm4a', 'flac'};
   static const _docTypes = {'pdf', 'docx', 'doc', 'txt', 'rtf'};
   static const _sheetTypes = {'xlsx', 'xls', 'csv'};
+
+  // Cache for rendered first-page thumbnails of PDFs
+  static final Map<String, Uint8List> _pdfThumbCache = {};
 
   static const _iconSize = 64.0;
   static const _gridPadding = EdgeInsets.symmetric(horizontal: 4);
@@ -132,6 +137,10 @@ class GridViewItemsSuccess extends StatelessWidget {
       );
     }
 
+    if (fileType == 'pdf' && filePath != null) {
+      return _buildPdfThumbnail(filePath);
+    }
+
     if (_videoTypes.contains(fileType)) {
       return Stack(
         children: [
@@ -157,6 +166,71 @@ class GridViewItemsSuccess extends StatelessWidget {
       size: _iconSize,
       color: _getIconColor(fileType),
     );
+  }
+
+  Widget _buildPdfThumbnail(String path) {
+    if (_pdfThumbCache.containsKey(path)) {
+      return Image.memory(
+        _pdfThumbCache[path]!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 120,
+        errorBuilder: (ctx, _, __) => Container(
+          color: Colors.grey[200],
+          child: const Icon(AppIcons.pdf, size: 40),
+        ),
+      );
+    }
+
+    return FutureBuilder<Uint8List?>(
+      future: _renderPdfFirstPage(path),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          final bytes = snapshot.data!;
+          _pdfThumbCache[path] = bytes;
+          return Image.memory(
+            bytes,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 120,
+            errorBuilder: (ctx, _, __) => Container(
+              color: Colors.grey[200],
+              child: const Icon(AppIcons.pdf, size: 40),
+            ),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            color: Colors.grey[200],
+            child: const Center(
+              child: SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+          );
+        }
+        return Container(
+          color: Colors.grey[200],
+          child: const Icon(AppIcons.pdf, size: 40),
+        );
+      },
+    );
+  }
+
+  Future<Uint8List?> _renderPdfFirstPage(String path) async {
+    try {
+      if (!File(path).existsSync()) return null;
+      final data = await File(path).readAsBytes();
+      final stream = Printing.raster(data, dpi: 144);
+      final firstPage = await stream.first;
+      final pngBytes = await firstPage.toPng();
+      return pngBytes;
+    } catch (e) {
+      log('PDF thumbnail error for $path: $e');
+      return null;
+    }
   }
 
   Widget _buildFileThumbnail(BuildContext context, ItemSection item) {
