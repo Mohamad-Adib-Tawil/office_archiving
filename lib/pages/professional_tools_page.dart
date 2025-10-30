@@ -19,10 +19,7 @@ class ProfessionalToolsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('أدوات احترافية'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('أدوات احترافية'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -30,13 +27,13 @@ class ProfessionalToolsPage extends StatelessWidget {
           children: [
             _buildHeaderCard(context),
             const SizedBox(height: 24),
-            
+
             const Text(
               'أدوات المسح والالتقاط',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            
+
             _buildToolGrid(context, [
               ToolItem(
                 title: 'ماسح المستندات',
@@ -60,15 +57,15 @@ class ProfessionalToolsPage extends StatelessWidget {
                 page: const QRBarcodeScannerPage(),
               ),
             ]),
-            
+
             const SizedBox(height: 24),
-            
+
             const Text(
               'أدوات PDF المتقدمة',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            
+
             _buildToolGrid(context, [
               ToolItem(
                 title: 'حماية PDF',
@@ -92,15 +89,15 @@ class ProfessionalToolsPage extends StatelessWidget {
                 page: const DocumentManagementPage(),
               ),
             ]),
-            
+
             const SizedBox(height: 24),
-            
+
             const Text(
               'أدوات إضافية',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            
+
             _buildToolGrid(context, [
               ToolItem(
                 title: 'مولد التقارير',
@@ -138,7 +135,7 @@ class ProfessionalToolsPage extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
-            colors: [scheme.primary, scheme.primary.withOpacity(0.8)],
+            colors: [scheme.primary, scheme.primary.withValues(alpha: 0.8)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -167,10 +164,7 @@ class ProfessionalToolsPage extends StatelessWidget {
               const SizedBox(height: 12),
               const Text(
                 'مجموعة شاملة من الأدوات المتقدمة لمسح وتحرير وحماية وإدارة المستندات بطريقة احترافية',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),
@@ -222,14 +216,10 @@ class ProfessionalToolsPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: tool.color.withOpacity(0.1),
+                  color: tool.color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  tool.icon,
-                  color: tool.color,
-                  size: 28,
-                ),
+                child: Icon(tool.icon, color: tool.color, size: 28),
               ),
               const SizedBox(height: 8),
               Text(
@@ -250,7 +240,9 @@ class ProfessionalToolsPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   height: 1.3,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -271,7 +263,9 @@ class ProfessionalToolsPage extends StatelessWidget {
             Text('قريباً'),
           ],
         ),
-        content: const Text('هذه الميزة قيد التطوير وستكون متاحة في التحديث القادم'),
+        content: const Text(
+          'هذه الميزة قيد التطوير وستكون متاحة في التحديث القادم',
+        ),
         actions: [
           FilledButton(
             onPressed: () => Navigator.pop(ctx),
@@ -281,14 +275,14 @@ class ProfessionalToolsPage extends StatelessWidget {
       ),
     );
   }
-  
+
   /// عرض قائمة الأقسام لاختيار القسم قبل المسح
   Future<void> _showSectionSelectionForScanner(BuildContext context) async {
     final db = DatabaseService.instance;
     final sections = await db.getAllSections();
-    
+
     if (!context.mounted) return;
-    
+
     if (sections.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -298,7 +292,7 @@ class ProfessionalToolsPage extends StatelessWidget {
       );
       return;
     }
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -345,7 +339,9 @@ class ProfessionalToolsPage extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer,
                           child: Icon(
                             Icons.folder,
                             color: Theme.of(context).colorScheme.primary,
@@ -358,13 +354,17 @@ class ProfessionalToolsPage extends StatelessWidget {
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                         onTap: () async {
                           Navigator.pop(ctx);
-                          
+
                           final sectionId = section['id'] as int;
-                          final sectionName = section['name'] as String? ?? 'قسم';
-                          
+                          final sectionName =
+                              section['name'] as String? ?? 'قسم';
+
                           try {
-                            final result = await FlutterDocScanner().getScanDocuments();
-                            debugPrint('Scanner result type: ${result.runtimeType}');
+                            final result = await FlutterDocScanner()
+                                .getScanDocuments();
+                            debugPrint(
+                              'Scanner result type: ${result.runtimeType}',
+                            );
                             debugPrint('Scanner raw result: $result');
 
                             // تطبيع النتيجة إلى List<String>
@@ -377,7 +377,10 @@ class ProfessionalToolsPage extends StatelessWidget {
                                 if (item is String) {
                                   p = item;
                                 } else if (item is Map) {
-                                  final tmp = item['path'] ?? item['filePath'] ?? item['imagePath'];
+                                  final tmp =
+                                      item['path'] ??
+                                      item['filePath'] ??
+                                      item['imagePath'];
                                   if (tmp is String) p = tmp;
                                 } else {
                                   try {
@@ -387,14 +390,21 @@ class ProfessionalToolsPage extends StatelessWidget {
                                 if (p != null && p.isNotEmpty) paths.add(p);
                               }
                             } else if (result is Map) {
-                              final maybeList = result['paths'] ?? result['images'] ?? result['files'] ?? result['savedPaths'];
+                              final maybeList =
+                                  result['paths'] ??
+                                  result['images'] ??
+                                  result['files'] ??
+                                  result['savedPaths'];
                               if (maybeList is List) {
                                 for (final item in maybeList) {
                                   String? p;
                                   if (item is String) {
                                     p = item;
                                   } else if (item is Map) {
-                                    final tmp = item['path'] ?? item['filePath'] ?? item['imagePath'];
+                                    final tmp =
+                                        item['path'] ??
+                                        item['filePath'] ??
+                                        item['imagePath'];
                                     if (tmp is String) p = tmp;
                                   } else {
                                     try {
@@ -404,33 +414,53 @@ class ProfessionalToolsPage extends StatelessWidget {
                                   if (p != null && p.isNotEmpty) paths.add(p);
                                 }
                               } else {
-                                final single = result['path'] ?? result['filePath'] ?? result['imagePath'] ?? result['pdfUri'];
-                                if (single is String && single.isNotEmpty) paths.add(single);
+                                final single =
+                                    result['path'] ??
+                                    result['filePath'] ??
+                                    result['imagePath'] ??
+                                    result['pdfUri'];
+                                if (single is String && single.isNotEmpty)
+                                  paths.add(single);
                               }
                             } else {
                               // خصائص ديناميكية محتملة
                               try {
-                                final dynSaved = (result as dynamic).savedPaths as List?;
+                                final dynSaved =
+                                    (result as dynamic).savedPaths as List?;
                                 if (dynSaved != null) {
                                   for (final item in dynSaved) {
                                     String? p;
-                                    if (item is String) p = item; else {
-                                      try { p = (item as dynamic).path as String?; } catch (_) {}
+                                    if (item is String)
+                                      p = item;
+                                    else {
+                                      try {
+                                        p = (item as dynamic).path as String?;
+                                      } catch (_) {}
                                     }
                                     if (p != null && p.isNotEmpty) paths.add(p);
                                   }
                                 }
-                                final dynList = (result as dynamic).paths as List?;
+                                final dynList =
+                                    (result as dynamic).paths as List?;
                                 if (dynList != null) {
                                   for (final item in dynList) {
                                     String? p;
-                                    if (item is String) p = item; else {
-                                      try { p = (item as dynamic).path as String?; } catch (_) {}
+                                    if (item is String)
+                                      p = item;
+                                    else {
+                                      try {
+                                        p = (item as dynamic).path as String?;
+                                      } catch (_) {}
                                     }
                                     if (p != null && p.isNotEmpty) paths.add(p);
                                   }
                                 } else {
-                                  final p = (result as dynamic).path as String? ?? (result as dynamic).filePath as String? ?? (result as dynamic).imagePath as String? ?? (result as dynamic).pdfUri as String?;
+                                  final p =
+                                      (result as dynamic).path as String? ??
+                                      (result as dynamic).filePath as String? ??
+                                      (result as dynamic).imagePath
+                                          as String? ??
+                                      (result as dynamic).pdfUri as String?;
                                   if (p != null && p.isNotEmpty) paths.add(p);
                                 }
                               } catch (_) {}
@@ -449,10 +479,13 @@ class ProfessionalToolsPage extends StatelessWidget {
                             }
 
                             final now = DateTime.now();
-                            final dateStr = DateFormat('yyyy-MM-dd').format(now);
-                            
+                            final dateStr = DateFormat(
+                              'yyyy-MM-dd',
+                            ).format(now);
+
                             // تحضير مجلد scans للنسخ الدائم
-                            final docsDir = await getApplicationDocumentsDirectory();
+                            final docsDir =
+                                await getApplicationDocumentsDirectory();
                             final scansDir = Directory('${docsDir.path}/scans');
                             if (!await scansDir.exists()) {
                               await scansDir.create(recursive: true);
@@ -462,24 +495,34 @@ class ProfessionalToolsPage extends StatelessWidget {
                             for (int i = 0; i < paths.length; i++) {
                               String path = paths[i];
                               if (path.startsWith('file://')) {
-                                try { path = Uri.parse(path).toFilePath(); } catch (_) { path = path.replaceFirst('file://', ''); }
+                                try {
+                                  path = Uri.parse(path).toFilePath();
+                                } catch (_) {
+                                  path = path.replaceFirst('file://', '');
+                                }
                               }
                               if (!File(path).existsSync()) {
                                 debugPrint('Skipped non-existing file: $path');
                                 continue;
                               }
 
-                              final ext = (path.split('.').length > 1) ? path.split('.').last.toLowerCase() : 'jpg';
+                              final ext = (path.split('.').length > 1)
+                                  ? path.split('.').last.toLowerCase()
+                                  : 'jpg';
                               if (ext == 'pdf') {
-                                final images = await PdfService().rasterizePdfToImages(
-                                  File(path),
-                                  outputDir: scansDir,
-                                  namePrefix: 'scan_${now.millisecondsSinceEpoch}_$i',
-                                );
+                                final images = await PdfService()
+                                    .rasterizePdfToImages(
+                                      File(path),
+                                      outputDir: scansDir,
+                                      namePrefix:
+                                          'scan_${now.millisecondsSinceEpoch}_$i',
+                                    );
                                 for (int p = 0; p < images.length; p++) {
                                   final img = images[p];
-                                  final imgExt = (img.path.split('.').last).toLowerCase();
-                                  final docName = 'مستند $sectionName $dateStr ${i + 1}-${p + 1}';
+                                  final imgExt = (img.path.split('.').last)
+                                      .toLowerCase();
+                                  final docName =
+                                      'مستند $sectionName $dateStr ${i + 1}-${p + 1}';
                                   await DatabaseService.instance.insertItem(
                                     docName,
                                     img.path,
@@ -492,11 +535,13 @@ class ProfessionalToolsPage extends StatelessWidget {
                                 continue;
                               }
 
-                              final newName = 'scan_${now.millisecondsSinceEpoch}_$i.$ext';
+                              final newName =
+                                  'scan_${now.millisecondsSinceEpoch}_$i.$ext';
                               final destPath = '${scansDir.path}/$newName';
                               await File(path).copy(destPath);
 
-                              final docName = 'مستند $sectionName $dateStr ${i + 1}';
+                              final docName =
+                                  'مستند $sectionName $dateStr ${i + 1}';
                               await DatabaseService.instance.insertItem(
                                 docName,
                                 destPath,
@@ -506,11 +551,13 @@ class ProfessionalToolsPage extends StatelessWidget {
                               );
                               savedCount++;
                             }
-                            
+
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('تم حفظ $savedCount ${savedCount == 1 ? "صورة" : "صور"} بنجاح'),
+                                  content: Text(
+                                    'تم حفظ $savedCount ${savedCount == 1 ? "صورة" : "صور"} بنجاح',
+                                  ),
                                   backgroundColor: Colors.green,
                                 ),
                               );

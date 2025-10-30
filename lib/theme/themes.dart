@@ -141,16 +141,23 @@ class AppThemes {
     scheme = scheme.copyWith(
       surface: backgroundSurface,
       background: backgroundSurface,
-      onSurface:
-          isDark ? Colors.white.withOpacity(0.92) : scheme.onSurface,
+      onSurface: isDark
+          ? Colors.white.withValues(alpha: 0.92)
+          : scheme.onSurface,
       onPrimary: isDark ? Colors.white : scheme.onPrimary,
     );
 
     final cardColor = isDark
-        ? Color.alphaBlend(Colors.white.withOpacity(0.06), backgroundSurface)
+        ? Color.alphaBlend(
+            Colors.white.withValues(alpha: 0.06),
+            backgroundSurface,
+          )
         : Colors.white;
     final inputFill = isDark
-        ? Color.alphaBlend(Colors.white.withOpacity(0.04), backgroundSurface)
+        ? Color.alphaBlend(
+            Colors.white.withValues(alpha: 0.04),
+            backgroundSurface,
+          )
         : const Color(0xFFF3F5F7);
 
     final baseTypography = isDark
@@ -185,13 +192,14 @@ class AppThemes {
       ),
       textTheme: baseTypography
           .apply(
-            bodyColor:
-                isDark ? Colors.white.withOpacity(0.9) : onSurface,
+            bodyColor: isDark ? Colors.white.withValues(alpha: 0.9) : onSurface,
             displayColor: onSurface,
           )
           .copyWith(
-            titleMedium:
-                TextStyle(fontWeight: FontWeight.w600, color: onSurface),
+            titleMedium: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: onSurface,
+            ),
           ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -199,16 +207,18 @@ class AppThemes {
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: scheme.primary,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -220,8 +230,10 @@ class AppThemes {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: inputFill,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: scheme.outlineVariant),
@@ -241,10 +253,12 @@ class AppThemes {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
       ),
-      pageTransitionsTheme: const PageTransitionsTheme(builders: {
-        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-      }),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        },
+      ),
     );
   }
 }
