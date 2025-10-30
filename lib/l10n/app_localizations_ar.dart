@@ -653,4 +653,90 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get since => 'منذ';
+
+  @override
+  String get tooltip_professional_tools => 'أدوات احترافية';
+
+  @override
+  String get tools_docs_center_title => 'مركز الأدوات والملفات';
+
+  @override
+  String get tab_professional_tools => 'أدوات احترافية';
+
+  @override
+  String get coming_soon_message =>
+      'هذه الميزة قيد التطوير وستكون متاحة في التحديث القادم';
+
+  @override
+  String get ok_action => 'موافق';
+
+  @override
+  String get pdf_security_title => 'حماية وتوقيع PDF';
+
+  @override
+  String get tab_security => 'الحماية';
+
+  @override
+  String get tab_signature => 'التوقيع';
+
+  @override
+  String get tab_watermark => 'العلامة المائية';
+
+  @override
+  String get protect_pdf_action => 'حماية PDF';
+
+  @override
+  String get draw_signature_instruction => 'ارسم توقيعك في المساحة أدناه';
+
+  @override
+  String get clear_action => 'مسح';
+
+  @override
+  String get preview_action => 'معاينة';
+
+  @override
+  String get signature_options_title => 'خيارات التوقيع';
+
+  @override
+  String get signature_location_title => 'موقع التوقيع';
+
+  @override
+  String get signature_location_hint_last_page_br => 'أسفل يمين الصفحة الأخيرة';
+
+  @override
+  String get signature_size_title => 'حجم التوقيع';
+
+  @override
+  String get signature_size_medium => 'متوسط';
+
+  @override
+  String get watermark_settings_title => 'إعدادات العلامة المائية';
+
+  @override
+  String get watermark_text_label => 'نص العلامة المائية';
+
+  @override
+  String get watermark_text_hint => 'مثل: سري، نسخة أولية، شركة XYZ';
+
+  @override
+  String get transparency_label => 'الشفافية';
+
+  @override
+  String get color_label => 'اللون';
+
+  @override
+  String get document_content_preview => 'محتوى المستند\n(معاينة)';
+
+  @override
+  String get watermark_templates_title => 'قوالب جاهزة';
+
+  @override
+  String get no_pdfs_found => 'لا توجد ملفات PDF';
+
+  @override
+  String get signature_preview_title => 'معاينة التوقيع';
+
+  @override
+  String get signature_preview_hint =>
+      'سيتم إضافة هذا التوقيع للصفحة الأخيرة من المستند';
 }

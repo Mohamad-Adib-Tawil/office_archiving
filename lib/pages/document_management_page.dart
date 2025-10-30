@@ -11,7 +11,8 @@ import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:office_archiving/helper/open_file.dart' as opener;
 
 class DocumentManagementPage extends StatefulWidget {
-  const DocumentManagementPage({super.key});
+  final bool embedded;
+  const DocumentManagementPage({super.key, this.embedded = false});
 
   @override
   State<DocumentManagementPage> createState() => _DocumentManagementPageState();
@@ -199,40 +200,42 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).doc_manage_title),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            tooltip: AppLocalizations.of(context).searchLabel,
-            icon: const Icon(Icons.search),
-            onPressed: () async {
-              await showSearch(
-                context: context,
-                delegate: _GlobalItemSearchDelegate(context),
-              );
-            },
-          ),
-          IconButton(
-            tooltip: 'Reload',
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadAllItemsFromDb,
-          ),
-        ],
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                colorScheme.primary.withValues(alpha: 0.1),
-                colorScheme.secondary.withValues(alpha: 0.05),
+      appBar: widget.embedded
+          ? null
+          : AppBar(
+              title: Text(AppLocalizations.of(context).doc_manage_title),
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              actions: [
+                IconButton(
+                  tooltip: AppLocalizations.of(context).searchLabel,
+                  icon: const Icon(Icons.search),
+                  onPressed: () async {
+                    await showSearch(
+                      context: context,
+                      delegate: _GlobalItemSearchDelegate(context),
+                    );
+                  },
+                ),
+                IconButton(
+                  tooltip: 'Reload',
+                  icon: const Icon(Icons.refresh),
+                  onPressed: _loadAllItemsFromDb,
+                ),
               ],
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colorScheme.primary.withValues(alpha: 0.1),
+                      colorScheme.secondary.withValues(alpha: 0.05),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: Column(

@@ -6,6 +6,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class PdfSecurityPage extends StatefulWidget {
   final String? inputPdfPath;
@@ -60,13 +61,13 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('حماية وتوقيع PDF'),
+        title: Text(AppLocalizations.of(context).pdf_security_title),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.security), text: 'الحماية'),
-            Tab(icon: Icon(Icons.edit), text: 'التوقيع'),
-            Tab(icon: Icon(Icons.branding_watermark), text: 'العلامة المائية'),
+          tabs: [
+            Tab(icon: const Icon(Icons.security), text: AppLocalizations.of(context).tab_security),
+            Tab(icon: const Icon(Icons.edit), text: AppLocalizations.of(context).tab_signature),
+            Tab(icon: const Icon(Icons.branding_watermark), text: AppLocalizations.of(context).tab_watermark),
           ],
         ),
       ),
@@ -90,7 +91,9 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                 ),
               )
             : const Icon(Icons.security),
-        label: Text(_isProcessing ? 'جاري المعالجة...' : 'حماية PDF'),
+        label: Text(_isProcessing
+            ? AppLocalizations.of(context).processing_ellipsis
+            : AppLocalizations.of(context).protect_pdf_action),
         backgroundColor: _isProcessing ? Colors.grey : scheme.primary,
       ),
     );
@@ -112,14 +115,11 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.lock, color: Colors.blue),
                       SizedBox(width: 8),
-                      Text(
-                        'كلمة مرور الفتح',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      Text('كلمة مرور الفتح', style: const TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -155,21 +155,15 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.admin_panel_settings, color: Colors.orange),
                       SizedBox(width: 8),
-                      Text(
-                        'كلمة مرور المالك',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      Text('كلمة مرور المالك', style: const TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'للتحكم في صلاحيات الطباعة والتحرير',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
+                  const Text('للتحكم في صلاحيات الطباعة والتحرير', style: TextStyle(fontSize: 12, color: Colors.grey)),
                   const SizedBox(height: 12),
                   TextField(
                     controller: _ownerPasswordController,
@@ -193,14 +187,11 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.settings, color: Colors.green),
                       SizedBox(width: 8),
-                      Text(
-                        'الصلاحيات',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      Text('الصلاحيات', style: const TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -246,9 +237,9 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          child: const Text(
-            'ارسم توقيعك في المساحة أدناه',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          child: Text(
+            AppLocalizations.of(context).draw_signature_instruction,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
 
@@ -277,7 +268,7 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                     HapticFeedback.lightImpact();
                   },
                   icon: const Icon(Icons.clear),
-                  label: const Text('مسح'),
+                  label: Text(AppLocalizations.of(context).clear_action),
                 ),
               ),
               const SizedBox(width: 16),
@@ -287,7 +278,7 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                       ? () => _previewSignature()
                       : null,
                   icon: const Icon(Icons.preview),
-                  label: const Text('معاينة'),
+                  label: Text(AppLocalizations.of(context).preview_action),
                 ),
               ),
             ],
@@ -302,16 +293,13 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'خيارات التوقيع',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text(AppLocalizations.of(context).signature_options_title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
 
                 ListTile(
                   leading: const Icon(Icons.location_on),
-                  title: const Text('موقع التوقيع'),
-                  subtitle: const Text('أسفل يمين الصفحة الأخيرة'),
+                  title: Text(AppLocalizations.of(context).signature_location_title),
+                  subtitle: Text(AppLocalizations.of(context).signature_location_hint_last_page_br),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     // TODO: فتح حوار اختيار موقع التوقيع
@@ -320,8 +308,8 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
 
                 ListTile(
                   leading: const Icon(Icons.format_size),
-                  title: const Text('حجم التوقيع'),
-                  subtitle: const Text('متوسط'),
+                  title: Text(AppLocalizations.of(context).signature_size_title),
+                  subtitle: Text(AppLocalizations.of(context).signature_size_medium),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     // TODO: فتح حوار اختيار حجم التوقيع
@@ -347,26 +335,23 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'إعدادات العلامة المائية',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text(AppLocalizations.of(context).watermark_settings_title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
 
                   TextField(
                     onChanged: (value) => setState(
                       () => _watermarkText = value.isEmpty ? null : value,
                     ),
-                    decoration: const InputDecoration(
-                      labelText: 'نص العلامة المائية',
-                      hintText: 'مثل: سري، نسخة أولية، شركة XYZ',
-                      prefixIcon: Icon(Icons.text_fields),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context).watermark_text_label,
+                      hintText: AppLocalizations.of(context).watermark_text_hint,
+                      prefixIcon: const Icon(Icons.text_fields),
                     ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  Text('الشفافية: ${(_watermarkOpacity * 100).round()}%'),
+                  Text('${AppLocalizations.of(context).transparency_label}: ${(_watermarkOpacity * 100).round()}%'),
                   Slider(
                     value: _watermarkOpacity,
                     onChanged: (v) => setState(() => _watermarkOpacity = v),
@@ -376,7 +361,7 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
 
                   const SizedBox(height: 16),
 
-                  const Text('اللون:'),
+                  Text('${AppLocalizations.of(context).color_label}:'),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -432,11 +417,11 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                         color: Colors.grey[100],
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          'محتوى المستند\n(معاينة)',
+                          AppLocalizations.of(context).document_content_preview,
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black54),
+                          style: const TextStyle(color: Colors.black54),
                         ),
                       ),
                     ),
@@ -468,10 +453,7 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'قوالب جاهزة',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  Text(AppLocalizations.of(context).watermark_templates_title, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
 
                   Wrap(
@@ -552,7 +534,7 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('معاينة التوقيع'),
+        title: Text(AppLocalizations.of(context).signature_preview_title),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -565,23 +547,23 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Image.memory(signatureBytes),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'سيتم إضافة هذا التوقيع للصفحة الأخيرة من المستند',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+            Text(
+              AppLocalizations.of(context).signature_preview_hint,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () {
               Navigator.pop(ctx);
               _processPdf();
             },
-            child: const Text('موافق'),
+            child: Text(AppLocalizations.of(context).ok_action),
           ),
         ],
       ),

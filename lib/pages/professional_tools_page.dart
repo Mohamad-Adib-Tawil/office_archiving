@@ -12,14 +12,21 @@ import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:office_archiving/services/pdf_service.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class ProfessionalToolsPage extends StatelessWidget {
-  const ProfessionalToolsPage({super.key});
+  final bool embedded;
+  const ProfessionalToolsPage({super.key, this.embedded = false});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('أدوات احترافية'), centerTitle: true),
+      appBar: embedded
+          ? null
+          : AppBar(
+              title: Text(AppLocalizations.of(context).tab_professional_tools),
+              centerTitle: true,
+            ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -72,14 +79,14 @@ class ProfessionalToolsPage extends StatelessWidget {
                 subtitle: 'كلمات مرور وتوقيع إلكتروني',
                 icon: Icons.security,
                 color: Colors.red,
-                page: const PdfSecurityPage(),
+                onTap: () => _openPdfPickerForSecurity(context),
               ),
               ToolItem(
                 title: 'محرر PDF',
                 subtitle: 'إضافة تعليقات وتمييز النصوص',
                 icon: Icons.edit_document,
                 color: Colors.purple,
-                page: const PdfEditorPage(pdfPath: ''),
+                onTap: () => _openPdfPickerForEditor(context),
               ),
               ToolItem(
                 title: 'دمج PDF',
@@ -123,6 +130,108 @@ class ProfessionalToolsPage extends StatelessWidget {
             ]),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> _openPdfPickerForEditor(BuildContext context) async {
+    final docsDir = await getApplicationDocumentsDirectory();
+    final scansDir = Directory('${docsDir.path}/scans');
+    final files = <File>[];
+    if (await docsDir.exists()) {
+      for (final e in docsDir.listSync()) {
+        if (e is File && e.path.toLowerCase().endsWith('.pdf')) files.add(e);
+      }
+    }
+    if (await scansDir.exists()) {
+      for (final e in scansDir.listSync()) {
+        if (e is File && e.path.toLowerCase().endsWith('.pdf')) files.add(e);
+      }
+    }
+
+    if (files.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context).no_pdfs_found)),
+        );
+      }
+      return;
+    }
+
+    if (!context.mounted) return;
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => ListView.builder(
+        itemCount: files.length,
+        itemBuilder: (_, i) {
+          final f = files[i];
+          final name = f.path.split('/').last;
+          return ListTile(
+            leading: const Icon(Icons.picture_as_pdf),
+            title: Text(name),
+            subtitle: Text('${(f.lengthSync() / 1024).toStringAsFixed(1)} KB'),
+            onTap: () {
+              Navigator.pop(ctx);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => PdfEditorPage(pdfPath: f.path),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _openPdfPickerForSecurity(BuildContext context) async {
+    final docsDir = await getApplicationDocumentsDirectory();
+    final scansDir = Directory('${docsDir.path}/scans');
+    final files = <File>[];
+    if (await docsDir.exists()) {
+      for (final e in docsDir.listSync()) {
+        if (e is File && e.path.toLowerCase().endsWith('.pdf')) files.add(e);
+      }
+    }
+    if (await scansDir.exists()) {
+      for (final e in scansDir.listSync()) {
+        if (e is File && e.path.toLowerCase().endsWith('.pdf')) files.add(e);
+      }
+    }
+
+    if (files.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context).no_pdfs_found)),
+        );
+      }
+      return;
+    }
+
+    if (!context.mounted) return;
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => ListView.builder(
+        itemCount: files.length,
+        itemBuilder: (_, i) {
+          final f = files[i];
+          final name = f.path.split('/').last;
+          return ListTile(
+            leading: const Icon(Icons.picture_as_pdf),
+            title: Text(name),
+            subtitle: Text('${(f.lengthSync() / 1024).toStringAsFixed(1)} KB'),
+            onTap: () {
+              Navigator.pop(ctx);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => PdfSecurityPage(inputPdfPath: f.path),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -256,20 +365,18 @@ class ProfessionalToolsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.schedule, color: Colors.orange),
-            SizedBox(width: 8),
-            Text('قريباً'),
+            const Icon(Icons.schedule, color: Colors.orange),
+            const SizedBox(width: 8),
+            Text(AppLocalizations.of(context).coming_soon),
           ],
         ),
-        content: const Text(
-          'هذه الميزة قيد التطوير وستكون متاحة في التحديث القادم',
-        ),
+        content: Text(AppLocalizations.of(context).coming_soon_message),
         actions: [
           FilledButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('موافق'),
+            child: Text(AppLocalizations.of(context).ok_action),
           ),
         ],
       ),
