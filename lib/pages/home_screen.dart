@@ -19,7 +19,7 @@ import 'package:intl/intl.dart';
 
 import '../service/sqlite_service.dart';
 import 'package:office_archiving/services/pdf_service.dart';
-import 'package:office_archiving/pages/document_management_page.dart';
+import 'package:office_archiving/pages/storage_center_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -352,9 +352,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Storage Management
+                    // Storage Center (replaces Document Management)
                     IconButton(
-                      tooltip: AppLocalizations.of(context).doc_manage_title,
+                      tooltip: AppLocalizations.of(context).storage_center_title,
                       icon: const Icon(Icons.storage_rounded),
                       color: scheme.primary,
                       onPressed: () {
@@ -362,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const DocumentManagementPage(),
+                            builder: (_) => const StorageCenterPage(),
                           ),
                         );
                       },
