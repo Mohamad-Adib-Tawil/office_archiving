@@ -43,8 +43,9 @@ class SectionListView extends StatelessWidget {
                     child: EmptyState(
                       asset: kLogoOffice,
                       title: null,
-                      message:
-                          AppLocalizations.of(context).empty_sections_message,
+                      message: AppLocalizations.of(
+                        context,
+                      ).empty_sections_message,
                     ),
                   ),
                 )
@@ -57,8 +58,9 @@ class SectionListView extends StatelessWidget {
                   ),
                   itemCount: sections.length,
                   itemBuilder: (context, index) {
-                    final animDuration =
-                        Duration(milliseconds: 420 + (index % 12) * 35);
+                    final animDuration = Duration(
+                      milliseconds: 420 + (index % 12) * 35,
+                    );
                     return TweenAnimationBuilder<double>(
                       duration: animDuration,
                       tween: Tween(begin: 0, end: 1),
@@ -88,8 +90,9 @@ class SectionListView extends StatelessWidget {
   // Rules: Arabic -> RTL, English -> LTR, Others/Mixed -> RTL
   TextDirection _dirFor(String text) {
     // Arabic ranges: Arabic, Arabic Supplement, Arabic Extended-A/B, Presentation Forms
-    final hasArabic = RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]')
-        .hasMatch(text);
+    final hasArabic = RegExp(
+      r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]',
+    ).hasMatch(text);
     final hasEnglish = RegExp(r'[A-Za-z]').hasMatch(text);
     if (hasArabic && !hasEnglish) return TextDirection.rtl;
     if (hasEnglish && !hasArabic) return TextDirection.ltr;
@@ -99,7 +102,7 @@ class SectionListView extends StatelessWidget {
 
   Widget _buildModernSectionCard(BuildContext context, int index) {
     final section = sections[index];
-    
+
     // تدرجات لونية متنوعة لكل قسم
     final gradients = [
       [const Color(0xFF667eea), const Color(0xFF764ba2)],
@@ -109,9 +112,9 @@ class SectionListView extends StatelessWidget {
       [const Color(0xFFfa709a), const Color(0xFFfee140)],
       [const Color(0xFF30cfd0), const Color(0xFF330867)],
     ];
-    
+
     final gradientColors = gradients[index % gradients.length];
-    
+
     return OpenContainer(
       openElevation: 0,
       closedElevation: 0,
@@ -124,10 +127,7 @@ class SectionListView extends StatelessWidget {
       transitionType: ContainerTransitionType.fadeThrough,
       transitionDuration: const Duration(milliseconds: 500),
       openBuilder: (context, _) => SectionScreen(
-        section: Section(
-          id: section.id,
-          name: section.name,
-        ),
+        section: Section(id: section.id, name: section.name),
       ),
       closedBuilder: (context, open) => GestureDetector(
         onTap: open,
@@ -139,13 +139,13 @@ class SectionListView extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                gradientColors[0].withOpacity(0.85),
-                gradientColors[1].withOpacity(0.95),
+                gradientColors[0].withValues(alpha: 0.85),
+                gradientColors[1].withValues(alpha: 0.95),
               ],
             ),
             boxShadow: [
               BoxShadow(
-                color: gradientColors[0].withOpacity(0.4),
+                color: gradientColors[0].withValues(alpha: 0.4),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
                 spreadRadius: -5,
@@ -164,27 +164,32 @@ class SectionListView extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.white.withOpacity(0.1),
-                          Colors.white.withOpacity(0.05),
+                          Colors.white.withValues(alpha: 0.1),
+                          Colors.white.withValues(alpha: 0.05),
                         ],
                       ),
                     ),
                   ),
                 ),
-                
+
                 // الصورة أو الأيقونة الافتراضية
                 Positioned.fill(
                   child: FutureBuilder<String?>(
-                    future: DatabaseService.instance.getSectionCoverOrLatest(section.id),
+                    future: DatabaseService.instance.getSectionCoverOrLatest(
+                      section.id,
+                    ),
                     builder: (context, snap) {
                       final path = snap.data;
-                      if (path != null && path.isNotEmpty && File(path).existsSync()) {
+                      if (path != null &&
+                          path.isNotEmpty &&
+                          File(path).existsSync()) {
                         return Stack(
                           children: [
                             Image.file(
                               File(path),
                               fit: BoxFit.cover,
-                              errorBuilder: (ctx, _, __) => _buildModernFallback(context, gradientColors),
+                              errorBuilder: (ctx, _, __) =>
+                                  _buildModernFallback(context, gradientColors),
                             ),
                             // تأثير overlay للصورة
                             Container(
@@ -194,7 +199,7 @@ class SectionListView extends StatelessWidget {
                                   end: Alignment.bottomCenter,
                                   colors: [
                                     Colors.transparent,
-                                    Colors.black.withOpacity(0.7),
+                                    Colors.black.withValues(alpha: 0.7),
                                   ],
                                 ),
                               ),
@@ -206,7 +211,7 @@ class SectionListView extends StatelessWidget {
                     },
                   ),
                 ),
-                
+
                 // محتوى البطاقة
                 Positioned(
                   bottom: 0,
@@ -242,25 +247,37 @@ class SectionListView extends StatelessWidget {
                           const SizedBox(height: 8),
                           // إحصائيات القسم
                           FutureBuilder<int>(
-                            future: DatabaseService.instance.getDocumentCountBySection(section.id),
+                            future: DatabaseService.instance
+                                .getDocumentCountBySection(section.id),
                             builder: (context, snapshot) {
                               final count = snapshot.data ?? 0;
                               return Row(
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.25),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.25,
+                                      ),
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
-                                        color: Colors.white.withOpacity(0.3),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.3,
+                                        ),
                                         width: 1,
                                       ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(Icons.description_outlined, size: 14, color: Colors.white),
+                                        const Icon(
+                                          Icons.description_outlined,
+                                          size: 14,
+                                          color: Colors.white,
+                                        ),
                                         const SizedBox(width: 4),
                                         Text(
                                           '$count',
@@ -282,7 +299,7 @@ class SectionListView extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // زر الخيارات
                 Positioned(
                   top: 12,
@@ -292,15 +309,15 @@ class SectionListView extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.25),
+                        color: Colors.white.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           width: 1,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -322,15 +339,18 @@ class SectionListView extends StatelessWidget {
     );
   }
 
-  Widget _buildModernFallback(BuildContext context, List<Color> gradientColors) {
+  Widget _buildModernFallback(
+    BuildContext context,
+    List<Color> gradientColors,
+  ) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            gradientColors[0].withOpacity(0.6),
-            gradientColors[1].withOpacity(0.8),
+            gradientColors[0].withValues(alpha: 0.6),
+            gradientColors[1].withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -341,10 +361,10 @@ class SectionListView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -359,7 +379,6 @@ class SectionListView extends StatelessWidget {
       ),
     );
   }
-
 
   void _showOptionsDialog(BuildContext context, int index) {
     final rootContext =
@@ -403,11 +422,7 @@ class SectionListView extends StatelessWidget {
                   onTap: () {
                     HapticFeedback.selectionClick();
                     Navigator.pop(sheetCtx);
-                    handleRenameSection(
-                      context,
-                      sectionCubit,
-                      sections[index],
-                    );
+                    handleRenameSection(context, sectionCubit, sections[index]);
                   },
                 ),
                 ListTile(
@@ -437,12 +452,14 @@ class SectionListView extends StatelessWidget {
 
                     if (imagePath != null) {
                       await sectionCubit.updateSectionCover(
-                          sections[index].id, imagePath);
+                        sections[index].id,
+                        imagePath,
+                      );
                       if (rootContext.mounted) {
                         UIFeedback.success(
-                            rootContext,
-                            AppLocalizations.of(rootContext)
-                                .snackbar_cover_set);
+                          rootContext,
+                          AppLocalizations.of(rootContext).snackbar_cover_set,
+                        );
                       }
                     }
                   },
@@ -454,10 +471,14 @@ class SectionListView extends StatelessWidget {
                     HapticFeedback.lightImpact();
                     Navigator.pop(sheetCtx);
                     await sectionCubit.updateSectionCover(
-                        sections[index].id, null);
+                      sections[index].id,
+                      null,
+                    );
                     if (context.mounted) {
-                      UIFeedback.info(context,
-                          AppLocalizations.of(context).snackbar_cover_cleared);
+                      UIFeedback.info(
+                        context,
+                        AppLocalizations.of(context).snackbar_cover_cleared,
+                      );
                     }
                   },
                 ),
@@ -479,7 +500,9 @@ class SectionListView extends StatelessWidget {
                     child: Text(
                       AppLocalizations.of(context).cancel,
                       style: TextStyle(
-                          color: scheme.primary, fontWeight: FontWeight.w700),
+                        color: scheme.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -492,7 +515,8 @@ class SectionListView extends StatelessWidget {
   }
 
   static Future<ImageSource?> _showImageSourceDialog(
-      BuildContext context) async {
+    BuildContext context,
+  ) async {
     return showDialog<ImageSource>(
       context: context,
       builder: (BuildContext context) {

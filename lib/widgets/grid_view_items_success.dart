@@ -86,8 +86,11 @@ class GridViewItemsSuccess extends StatelessWidget {
   // Removed unused _buildMediaOverlay to satisfy lint
 
   Widget _buildFileInfo(BuildContext context, ItemSection item) {
-    final isArabic = item.name.contains(RegExp(
-        r'[\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\uFE70-\uFEFF\uFB50-\uFDFF\uFEE0-\uFEFF]'));
+    final isArabic = item.name.contains(
+      RegExp(
+        r'[\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\uFE70-\uFEFF\uFB50-\uFDFF\uFEE0-\uFEFF]',
+      ),
+    );
 
     final scheme = Theme.of(context).colorScheme;
     return Column(
@@ -106,7 +109,8 @@ class GridViewItemsSuccess extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          item.fileType?.toUpperCase() ?? AppLocalizations.of(context).unknown_file_type,
+          item.fileType?.toUpperCase() ??
+              AppLocalizations.of(context).unknown_file_type,
           style: TextStyle(
             fontSize: 11,
             color: scheme.onSurfaceVariant,
@@ -147,9 +151,7 @@ class GridViewItemsSuccess extends StatelessWidget {
           Container(
             color: Colors.grey[200],
             height: 120,
-            child: const Center(
-              child: Icon(AppIcons.video, size: 40),
-            ),
+            child: const Center(child: Icon(AppIcons.video, size: 40)),
           ),
           const Positioned.fill(
             child: Align(
@@ -239,11 +241,13 @@ class GridViewItemsSuccess extends StatelessWidget {
       margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: scheme.surface,
-        border: Border.all(color: scheme.outlineVariant.withOpacity(0.20)),
+        border: Border.all(
+          color: scheme.outlineVariant.withValues(alpha: 0.20),
+        ),
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: scheme.shadow.withOpacity(0.08),
+            color: scheme.shadow.withValues(alpha: 0.08),
             spreadRadius: 0,
             blurRadius: 8,
             offset: const Offset(0, 2),
@@ -258,8 +262,9 @@ class GridViewItemsSuccess extends StatelessWidget {
             child: SizedBox(
               height: 120,
               child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(14)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(14),
+                ),
                 child: _buildMediaThumbnail(item),
               ),
             ),
@@ -296,10 +301,9 @@ class GridViewItemsSuccess extends StatelessWidget {
 
     if (fileType == 'pdf') {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => MyPdfViewer(filePath: filePath),
-          ));
+        context,
+        MaterialPageRoute(builder: (_) => MyPdfViewer(filePath: filePath)),
+      );
     } else {
       openFile(pathFile: filePath, context: context);
     }
@@ -326,7 +330,9 @@ class GridViewItemsSuccess extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        log('Item details: ${item.id} | ${item.name} | ${item.fileType} | ${item.filePath}');
+        log(
+          'Item details: ${item.id} | ${item.name} | ${item.fileType} | ${item.filePath}',
+        );
         final animDuration = Duration(milliseconds: 400 + (index % 12) * 35);
         return TweenAnimationBuilder<double>(
           duration: animDuration,

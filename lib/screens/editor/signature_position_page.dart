@@ -18,7 +18,11 @@ class SignaturePlacementResult {
 class SignaturePositionPage extends StatefulWidget {
   final String baseImagePath;
   final Uint8List signatureBytes;
-  const SignaturePositionPage({super.key, required this.baseImagePath, required this.signatureBytes});
+  const SignaturePositionPage({
+    super.key,
+    required this.baseImagePath,
+    required this.signatureBytes,
+  });
 
   @override
   State<SignaturePositionPage> createState() => _SignaturePositionPageState();
@@ -75,8 +79,13 @@ class _SignaturePositionPageState extends State<SignaturePositionPage> {
                 final ch = constraints.maxHeight;
                 final baseW = _baseImg!.width.toDouble();
                 final baseH = _baseImg!.height.toDouble();
-                final scale = (cw / baseW).clamp(0.0, double.infinity)
-                    .compareTo((ch / baseH).clamp(0.0, double.infinity)) < 0
+                final scale =
+                    (cw / baseW)
+                            .clamp(0.0, double.infinity)
+                            .compareTo(
+                              (ch / baseH).clamp(0.0, double.infinity),
+                            ) <
+                        0
                     ? (cw / baseW)
                     : (ch / baseH);
                 final dispW = baseW * scale;
@@ -101,7 +110,10 @@ class _SignaturePositionPageState extends State<SignaturePositionPage> {
                       top: offY,
                       width: dispW,
                       height: dispH,
-                      child: Image.file(File(widget.baseImagePath), fit: BoxFit.contain),
+                      child: Image.file(
+                        File(widget.baseImagePath),
+                        fit: BoxFit.contain,
+                      ),
                     ),
 
                     // Overlay signature
@@ -121,9 +133,16 @@ class _SignaturePositionPageState extends State<SignaturePositionPage> {
                           opacity: 0.95,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              border: Border.all(color: theme.colorScheme.primary.withOpacity(0.6)),
+                              border: Border.all(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.6,
+                                ),
+                              ),
                             ),
-                            child: Image.memory(widget.signatureBytes, fit: BoxFit.contain),
+                            child: Image.memory(
+                              widget.signatureBytes,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
@@ -137,8 +156,13 @@ class _SignaturePositionPageState extends State<SignaturePositionPage> {
                       child: SafeArea(
                         top: false,
                         child: Container(
-                          color: theme.colorScheme.surface.withOpacity(0.9),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          color: theme.colorScheme.surface.withValues(
+                            alpha: 0.9,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -150,18 +174,24 @@ class _SignaturePositionPageState extends State<SignaturePositionPage> {
                                       value: _overlayScale,
                                       min: 0.1,
                                       max: 0.8,
-                                      onChanged: (v) => setState(() => _overlayScale = v),
+                                      onChanged: (v) =>
+                                          setState(() => _overlayScale = v),
                                     ),
                                   ),
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('الموضع: x=${(left - offX).toStringAsFixed(0)}, y=${(top - offY).toStringAsFixed(0)}'),
-                                  Text('العرض: ${(overlayW).toStringAsFixed(0)}px')
+                                  Text(
+                                    'الموضع: x=${(left - offX).toStringAsFixed(0)}, y=${(top - offY).toStringAsFixed(0)}',
+                                  ),
+                                  Text(
+                                    'العرض: ${(overlayW).toStringAsFixed(0)}px',
+                                  ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -182,8 +212,11 @@ class _SignaturePositionPageState extends State<SignaturePositionPage> {
 
     final baseW = _baseImg!.width.toDouble();
     final baseH = _baseImg!.height.toDouble();
-    final scale = (cw / baseW).clamp(0.0, double.infinity)
-        .compareTo((ch / baseH).clamp(0.0, double.infinity)) < 0
+    final scale =
+        (cw / baseW)
+                .clamp(0.0, double.infinity)
+                .compareTo((ch / baseH).clamp(0.0, double.infinity)) <
+            0
         ? (cw / baseW)
         : (ch / baseH);
     final dispW = baseW * scale;
@@ -202,10 +235,13 @@ class _SignaturePositionPageState extends State<SignaturePositionPage> {
     final baseY = ((top - offY) / scale).round();
     final targetBaseWidth = (overlayW / scale).round();
 
-    Navigator.pop(context, SignaturePlacementResult(
-      baseX: baseX,
-      baseY: baseY,
-      targetBaseWidth: targetBaseWidth,
-    ));
+    Navigator.pop(
+      context,
+      SignaturePlacementResult(
+        baseX: baseX,
+        baseY: baseY,
+        targetBaseWidth: targetBaseWidth,
+      ),
+    );
   }
 }
