@@ -450,7 +450,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        _getDayName(usage.date.weekday),
+                        _getDayInitial(context, usage.date.weekday),
                         style: const TextStyle(fontSize: 10),
                       ),
                     ],
@@ -544,16 +544,24 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
     }
   }
 
-  String _getDayName(int weekday) {
-    // أيام الأسبوع بالعربية - أول حرف من كل يوم
-    const days = ['ن', 'ث', 'ر', 'خ', 'ج', 'س', 'ح']; // الاثنين، الثلاثاء، الأربعاء، الخميس، الجمعة، السبت، الأحد
-    return days[weekday - 1];
+  String _getDayInitial(BuildContext context, int weekday) {
+    // Return first-letter initials based on current locale
+    final lang = Localizations.localeOf(context).languageCode.toLowerCase();
+    if (lang.startsWith('ar')) {
+      // Arabic initials: الاثنين، الثلاثاء، الأربعاء، الخميس، الجمعة، السبت، الأحد
+      const ar = ['ن', 'ث', 'ر', 'خ', 'ج', 'س', 'ح'];
+      return ar[weekday - 1];
+    } else {
+      // English initials: Monday..Sunday -> M T W T F S S
+      const en = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+      return en[weekday - 1];
+    }
   }
 
   Widget _buildMonthlyReport() {
     final analytics = _analytics!;
     final now = DateTime.now();
-    final currentMonth = '${_getMonthName(now.month)} ${now.year}';
+    final currentMonth = '${_getMonthName(context, now.month)} ${now.year}';
     
     return Container(
       padding: const EdgeInsets.all(20),
@@ -645,12 +653,21 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
     return maxEntry.key;
   }
 
-  String _getMonthName(int month) {
-    const months = [
-      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
-    ];
-    return months[month - 1];
+  String _getMonthName(BuildContext context, int month) {
+    final lang = Localizations.localeOf(context).languageCode.toLowerCase();
+    if (lang.startsWith('ar')) {
+      const arMonths = [
+        'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+      ];
+      return arMonths[month - 1];
+    } else {
+      const enMonths = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      return enMonths[month - 1];
+    }
   }
 
   String _formatBytes(double bytes) {

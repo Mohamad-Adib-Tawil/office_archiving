@@ -749,4 +749,182 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get signature_preview_hint =>
       'This signature will be added to the last page of the document';
+
+  @override
+  String get scan_capture_tools_title => 'Scanning and Capture Tools';
+
+  @override
+  String get tool_scanner_title => 'Document Scanner';
+
+  @override
+  String get tool_scanner_sub => 'Advanced scan with filters and enhancement';
+
+  @override
+  String get tool_bizcard_title => 'Business Card Scanner';
+
+  @override
+  String get tool_bizcard_sub => 'Automatically extract contact info';
+
+  @override
+  String get tool_qr_title => 'QR & Barcode Scanner';
+
+  @override
+  String get tool_qr_sub => 'Scan and generate QR and barcodes';
+
+  @override
+  String get advanced_pdf_tools_title => 'Advanced PDF Tools';
+
+  @override
+  String get tool_pdf_security_sub => 'Passwords and e-signature';
+
+  @override
+  String get tool_pdf_editor_title => 'PDF Editor';
+
+  @override
+  String get tool_pdf_editor_sub => 'Add comments and highlight text';
+
+  @override
+  String get tool_pdf_merge_title => 'Merge PDF';
+
+  @override
+  String get tool_pdf_merge_sub => 'Combine multiple PDFs into a single file';
+
+  @override
+  String get extra_tools_title => 'Additional Tools';
+
+  @override
+  String get tool_report_gen_title => 'Report Generator';
+
+  @override
+  String get tool_report_gen_sub => 'Create professional reports';
+
+  @override
+  String get tool_cloud_backup_title => 'Cloud Backup';
+
+  @override
+  String get tool_cloud_backup_sub => 'Sync with cloud services';
+
+  @override
+  String get tool_advanced_share_title => 'Advanced Sharing';
+
+  @override
+  String get tool_advanced_share_sub => 'Share with permission control';
+
+  @override
+  String get header_title_prof_tools =>
+      'Professional tools for document management';
+
+  @override
+  String get header_sub_prof_tools =>
+      'A comprehensive set of advanced tools to scan, edit, protect, and manage documents professionally';
+
+  @override
+  String get no_sections_available =>
+      'No sections available. Please create a section first.';
+
+  @override
+  String get choose_section_to_scan_title => 'Choose a section to scan';
+
+  @override
+  String get section_default_name => 'Section';
+
+  @override
+  String get no_document_captured => 'No document captured';
+
+  @override
+  String get scan_failed_prefix => 'Scan failed: ';
+
+  @override
+  String get qr_title => 'QR & Barcode Scanner';
+
+  @override
+  String get qr_tab_scan => 'Scan';
+
+  @override
+  String get qr_tab_generate => 'Generate QR';
+
+  @override
+  String get qr_tab_history => 'History';
+
+  @override
+  String get qr_scan_area => 'Scan Area';
+
+  @override
+  String get qr_position_camera => 'Point the camera at the code';
+
+  @override
+  String get qr_scan_with_camera => 'Scan with Camera';
+
+  @override
+  String get qr_result => 'Scan Result:';
+
+  @override
+  String get copied_done => 'Copied';
+
+  @override
+  String get copy_action_short => 'Copy';
+
+  @override
+  String get share_action_short => 'Share';
+
+  @override
+  String get qr_generate_title => 'Create QR Code';
+
+  @override
+  String get text_or_url => 'Text or URL';
+
+  @override
+  String get enter_text_for_qr => 'Enter text to convert into QR';
+
+  @override
+  String get quick_templates => 'Quick templates:';
+
+  @override
+  String get phone_number => 'Phone Number';
+
+  @override
+  String get email_address => 'Email';
+
+  @override
+  String get geo_location => 'Geo Location';
+
+  @override
+  String get qr_preview_title => 'QR Preview';
+
+  @override
+  String get save_as_image => 'Save as Image';
+
+  @override
+  String get qr_saved_gallery => 'QR saved to gallery';
+
+  @override
+  String get scan_error_prefix => 'Scan error: ';
+
+  @override
+  String get save_error_prefix => 'Save error: ';
+
+  @override
+  String get share_error_prefix => 'Share error: ';
+
+  @override
+  String get wifi_settings_title => 'WiFi Settings';
+
+  @override
+  String get network_name_ssid => 'Network name (SSID)';
+
+  @override
+  String get password_label => 'Password';
+
+  @override
+  String get security_type_label => 'Security type';
+
+  @override
+  String get scanned_on_prefix => 'Scanned on ';
+
+  @override
+  String get delete_action => 'Delete';
+
+  @override
+  String get scanned_text_from_selected_image =>
+      'Scanned text from selected image';
 }

@@ -739,4 +739,180 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get signature_preview_hint =>
       'سيتم إضافة هذا التوقيع للصفحة الأخيرة من المستند';
+
+  @override
+  String get scan_capture_tools_title => 'أدوات المسح والالتقاط';
+
+  @override
+  String get tool_scanner_title => 'ماسح المستندات';
+
+  @override
+  String get tool_scanner_sub => 'مسح متقدم مع فلاتر وتحسين';
+
+  @override
+  String get tool_bizcard_title => 'ماسح بطاقات العمل';
+
+  @override
+  String get tool_bizcard_sub => 'استخراج معلومات الاتصال تلقائياً';
+
+  @override
+  String get tool_qr_title => 'ماسح الرموز والباركود';
+
+  @override
+  String get tool_qr_sub => 'مسح وإنشاء رموز QR والباركود';
+
+  @override
+  String get advanced_pdf_tools_title => 'أدوات PDF المتقدمة';
+
+  @override
+  String get tool_pdf_security_sub => 'كلمات مرور وتوقيع إلكتروني';
+
+  @override
+  String get tool_pdf_editor_title => 'محرر PDF';
+
+  @override
+  String get tool_pdf_editor_sub => 'إضافة تعليقات وتمييز النصوص';
+
+  @override
+  String get tool_pdf_merge_title => 'دمج PDF';
+
+  @override
+  String get tool_pdf_merge_sub => 'دمج عدة ملفات PDF في ملف واحد';
+
+  @override
+  String get extra_tools_title => 'أدوات إضافية';
+
+  @override
+  String get tool_report_gen_title => 'مولد التقارير';
+
+  @override
+  String get tool_report_gen_sub => 'إنشاء تقارير احترافية';
+
+  @override
+  String get tool_cloud_backup_title => 'النسخ الاحتياطي السحابي';
+
+  @override
+  String get tool_cloud_backup_sub => 'مزامنة مع الخدمات السحابية';
+
+  @override
+  String get tool_advanced_share_title => 'مشاركة متقدمة';
+
+  @override
+  String get tool_advanced_share_sub => 'مشاركة مع تحكم في الصلاحيات';
+
+  @override
+  String get header_title_prof_tools => 'أدوات احترافية لإدارة المستندات';
+
+  @override
+  String get header_sub_prof_tools =>
+      'مجموعة شاملة من الأدوات المتقدمة لمسح وتحرير وحماية وإدارة المستندات بطريقة احترافية';
+
+  @override
+  String get no_sections_available =>
+      'لا توجد أقسام متاحة. يرجى إنشاء قسم أولاً.';
+
+  @override
+  String get choose_section_to_scan_title => 'اختر القسم للمسح';
+
+  @override
+  String get section_default_name => 'قسم';
+
+  @override
+  String get no_document_captured => 'لم يتم التقاط أي مستند';
+
+  @override
+  String get scan_failed_prefix => 'فشل المسح: ';
+
+  @override
+  String get qr_title => 'ماسح الرموز والباركود';
+
+  @override
+  String get qr_tab_scan => 'مسح';
+
+  @override
+  String get qr_tab_generate => 'إنشاء QR';
+
+  @override
+  String get qr_tab_history => 'السجل';
+
+  @override
+  String get qr_scan_area => 'منطقة المسح';
+
+  @override
+  String get qr_position_camera => 'ضع الكاميرا على الرمز للمسح';
+
+  @override
+  String get qr_scan_with_camera => 'مسح بالكاميرا';
+
+  @override
+  String get qr_result => 'نتيجة المسح:';
+
+  @override
+  String get copied_done => 'تم النسخ';
+
+  @override
+  String get copy_action_short => 'نسخ';
+
+  @override
+  String get share_action_short => 'مشاركة';
+
+  @override
+  String get qr_generate_title => 'إنشاء رمز QR';
+
+  @override
+  String get text_or_url => 'النص أو الرابط';
+
+  @override
+  String get enter_text_for_qr => 'أدخل النص الذي تريد تحويله لرمز QR';
+
+  @override
+  String get quick_templates => 'قوالب سريعة:';
+
+  @override
+  String get phone_number => 'رقم الهاتف';
+
+  @override
+  String get email_address => 'بريد إلكتروني';
+
+  @override
+  String get geo_location => 'موقع جغرافي';
+
+  @override
+  String get qr_preview_title => 'معاينة رمز QR';
+
+  @override
+  String get save_as_image => 'حفظ كصورة';
+
+  @override
+  String get qr_saved_gallery => 'تم حفظ رمز QR في المعرض';
+
+  @override
+  String get scan_error_prefix => 'خطأ في المسح: ';
+
+  @override
+  String get save_error_prefix => 'خطأ في الحفظ: ';
+
+  @override
+  String get share_error_prefix => 'خطأ في المشاركة: ';
+
+  @override
+  String get wifi_settings_title => 'إعدادات WiFi';
+
+  @override
+  String get network_name_ssid => 'اسم الشبكة (SSID)';
+
+  @override
+  String get password_label => 'كلمة المرور';
+
+  @override
+  String get security_type_label => 'نوع الأمان';
+
+  @override
+  String get scanned_on_prefix => 'تم المسح في ';
+
+  @override
+  String get delete_action => 'حذف';
+
+  @override
+  String get scanned_text_from_selected_image => 'نص ممسوح من الصورة المحددة';
 }
