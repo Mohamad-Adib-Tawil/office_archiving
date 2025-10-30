@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class PdfEditorPage extends StatefulWidget {
   final String pdfPath;
@@ -37,13 +38,16 @@ class _PdfEditorPageState extends State<PdfEditorPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _buildToolbar(),
-          Expanded(
-            child: _buildPdfViewer(),
-          ),
-        ],
+      body: FirstOpenAnimator(
+        pageKey: 'pdf_editor_page',
+        child: Column(
+          children: [
+            _buildToolbar(),
+            Expanded(
+              child: _buildPdfViewer(),
+            ),
+          ],
+        ),
       ),
     );
   }

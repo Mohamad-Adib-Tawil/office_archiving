@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:office_archiving/services/ocr_service.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class BusinessCardScannerPage extends StatefulWidget {
   const BusinessCardScannerPage({super.key});
@@ -33,23 +34,26 @@ class _BusinessCardScannerPageState extends State<BusinessCardScannerPage> {
             ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildInfoCard(),
-            const SizedBox(height: 16),
-            _buildScanCard(),
-            if (_scannedImagePath != null) ...[
+      body: FirstOpenAnimator(
+        pageKey: 'business_card_scanner',
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildInfoCard(),
               const SizedBox(height: 16),
-              _buildImagePreview(),
+              _buildScanCard(),
+              if (_scannedImagePath != null) ...[
+                const SizedBox(height: 16),
+                _buildImagePreview(),
+              ],
+              if (_extractedData != null) ...[
+                const SizedBox(height: 16),
+                _buildExtractedDataCard(),
+              ],
             ],
-            if (_extractedData != null) ...[
-              const SizedBox(height: 16),
-              _buildExtractedDataCard(),
-            ],
-          ],
+          ),
         ),
       ),
     );

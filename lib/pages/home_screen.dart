@@ -20,6 +20,7 @@ import 'package:intl/intl.dart';
 import '../service/sqlite_service.dart';
 import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/pages/storage_center_page.dart';
+import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -286,7 +287,9 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 2,
       ),
       bottomNavigationBar: _buildBottomBar(context),
-      body: Column(
+      body: FirstOpenAnimator(
+        pageKey: 'home_screen',
+        child: Column(
         children: [
           const SizedBox(height: 8),
           Padding(
@@ -319,6 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

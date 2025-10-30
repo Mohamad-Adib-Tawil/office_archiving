@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class QRBarcodeScannerPage extends StatefulWidget {
   const QRBarcodeScannerPage({super.key});
@@ -188,13 +189,16 @@ class _QRBarcodeScannerPageState extends State<QRBarcodeScannerPage>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildScannerTab(),
-          _buildGeneratorTab(),
-          _buildHistoryTab(),
-        ],
+      body: FirstOpenAnimator(
+        pageKey: 'qr_barcode_scanner',
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildScannerTab(),
+            _buildGeneratorTab(),
+            _buildHistoryTab(),
+          ],
+        ),
       ),
     );
   }

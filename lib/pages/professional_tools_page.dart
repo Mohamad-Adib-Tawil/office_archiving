@@ -13,6 +13,7 @@ import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class ProfessionalToolsPage extends StatelessWidget {
   final bool embedded;
@@ -27,11 +28,13 @@ class ProfessionalToolsPage extends StatelessWidget {
               title: Text(AppLocalizations.of(context).tab_professional_tools),
               centerTitle: true,
             ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: FirstOpenAnimator(
+        pageKey: 'professional_tools_page',
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             _buildHeaderCard(context),
             const SizedBox(height: 24),
 
@@ -128,7 +131,8 @@ class ProfessionalToolsPage extends StatelessWidget {
                 onTap: () => _showComingSoon(context),
               ),
             ]),
-          ],
+            ],
+          ),
         ),
       ),
     );

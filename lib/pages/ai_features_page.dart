@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/services/smart_organization_service.dart';
+import 'package:office_archiving/services/first_open_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as p;
 
@@ -49,7 +50,16 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
     _translationService = TranslationService();
     _summarizationService = AISummarizationService();
     _ocrService = OCRService();
-    _animationController.forward();
+    // Animate only on first open
+    Future.microtask(() async {
+      final first = await FirstOpenService.isFirstOpen('ai_features_page');
+      if (!mounted) return;
+      if (first) {
+        _animationController.forward();
+      } else {
+        _animationController.value = 1.0; // show content without animating
+      }
+    });
     // تهيئة النص المستخرج إن تم تمريره من شاشة أخرى (مثل المحرر الداخلي)
     if (widget.initialText != null && widget.initialText!.trim().isNotEmpty) {
       _extractedText = widget.initialText!.trim();

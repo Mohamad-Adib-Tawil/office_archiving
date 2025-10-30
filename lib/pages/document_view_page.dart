@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:office_archiving/utils/image_utils.dart';
+import 'package:office_archiving/widgets/first_open_animator.dart';
 
 /// صفحة عرض المستند بالكامل
 class DocumentViewPage extends StatefulWidget {
@@ -100,7 +101,10 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
           ),
         ],
       ),
-      body: _fileExists ? _buildImageViewer() : _buildFileNotFound(colorScheme),
+      body: FirstOpenAnimator(
+        pageKey: 'document_view_page',
+        child: _fileExists ? _buildImageViewer() : _buildFileNotFound(colorScheme),
+      ),
     );
   }
 

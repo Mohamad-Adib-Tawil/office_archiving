@@ -9,6 +9,7 @@ import 'package:office_archiving/screens/editor/signature_pad.dart';
 import 'package:office_archiving/helper/pdf_viwer.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:office_archiving/helper/open_file.dart' as opener;
+import 'package:office_archiving/services/first_open_service.dart';
 
 class DocumentManagementPage extends StatefulWidget {
   final bool embedded;
@@ -38,7 +39,16 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    _animationController.forward();
+    // First-open only animation
+    Future.microtask(() async {
+      final first = await FirstOpenService.isFirstOpen('document_management_page');
+      if (!mounted) return;
+      if (first) {
+        _animationController.forward();
+      } else {
+        _animationController.value = 1.0;
+      }
+    });
     // تحميل جميع العناصر من كل الأقسام لعرضها في الصفحة
     _loadAllItemsFromDb();
   }

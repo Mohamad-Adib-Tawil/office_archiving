@@ -115,6 +115,7 @@ class SectionListView extends StatelessWidget {
 
     final gradientColors = gradients[index % gradients.length];
 
+    final scheme = Theme.of(context).colorScheme;
     return OpenContainer(
       openElevation: 0,
       closedElevation: 0,
@@ -125,9 +126,13 @@ class SectionListView extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
       ),
       transitionType: ContainerTransitionType.fadeThrough,
-      transitionDuration: const Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 420),
+      openColor: scheme.surface,
+      closedColor: Colors.transparent,
+      middleColor: scheme.surface,
       openBuilder: (context, _) => SectionScreen(
         section: Section(id: section.id, name: section.name),
+        animateIntro: false, // avoid double fade (OpenContainer already animates)
       ),
       closedBuilder: (context, open) => GestureDetector(
         onTap: open,
