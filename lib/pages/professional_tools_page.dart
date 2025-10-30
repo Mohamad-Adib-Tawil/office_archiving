@@ -35,30 +35,30 @@ class ProfessionalToolsPage extends StatelessWidget {
             _buildHeaderCard(context),
             const SizedBox(height: 24),
 
-            const Text(
-              'أدوات المسح والالتقاط',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context).scan_capture_tools_title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
 
             _buildToolGrid(context, [
               ToolItem(
-                title: 'ماسح المستندات',
-                subtitle: 'مسح متقدم مع فلاتر وتحسين',
+                title: AppLocalizations.of(context).tool_scanner_title,
+                subtitle: AppLocalizations.of(context).tool_scanner_sub,
                 icon: Icons.document_scanner,
                 color: Colors.blue,
                 onTap: () => _showSectionSelectionForScanner(context),
               ),
               ToolItem(
-                title: 'ماسح بطاقات العمل',
-                subtitle: 'استخراج معلومات الاتصال تلقائياً',
+                title: AppLocalizations.of(context).tool_bizcard_title,
+                subtitle: AppLocalizations.of(context).tool_bizcard_sub,
                 icon: Icons.credit_card,
                 color: Colors.green,
                 page: const BusinessCardScannerPage(),
               ),
               ToolItem(
-                title: 'ماسح الرموز والباركود',
-                subtitle: 'مسح وإنشاء رموز QR والباركود',
+                title: AppLocalizations.of(context).tool_qr_title,
+                subtitle: AppLocalizations.of(context).tool_qr_sub,
                 icon: Icons.qr_code_scanner,
                 color: Colors.orange,
                 page: const QRBarcodeScannerPage(),
@@ -67,30 +67,30 @@ class ProfessionalToolsPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            const Text(
-              'أدوات PDF المتقدمة',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context).advanced_pdf_tools_title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
 
             _buildToolGrid(context, [
               ToolItem(
-                title: 'حماية PDF',
-                subtitle: 'كلمات مرور وتوقيع إلكتروني',
+                title: 'PDF Security',
+                subtitle: AppLocalizations.of(context).tool_pdf_security_sub,
                 icon: Icons.security,
                 color: Colors.red,
                 onTap: () => _openPdfPickerForSecurity(context),
               ),
               ToolItem(
-                title: 'محرر PDF',
-                subtitle: 'إضافة تعليقات وتمييز النصوص',
+                title: AppLocalizations.of(context).tool_pdf_editor_title,
+                subtitle: AppLocalizations.of(context).tool_pdf_editor_sub,
                 icon: Icons.edit_document,
                 color: Colors.purple,
                 onTap: () => _openPdfPickerForEditor(context),
               ),
               ToolItem(
-                title: 'دمج PDF',
-                subtitle: 'دمج عدة ملفات PDF في ملف واحد',
+                title: AppLocalizations.of(context).tool_pdf_merge_title,
+                subtitle: AppLocalizations.of(context).tool_pdf_merge_sub,
                 icon: Icons.merge,
                 color: Colors.teal,
                 page: const DocumentManagementPage(),
@@ -99,30 +99,30 @@ class ProfessionalToolsPage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            const Text(
-              'أدوات إضافية',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context).extra_tools_title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
 
             _buildToolGrid(context, [
               ToolItem(
-                title: 'مولد التقارير',
-                subtitle: 'إنشاء تقارير احترافية',
+                title: AppLocalizations.of(context).tool_report_gen_title,
+                subtitle: AppLocalizations.of(context).tool_report_gen_sub,
                 icon: Icons.assessment,
                 color: Colors.indigo,
                 onTap: () => _showComingSoon(context),
               ),
               ToolItem(
-                title: 'النسخ الاحتياطي السحابي',
-                subtitle: 'مزامنة مع الخدمات السحابية',
+                title: AppLocalizations.of(context).tool_cloud_backup_title,
+                subtitle: AppLocalizations.of(context).tool_cloud_backup_sub,
                 icon: Icons.cloud_sync,
                 color: Colors.lightBlue,
                 onTap: () => _showComingSoon(context),
               ),
               ToolItem(
-                title: 'مشاركة متقدمة',
-                subtitle: 'مشاركة مع تحكم في الصلاحيات',
+                title: AppLocalizations.of(context).tool_advanced_share_title,
+                subtitle: AppLocalizations.of(context).tool_advanced_share_sub,
                 icon: Icons.share_outlined,
                 color: Colors.amber,
                 onTap: () => _showComingSoon(context),

@@ -1525,6 +1525,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This signature will be added to the last page of the document'**
   String get signature_preview_hint;
+
+  /// No description provided for @scan_capture_tools_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning and Capture Tools'**
+  String get scan_capture_tools_title;
+
+  /// No description provided for @tool_scanner_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Scanner'**
+  String get tool_scanner_title;
+
+  /// No description provided for @tool_scanner_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced scan with filters and enhancement'**
+  String get tool_scanner_sub;
+
+  /// No description provided for @tool_bizcard_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Card Scanner'**
+  String get tool_bizcard_title;
+
+  /// No description provided for @tool_bizcard_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically extract contact info'**
+  String get tool_bizcard_sub;
+
+  /// No description provided for @tool_qr_title.
+  ///
+  /// In en, this message translates to:
+  /// **'QR & Barcode Scanner'**
+  String get tool_qr_title;
+
+  /// No description provided for @tool_qr_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan and generate QR and barcodes'**
+  String get tool_qr_sub;
+
+  /// No description provided for @advanced_pdf_tools_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced PDF Tools'**
+  String get advanced_pdf_tools_title;
+
+  /// No description provided for @tool_pdf_security_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords and e-signature'**
+  String get tool_pdf_security_sub;
+
+  /// No description provided for @tool_pdf_editor_title.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Editor'**
+  String get tool_pdf_editor_title;
+
+  /// No description provided for @tool_pdf_editor_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Add comments and highlight text'**
+  String get tool_pdf_editor_sub;
+
+  /// No description provided for @tool_pdf_merge_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge PDF'**
+  String get tool_pdf_merge_title;
+
+  /// No description provided for @tool_pdf_merge_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Combine multiple PDFs into a single file'**
+  String get tool_pdf_merge_sub;
+
+  /// No description provided for @extra_tools_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Tools'**
+  String get extra_tools_title;
+
+  /// No description provided for @tool_report_gen_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Generator'**
+  String get tool_report_gen_title;
+
+  /// No description provided for @tool_report_gen_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Create professional reports'**
+  String get tool_report_gen_sub;
+
+  /// No description provided for @tool_cloud_backup_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Backup'**
+  String get tool_cloud_backup_title;
+
+  /// No description provided for @tool_cloud_backup_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with cloud services'**
+  String get tool_cloud_backup_sub;
+
+  /// No description provided for @tool_advanced_share_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Sharing'**
+  String get tool_advanced_share_title;
+
+  /// No description provided for @tool_advanced_share_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with permission control'**
+  String get tool_advanced_share_sub;
+
+  /// No description provided for @header_title_prof_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional tools for document management'**
+  String get header_title_prof_tools;
+
+  /// No description provided for @header_sub_prof_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'A comprehensive set of advanced tools to scan, edit, protect, and manage documents professionally'**
+  String get header_sub_prof_tools;
+
+  /// No description provided for @no_sections_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No sections available. Please create a section first.'**
+  String get no_sections_available;
+
+  /// No description provided for @choose_section_to_scan_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a section to scan'**
+  String get choose_section_to_scan_title;
+
+  /// No description provided for @section_default_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Section'**
+  String get section_default_name;
+
+  /// No description provided for @no_document_captured.
+  ///
+  /// In en, this message translates to:
+  /// **'No document captured'**
+  String get no_document_captured;
+
+  /// No description provided for @scan_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan failed: '**
+  String get scan_failed_prefix;
+
+  /// No description provided for @qr_title.
+  ///
+  /// In en, this message translates to:
+  /// **'QR & Barcode Scanner'**
+  String get qr_title;
+
+  /// No description provided for @qr_tab_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get qr_tab_scan;
+
+  /// No description provided for @qr_tab_generate.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate QR'**
+  String get qr_tab_generate;
+
+  /// No description provided for @qr_tab_history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get qr_tab_history;
+
+  /// No description provided for @qr_scan_area.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Area'**
+  String get qr_scan_area;
+
+  /// No description provided for @qr_position_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Point the camera at the code'**
+  String get qr_position_camera;
+
+  /// No description provided for @qr_scan_with_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan with Camera'**
+  String get qr_scan_with_camera;
+
+  /// No description provided for @qr_result.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Result:'**
+  String get qr_result;
+
+  /// No description provided for @copied_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get copied_done;
+
+  /// No description provided for @copy_action_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy_action_short;
+
+  /// No description provided for @share_action_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_action_short;
+
+  /// No description provided for @qr_generate_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Create QR Code'**
+  String get qr_generate_title;
+
+  /// No description provided for @text_or_url.
+  ///
+  /// In en, this message translates to:
+  /// **'Text or URL'**
+  String get text_or_url;
+
+  /// No description provided for @enter_text_for_qr.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter text to convert into QR'**
+  String get enter_text_for_qr;
+
+  /// No description provided for @quick_templates.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick templates:'**
+  String get quick_templates;
+
+  /// No description provided for @phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phone_number;
+
+  /// No description provided for @email_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email_address;
+
+  /// No description provided for @geo_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Geo Location'**
+  String get geo_location;
+
+  /// No description provided for @qr_preview_title.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Preview'**
+  String get qr_preview_title;
+
+  /// No description provided for @save_as_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as Image'**
+  String get save_as_image;
+
+  /// No description provided for @qr_saved_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'QR saved to gallery'**
+  String get qr_saved_gallery;
+
+  /// No description provided for @scan_error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan error: '**
+  String get scan_error_prefix;
+
+  /// No description provided for @save_error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Save error: '**
+  String get save_error_prefix;
+
+  /// No description provided for @share_error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Share error: '**
+  String get share_error_prefix;
+
+  /// No description provided for @wifi_settings_title.
+  ///
+  /// In en, this message translates to:
+  /// **'WiFi Settings'**
+  String get wifi_settings_title;
+
+  /// No description provided for @network_name_ssid.
+  ///
+  /// In en, this message translates to:
+  /// **'Network name (SSID)'**
+  String get network_name_ssid;
+
+  /// No description provided for @password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password_label;
+
+  /// No description provided for @security_type_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Security type'**
+  String get security_type_label;
+
+  /// No description provided for @scanned_on_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned on '**
+  String get scanned_on_prefix;
+
+  /// No description provided for @delete_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete_action;
+
+  /// No description provided for @scanned_text_from_selected_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned text from selected image'**
+  String get scanned_text_from_selected_image;
 }
 
 class _AppLocalizationsDelegate
