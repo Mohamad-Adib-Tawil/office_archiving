@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:office_archiving/models/storage_analytics.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/services/first_open_service.dart';
 
 class AnalyticsPage extends StatefulWidget {
   final bool embedded;
@@ -18,6 +19,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
   StorageAnalytics? _analytics;
   bool _isLoading = true;
 
+  bool _animateOnce = false;
+
   @override
   void initState() {
     super.initState();
@@ -28,7 +31,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    _loadAnalytics();
+    // Decide animation once, then load
+    Future.microtask(() async {
+      _animateOnce = await FirstOpenService.isFirstOpen('analytics_page');
+      if (!mounted) return;
+      _loadAnalytics();
+    });
   }
 
   @override
@@ -85,7 +93,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
         _analytics = analytics;
         _isLoading = false;
       });
-      _animationController.forward();
+      if (_animateOnce) {
+        _animationController.forward();
+      } else {
+        _animationController.value = 1.0;
+      }
     } catch (e) {
       // Fallback to empty data if error
       final analytics = StorageAnalytics(

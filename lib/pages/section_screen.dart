@@ -17,10 +17,12 @@ import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/services/ocr_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class SectionScreen extends StatefulWidget {
   final Section section;
-  const SectionScreen({super.key, required this.section});
+  final bool animateIntro;
+  const SectionScreen({super.key, required this.section, this.animateIntro = true});
 
   @override
   State<SectionScreen> createState() => _SectionScreenState();
@@ -37,7 +39,12 @@ class _SectionScreenState extends State<SectionScreen> {
     sqlDB = DatabaseService.instance;
     itemCubit = BlocProvider.of<ItemSectionCubit>(context);
     log('SectionScreen widget.section.id ${widget.section.id}');
-    itemCubit.fetchItemsBySectionId(widget.section.id);
+    // Defer initial fetch slightly to avoid jank during route transition
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 180));
+      if (!mounted) return;
+      itemCubit.fetchItemsBySectionId(widget.section.id);
+    });
     _sectionName = widget.section.name;
     super.initState();
   }
@@ -49,6 +56,7 @@ class _SectionScreenState extends State<SectionScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         bottomNavigationBar: _buildBottomBar(),
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -82,7 +90,46 @@ class _SectionScreenState extends State<SectionScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(_sectionName),
+                // Small cover thumbnail beside the name
+                StreamBuilder<void>(
+                  stream: DatabaseService.instance.changes,
+                  builder: (context, _) {
+                    return FutureBuilder<String?>(
+                      future: DatabaseService.instance.getSectionCoverOrLatest(widget.section.id),
+                      builder: (context, snap) {
+                        final path = snap.data;
+                        final hasImage = path != null && path.isNotEmpty && File(path).existsSync();
+                        return Container(
+                          width: 28,
+                          height: 28,
+                          margin: const EdgeInsetsDirectional.only(end: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: hasImage
+                              ? Image.file(
+                                  File(path!),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                                )
+                              : Icon(
+                                  AppIcons.image,
+                                  size: 18,
+                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                Flexible(
+                  child: Text(
+                    _sectionName,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 const Icon(Icons.edit, size: 18),
               ],
@@ -111,88 +158,12 @@ class _SectionScreenState extends State<SectionScreen> {
             ),
           ],
         ),
-        body: Column(
+        body: FirstOpenAnimator(
+          pageKey: 'section_screen',
+          enabled: widget.animateIntro,
+          child: Column(
           children: [
-            // Listen to DB change stream so the cover updates immediately after updates
-            StreamBuilder<void>(
-              stream: DatabaseService.instance.changes,
-              builder: (context, _) {
-                return FutureBuilder<String?>(
-                  future: DatabaseService.instance
-                      .getSectionCoverOrLatest(widget.section.id),
-                  builder: (context, snap) {
-                    final scheme = Theme.of(context).colorScheme;
-                    final path = snap.data;
-                    final hasImage =
-                        path != null && path.isNotEmpty && File(path).existsSync();
-                    if (!hasImage) {
-                      return const SizedBox.shrink();
-                    }
-                    // Evict any stale cached image for this file path so the new cover shows immediately
-                    try {
-                      final provider = FileImage(File(path));
-                      PaintingBinding.instance.imageCache.evict(provider);
-                    } catch (_) {}
-                    return Container(
-                      key: ValueKey(path),
-                      height: 200,
-                      margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 14,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.file(
-                            File(path),
-                            key: ValueKey('cover-$path'),
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: scheme.primary.withValues(alpha: 0.22),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(AppIcons.image,
-                                        color: Colors.white, size: 16),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      AppLocalizations.of(context).cover_badge,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+            // Small cover moved to AppBar; removed large cover from body
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
@@ -239,6 +210,7 @@ class _SectionScreenState extends State<SectionScreen> {
                 ),
               ),
           ],
+        ),
         ),
       ),
     );
