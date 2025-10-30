@@ -1357,6 +1357,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'since'**
   String get since;
+
+  /// No description provided for @tooltip_professional_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional Tools'**
+  String get tooltip_professional_tools;
+
+  /// No description provided for @tools_docs_center_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools & Documents Center'**
+  String get tools_docs_center_title;
+
+  /// No description provided for @tab_professional_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional Tools'**
+  String get tab_professional_tools;
+
+  /// No description provided for @coming_soon_message.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is under development and will be available in the next update'**
+  String get coming_soon_message;
+
+  /// No description provided for @ok_action.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok_action;
+
+  /// No description provided for @pdf_security_title.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Security & Signature'**
+  String get pdf_security_title;
+
+  /// No description provided for @tab_security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get tab_security;
+
+  /// No description provided for @tab_signature.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get tab_signature;
+
+  /// No description provided for @tab_watermark.
+  ///
+  /// In en, this message translates to:
+  /// **'Watermark'**
+  String get tab_watermark;
+
+  /// No description provided for @protect_pdf_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Protect PDF'**
+  String get protect_pdf_action;
+
+  /// No description provided for @draw_signature_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw your signature below'**
+  String get draw_signature_instruction;
+
+  /// No description provided for @clear_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear_action;
+
+  /// No description provided for @preview_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview_action;
+
+  /// No description provided for @signature_options_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature Options'**
+  String get signature_options_title;
+
+  /// No description provided for @signature_location_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature location'**
+  String get signature_location_title;
+
+  /// No description provided for @signature_location_hint_last_page_br.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom-right of the last page'**
+  String get signature_location_hint_last_page_br;
+
+  /// No description provided for @signature_size_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature size'**
+  String get signature_size_title;
+
+  /// No description provided for @signature_size_medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get signature_size_medium;
+
+  /// No description provided for @watermark_settings_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Watermark Settings'**
+  String get watermark_settings_title;
+
+  /// No description provided for @watermark_text_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Watermark text'**
+  String get watermark_text_label;
+
+  /// No description provided for @watermark_text_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Confidential, Draft, Company XYZ'**
+  String get watermark_text_hint;
+
+  /// No description provided for @transparency_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Transparency'**
+  String get transparency_label;
+
+  /// No description provided for @color_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get color_label;
+
+  /// No description provided for @document_content_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Document content\n(Preview)'**
+  String get document_content_preview;
+
+  /// No description provided for @watermark_templates_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get watermark_templates_title;
+
+  /// No description provided for @no_pdfs_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No PDF files found'**
+  String get no_pdfs_found;
+
+  /// No description provided for @signature_preview_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature Preview'**
+  String get signature_preview_title;
+
+  /// No description provided for @signature_preview_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'This signature will be added to the last page of the document'**
+  String get signature_preview_hint;
 }
 
 class _AppLocalizationsDelegate

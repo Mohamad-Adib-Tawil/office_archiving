@@ -11,7 +11,7 @@ import 'package:office_archiving/widgets/shimmers.dart';
 import 'package:office_archiving/functions/show_add_section_dialog.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
 import 'package:office_archiving/pages/settings_page.dart';
-import 'package:office_archiving/pages/professional_tools_page.dart';
+import 'package:office_archiving/pages/tools_documents_center_page.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
@@ -385,9 +385,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       width: 72,
                     ), // space reserved for center button
-                    // Professional Tools
+                    // Professional Tools (opens combined Tools & Documents center)
                     IconButton(
-                      tooltip: 'أدوات احترافية',
+                      tooltip: AppLocalizations.of(context).tooltip_professional_tools,
                       icon: const Icon(Icons.construction_rounded),
                       color: scheme.primary,
                       onPressed: () {
@@ -395,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ProfessionalToolsPage(),
+                            builder: (_) => const ToolsDocumentsCenterPage(),
                           ),
                         );
                       },

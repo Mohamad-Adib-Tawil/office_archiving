@@ -662,4 +662,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get since => 'since';
+
+  @override
+  String get tooltip_professional_tools => 'Professional Tools';
+
+  @override
+  String get tools_docs_center_title => 'Tools & Documents Center';
+
+  @override
+  String get tab_professional_tools => 'Professional Tools';
+
+  @override
+  String get coming_soon_message =>
+      'This feature is under development and will be available in the next update';
+
+  @override
+  String get ok_action => 'OK';
+
+  @override
+  String get pdf_security_title => 'PDF Security & Signature';
+
+  @override
+  String get tab_security => 'Security';
+
+  @override
+  String get tab_signature => 'Signature';
+
+  @override
+  String get tab_watermark => 'Watermark';
+
+  @override
+  String get protect_pdf_action => 'Protect PDF';
+
+  @override
+  String get draw_signature_instruction => 'Draw your signature below';
+
+  @override
+  String get clear_action => 'Clear';
+
+  @override
+  String get preview_action => 'Preview';
+
+  @override
+  String get signature_options_title => 'Signature Options';
+
+  @override
+  String get signature_location_title => 'Signature location';
+
+  @override
+  String get signature_location_hint_last_page_br =>
+      'Bottom-right of the last page';
+
+  @override
+  String get signature_size_title => 'Signature size';
+
+  @override
+  String get signature_size_medium => 'Medium';
+
+  @override
+  String get watermark_settings_title => 'Watermark Settings';
+
+  @override
+  String get watermark_text_label => 'Watermark text';
+
+  @override
+  String get watermark_text_hint => 'e.g., Confidential, Draft, Company XYZ';
+
+  @override
+  String get transparency_label => 'Transparency';
+
+  @override
+  String get color_label => 'Color';
+
+  @override
+  String get document_content_preview => 'Document content\n(Preview)';
+
+  @override
+  String get watermark_templates_title => 'Templates';
+
+  @override
+  String get no_pdfs_found => 'No PDF files found';
+
+  @override
+  String get signature_preview_title => 'Signature Preview';
+
+  @override
+  String get signature_preview_hint =>
+      'This signature will be added to the last page of the document';
 }
