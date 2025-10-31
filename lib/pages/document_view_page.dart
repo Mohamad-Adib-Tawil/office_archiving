@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/utils/image_utils.dart';
 import 'package:office_archiving/widgets/first_open_animator.dart';
 
@@ -50,7 +51,7 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
         text: widget.documentName,
       );
     } catch (e) {
-      _showErrorSnackBar('فشلت المشاركة');
+      _showErrorSnackBar('${AppLocalizations.of(context).share_error_prefix}$e');
     }
   }
 
@@ -87,17 +88,17 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
           IconButton(
             icon: const Icon(Icons.zoom_out_map),
             onPressed: _resetZoom,
-            tooltip: 'إعادة تعيين التكبير',
+            tooltip: AppLocalizations.of(context).zoom_reset_tooltip,
           ),
           IconButton(
             icon: const Icon(Icons.share),
             onPressed: _shareDocument,
-            tooltip: 'مشاركة',
+            tooltip: AppLocalizations.of(context).share_action,
           ),
           IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: _showFileInfo,
-            tooltip: 'معلومات الملف',
+            tooltip: AppLocalizations.of(context).file_info_tooltip,
           ),
         ],
       ),
@@ -170,14 +171,14 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'الملف غير موجود',
+              AppLocalizations.of(context).file_not_found,
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: 12),
             Text(
-              'تم حذف الملف أو نقله من موقعه الأصلي',
+              AppLocalizations.of(context).file_missing_hint,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: Colors.white70,
               ),
@@ -205,28 +206,28 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.info_outline, color: Colors.blue),
-            SizedBox(width: 12),
-            Text('معلومات الملف'),
+            const Icon(Icons.info_outline, color: Colors.blue),
+            const SizedBox(width: 12),
+            Text(AppLocalizations.of(context).file_info_tooltip),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfoRow('الاسم', widget.documentName),
+            _buildInfoRow(AppLocalizations.of(context).name_label, widget.documentName),
             const Divider(),
-            _buildInfoRow('الحجم', fileSize),
+            _buildInfoRow(AppLocalizations.of(context).file_size, fileSize),
             const Divider(),
             _buildInfoRow(
-              'آخر تعديل',
+              AppLocalizations.of(context).file_date,
               '${modifiedDate.year}-${modifiedDate.month.toString().padLeft(2, '0')}-${modifiedDate.day.toString().padLeft(2, '0')}',
             ),
             const Divider(),
             _buildInfoRow(
-              'المسار',
+              AppLocalizations.of(context).path_label,
               widget.filePath,
               isPath: true,
             ),
@@ -235,7 +236,7 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إغلاق'),
+            child: Text(AppLocalizations.of(context).close),
           ),
         ],
       ),

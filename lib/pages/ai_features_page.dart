@@ -359,16 +359,16 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                       children: [
                         Icon(Icons.info_outline, color: Colors.blue, size: 20),
                         const SizedBox(width: 8),
-                        const Text(
-                          'ميزات الذكاء الاصطناعي',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                        Text(
+                          AppLocalizations.of(context).ai_features_title,
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      '• OCR متقدم محلي للعربية والإنجليزية\n• تلخيص ذكي محلي للنصوص\n• ترجمة فورية (تحتاج إنترنت) 🌐\n• تنظيم ذكي محلي للملفات\n• مفتاح Hugging Face اختياري للتحسين',
-                      style: TextStyle(fontSize: 13),
+                    Text(
+                      AppLocalizations.of(context).ai_info_desc,
+                      style: const TextStyle(fontSize: 13),
                     ),
                   ],
                 ),
@@ -377,7 +377,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
               
               // لغة OCR: تلقائي / العربية / الإنجليزية
               Text(
-                'لغة OCR',
+                AppLocalizations.of(context).ocr_language,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
@@ -385,7 +385,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                 spacing: 8,
                 children: [
                   ChoiceChip(
-                    label: const Text('تلقائي'),
+                    label: Text(AppLocalizations.of(context).ocr_auto),
                     selected: _ocrLang == 'auto',
                     onSelected: (v) {
                       if (!v) return;
@@ -394,7 +394,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                     },
                   ),
                   ChoiceChip(
-                    label: const Text('العربية'),
+                    label: Text(AppLocalizations.of(context).ocr_arabic),
                     selected: _ocrLang == 'ar',
                     onSelected: (v) {
                       if (!v) return;
@@ -403,7 +403,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
                     },
                   ),
                   ChoiceChip(
-                    label: const Text('الإنجليزية'),
+                    label: Text(AppLocalizations.of(context).ocr_english),
                     selected: _ocrLang == 'en',
                     onSelected: (v) {
                       if (!v) return;
@@ -423,26 +423,26 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
               ),
               const SizedBox(height: 16),
               _buildFeatureCard(
-                'OCR للملفات PDF (عدّة صفحات)',
-                'استخراج نص من PDF عبر تحويل الصفحات إلى صور ومعالجتها (AR/EN)',
+                AppLocalizations.of(context).pdf_ocr_title,
+                AppLocalizations.of(context).pdf_ocr_desc,
                 Icons.picture_as_pdf,
                 Colors.red,
                 _pickPdfAndExtractText,
               ),
               const SizedBox(height: 16),
               _buildFeatureCard(
-                'Batch OCR (العناصر الناقصة)',
+                AppLocalizations.of(context).batch_ocr_title,
                 _batchRunning
-                    ? 'جاري المعالجة: $_batchProcessed/$_batchTotal'
-                    : 'شغّل OCR لكل العناصر التي لا تحتوي نص OCR محفوظ',
+                    ? '${AppLocalizations.of(context).ocr_processing} $_batchProcessed/$_batchTotal'
+                    : AppLocalizations.of(context).batch_ocr_desc,
                 Icons.task,
                 Colors.purple,
                 _runBatchOcr,
               ),
               const SizedBox(height: 16),
               _buildFeatureCard(
-                'تنظيم ذكي للملفات',
-                'اختر ملف (صورة/‏PDF/‏TXT) للحصول على تصنيف، علامات، واسم مقترح',
+                AppLocalizations.of(context).ai_feature_smart_organize_title,
+                AppLocalizations.of(context).ai_feature_smart_organize_desc,
                 Icons.auto_awesome,
                 Colors.teal,
                 _runSmartOrganization,
@@ -591,7 +591,7 @@ class _AIFeaturesPageState extends State<AIFeaturesPage> with TickerProviderStat
           ),
           actions: [
             TextButton(onPressed: () => Navigator.pop(ctx, null), child: Text(AppLocalizations.of(context).cancel)),
-            TextButton(onPressed: () => Navigator.pop(ctx, controller.text.trim()), child: const Text('حفظ')),
+            TextButton(onPressed: () => Navigator.pop(ctx, controller.text.trim()), child: Text(AppLocalizations.of(context).ok_action)),
           ],
         );
       },

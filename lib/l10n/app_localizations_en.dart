@@ -927,4 +927,331 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get scanned_text_from_selected_image =>
       'Scanned text from selected image';
+
+  @override
+  String get edit_action => 'Edit';
+
+  @override
+  String get options_action => 'Options';
+
+  @override
+  String get share_options_title => 'Share Options';
+
+  @override
+  String get file_name_label => 'File Name';
+
+  @override
+  String get share_pdf_single => 'Single PDF';
+
+  @override
+  String get share_images_multiple => 'Multiple Images';
+
+  @override
+  String get save_to_gallery_action => 'Save to Gallery';
+
+  @override
+  String get all_options_title => 'All Options';
+
+  @override
+  String get merge_all_to_pdf => 'Merge All to PDF';
+
+  @override
+  String get extract_text_ocr => 'Extract Text (OCR)';
+
+  @override
+  String get no_images_to_edit => 'No images to edit';
+
+  @override
+  String get no_valid_image_path => 'No valid image path';
+
+  @override
+  String get no_items_to_share => 'No items to share';
+
+  @override
+  String get no_valid_images => 'No valid images';
+
+  @override
+  String get pdf_created_shared_success =>
+      'PDF created and shared successfully';
+
+  @override
+  String get error_prefix => 'Error: ';
+
+  @override
+  String get no_images_to_share => 'No images to share';
+
+  @override
+  String get no_valid_images_to_share => 'No valid images to share';
+
+  @override
+  String get no_items_to_merge => 'No items to merge';
+
+  @override
+  String get merged_success_prefix => 'Merged: ';
+
+  @override
+  String get merge_error_prefix => 'Merge error: ';
+
+  @override
+  String get no_images_for_text_extraction => 'No images for text extraction';
+
+  @override
+  String get no_text_found => 'No text found';
+
+  @override
+  String get text_extracted_prefix => 'Text extracted: ';
+
+  @override
+  String get text_extraction_error_prefix => 'Text extraction error: ';
+
+  @override
+  String get saving_to_gallery => 'Saving to gallery...';
+
+  @override
+  String get saved_to_gallery => 'Saved to gallery';
+
+  @override
+  String get no_files_to_copy => 'No files to copy';
+
+  @override
+  String get file_paths_copied => 'File paths copied';
+
+  @override
+  String get copy_error_prefix => 'Copy error: ';
+
+  @override
+  String get ocr_language => 'OCR Language';
+
+  @override
+  String get ocr_auto => 'Auto';
+
+  @override
+  String get ocr_arabic => 'Arabic';
+
+  @override
+  String get ocr_english => 'English';
+
+  @override
+  String get ai_info_header => 'AI Features';
+
+  @override
+  String get ai_info_desc =>
+      '• Advanced local OCR for Arabic and English\n• Smart local text summarization\n• Instant translation (requires internet) 🌐\n• Smart local file organization\n• Optional Hugging Face key for enhancement';
+
+  @override
+  String get select_image_for_ocr => 'Select an image for OCR';
+
+  @override
+  String get ocr_processing => 'Processing OCR...';
+
+  @override
+  String get ocr_completed => 'OCR completed!';
+
+  @override
+  String get ocr_failed_prefix => 'OCR failed: ';
+
+  @override
+  String get translation_processing => 'Translating...';
+
+  @override
+  String get translation_completed => 'Translation completed!';
+
+  @override
+  String get translation_failed_prefix => 'Translation failed: ';
+
+  @override
+  String get summarization_processing => 'Summarizing...';
+
+  @override
+  String get summarization_completed => 'Summarization completed!';
+
+  @override
+  String get summarization_failed_prefix => 'Summarization failed: ';
+
+  @override
+  String get smart_organization_processing => 'Organizing...';
+
+  @override
+  String get smart_organization_completed => 'Organization completed!';
+
+  @override
+  String get smart_organization_failed_prefix => 'Organization failed: ';
+
+  @override
+  String get api_key_dialog_title => 'Hugging Face API Key';
+
+  @override
+  String get api_key_dialog_label => 'Bearer Token (optional)';
+
+  @override
+  String get api_key_dialog_hint => 'hf_...';
+
+  @override
+  String get api_key_dialog_helper => 'Leave empty for local use only';
+
+  @override
+  String get api_key_saved => 'API key saved';
+
+  @override
+  String get pdf_ocr_title => '📄 PDF OCR';
+
+  @override
+  String get pdf_ocr_desc => 'Extract text from PDF files';
+
+  @override
+  String get batch_ocr_title => '📚 Batch OCR';
+
+  @override
+  String get batch_ocr_desc => 'Process multiple images at once';
+
+  @override
+  String get editor_title => 'Image Editor';
+
+  @override
+  String get editor_no_image => 'No image to edit';
+
+  @override
+  String get editor_save_success => 'Image saved successfully!';
+
+  @override
+  String get editor_save_error_prefix => 'Save error: ';
+
+  @override
+  String get editor_rotate_left => 'Rotate Left';
+
+  @override
+  String get editor_rotate_right => 'Rotate Right';
+
+  @override
+  String get editor_flip_horizontal => 'Flip Horizontal';
+
+  @override
+  String get editor_flip_vertical => 'Flip Vertical';
+
+  @override
+  String get editor_crop => 'Crop';
+
+  @override
+  String get editor_filters => 'Filters';
+
+  @override
+  String get editor_adjust => 'Adjust';
+
+  @override
+  String get editor_brightness => 'Brightness';
+
+  @override
+  String get editor_contrast => 'Contrast';
+
+  @override
+  String get editor_saturation => 'Saturation';
+
+  @override
+  String get editor_filter_none => 'None';
+
+  @override
+  String get editor_filter_grayscale => 'Grayscale';
+
+  @override
+  String get editor_filter_sepia => 'Sepia';
+
+  @override
+  String get editor_filter_invert => 'Invert';
+
+  @override
+  String get editor_filter_blur => 'Blur';
+
+  @override
+  String get editor_reset => 'Reset';
+
+  @override
+  String get editor_save => 'Save';
+
+  @override
+  String get editor_cancel => 'Cancel';
+
+  @override
+  String get editor_undo => 'Undo';
+
+  @override
+  String get editor_redo => 'Redo';
+
+  @override
+  String get scanner_title => 'Smart Scanner';
+
+  @override
+  String get scanner_capture => 'Capture';
+
+  @override
+  String get scanner_flash_on => 'Flash On';
+
+  @override
+  String get scanner_flash_off => 'Flash Off';
+
+  @override
+  String get scanner_preview_title => 'Smart Preview';
+
+  @override
+  String get scanner_filter_original => 'Original';
+
+  @override
+  String get scanner_filter_enhance => 'Enhance';
+
+  @override
+  String get scanner_filter_bw => 'B&W';
+
+  @override
+  String get scanner_filter_grayscale => 'Grayscale';
+
+  @override
+  String get scanner_filter_vivid => 'Vivid';
+
+  @override
+  String get scanner_retake => 'Retake';
+
+  @override
+  String get scanner_save => 'Save';
+
+  @override
+  String get scanner_saved_prefix => 'Saved ';
+
+  @override
+  String get scanner_saved_suffix_singular => ' image successfully';
+
+  @override
+  String get scanner_saved_suffix_plural => ' images successfully';
+
+  @override
+  String get scanner_add_another => 'Add Another Page?';
+
+  @override
+  String get scanner_add_another_desc => 'Do you want to scan another page?';
+
+  @override
+  String get scanner_yes_another => 'Yes, Add Another';
+
+  @override
+  String get scanner_done => 'Done';
+
+  @override
+  String get scanner_no_camera => 'No camera available';
+
+  @override
+  String get scanner_camera_error => 'Camera initialization error';
+
+  @override
+  String get zoom_reset_tooltip => 'Reset Zoom';
+
+  @override
+  String get file_info_tooltip => 'File Info';
+
+  @override
+  String get name_label => 'Name';
+
+  @override
+  String get path_label => 'Path';
+
+  @override
+  String get file_missing_hint =>
+      'File deleted or moved from original location';
 }

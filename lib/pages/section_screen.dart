@@ -22,7 +22,11 @@ import 'package:office_archiving/widgets/first_open_animator.dart';
 class SectionScreen extends StatefulWidget {
   final Section section;
   final bool animateIntro;
-  const SectionScreen({super.key, required this.section, this.animateIntro = true});
+  const SectionScreen({
+    super.key,
+    required this.section,
+    this.animateIntro = true,
+  });
 
   @override
   State<SectionScreen> createState() => _SectionScreenState();
@@ -51,7 +55,9 @@ class _SectionScreenState extends State<SectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log('|||||||||||||||||||||||||||||||||||||||||| SectionScreen widget.section.id ${widget.section.id} |||||||||||||||||||||||||||||||||||||||||| ');
+    log(
+      '|||||||||||||||||||||||||||||||||||||||||| SectionScreen widget.section.id ${widget.section.id} |||||||||||||||||||||||||||||||||||||||||| ',
+    );
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -73,15 +79,17 @@ class _SectionScreenState extends State<SectionScreen> {
                   ),
                 );
               },
-              icon: Icon(AppIcons.search,
-                  color: Theme.of(context).colorScheme.primary),
+              icon: Icon(
+                AppIcons.search,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               style: IconButton.styleFrom(
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withValues(alpha: 0.12),
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.12),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ),
@@ -95,29 +103,38 @@ class _SectionScreenState extends State<SectionScreen> {
                   stream: DatabaseService.instance.changes,
                   builder: (context, _) {
                     return FutureBuilder<String?>(
-                      future: DatabaseService.instance.getSectionCoverOrLatest(widget.section.id),
+                      future: DatabaseService.instance.getSectionCoverOrLatest(
+                        widget.section.id,
+                      ),
                       builder: (context, snap) {
                         final path = snap.data;
-                        final hasImage = path != null && path.isNotEmpty && File(path).existsSync();
+                        final hasImage =
+                            path != null &&
+                            path.isNotEmpty &&
+                            File(path).existsSync();
                         return Container(
                           width: 28,
                           height: 28,
                           margin: const EdgeInsetsDirectional.only(end: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
                           ),
                           clipBehavior: Clip.antiAlias,
                           child: hasImage
                               ? Image.file(
-                                  File(path!),
+                                  File(path),
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                                  errorBuilder: (_, __, ___) =>
+                                      const SizedBox.shrink(),
                                 )
                               : Icon(
                                   AppIcons.image,
                                   size: 18,
-                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
                                 ),
                         );
                       },
@@ -125,10 +142,7 @@ class _SectionScreenState extends State<SectionScreen> {
                   },
                 ),
                 Flexible(
-                  child: Text(
-                    _sectionName,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  child: Text(_sectionName, overflow: TextOverflow.ellipsis),
                 ),
                 const SizedBox(width: 8),
                 const Icon(Icons.edit, size: 18),
@@ -143,16 +157,18 @@ class _SectionScreenState extends State<SectionScreen> {
                 onPressed: () => Navigator.pop(context),
                 icon: Transform.flip(
                   flipX: true,
-                  child: Icon(AppIcons.back,
-                      color: Theme.of(context).colorScheme.onSurface),
+                  child: Icon(
+                    AppIcons.back,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 style: IconButton.styleFrom(
-                  backgroundColor: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withValues(alpha: 0.5),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
               ),
             ),
@@ -162,55 +178,59 @@ class _SectionScreenState extends State<SectionScreen> {
           pageKey: 'section_screen',
           enabled: widget.animateIntro,
           child: Column(
-          children: [
-            // Small cover moved to AppBar; removed large cover from body
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  itemCubit.fetchItemsBySectionId(widget.section.id);
-                  await Future.delayed(const Duration(milliseconds: 200));
-                },
-                child: BlocBuilder<ItemSectionCubit, ItemSectionState>(
-                  builder: (context, state) {
-                    if (state is ItemSectionLoading) {
-                      log('ItemSectionLoading');
-                      return buildItemsShimmerGrid(context);
-                    } else if (state is ItemSectionLoaded) {
-                      log('ItemSectionLoaded');
-                      return GridViewItemsSuccess(
-                        items: state.items,
-                        itemSectionCubit: itemCubit,
-                      );
-                    } else if (state is ItemSectionError) {
-                      return SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 80),
-                          child: Center(child: Text(AppLocalizations.of(context).loading_error)),
-                        ),
-                      );
-                    } else {
-                      log("else section screen state :$state");
-                      return buildItemsShimmerGrid(context);
-                    }
+            children: [
+              // Small cover moved to AppBar; removed large cover from body
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    itemCubit.fetchItemsBySectionId(widget.section.id);
+                    await Future.delayed(const Duration(milliseconds: 200));
                   },
+                  child: BlocBuilder<ItemSectionCubit, ItemSectionState>(
+                    builder: (context, state) {
+                      if (state is ItemSectionLoading) {
+                        log('ItemSectionLoading');
+                        return buildItemsShimmerGrid(context);
+                      } else if (state is ItemSectionLoaded) {
+                        log('ItemSectionLoaded');
+                        return GridViewItemsSuccess(
+                          items: state.items,
+                          itemSectionCubit: itemCubit,
+                        );
+                      } else if (state is ItemSectionError) {
+                        return SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 80),
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context).loading_error,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        log("else section screen state :$state");
+                        return buildItemsShimmerGrid(context);
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-            if (_isProcessing)
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(width: 16),
-                    Text('جاري المعالجة...'),
-                  ],
+              if (_isProcessing)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 16),
+                      Text(AppLocalizations.of(context).processing_ellipsis),
+                    ],
+                  ),
                 ),
-              ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );
@@ -224,7 +244,7 @@ class _SectionScreenState extends State<SectionScreen> {
         children: [
           _buildBottomBarButton(
             icon: Icons.add_circle,
-            label: 'إضافة',
+            label: AppLocalizations.of(context).addAction,
             onTap: () {
               showAddItemSheet(
                 context,
@@ -236,17 +256,17 @@ class _SectionScreenState extends State<SectionScreen> {
           ),
           _buildBottomBarButton(
             icon: Icons.edit,
-            label: 'تحرير',
+            label: AppLocalizations.of(context).edit_action,
             onTap: _openImageEditor,
           ),
           _buildBottomBarButton(
             icon: Icons.share,
-            label: 'مشاركة',
+            label: AppLocalizations.of(context).share_action,
             onTap: _showShareOptions,
           ),
           _buildBottomBarButton(
             icon: Icons.more_vert,
-            label: 'خيارات',
+            label: AppLocalizations.of(context).options_action,
             onTap: _showAllOptions,
           ),
         ],
@@ -254,7 +274,11 @@ class _SectionScreenState extends State<SectionScreen> {
     );
   }
 
-  Widget _buildBottomBarButton({required IconData icon, required String label, required VoidCallback onTap}) {
+  Widget _buildBottomBarButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -269,10 +293,7 @@ class _SectionScreenState extends State<SectionScreen> {
               const SizedBox(height: 1),
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 9,
-                  height: 1.1,
-                ),
+                style: const TextStyle(fontSize: 9, height: 1.1),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -288,34 +309,36 @@ class _SectionScreenState extends State<SectionScreen> {
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('تعديل اسم القسم'),
+        title: Text(AppLocalizations.of(context).rename_section_title),
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(
-            labelText: 'اسم القسم',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).sectionNameLabel,
+            border: const OutlineInputBorder(),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
-            child: const Text('حفظ'),
+            child: Text(AppLocalizations.of(context).renameAction),
           ),
         ],
       ),
     );
-    
+
     if (result != null && result.isNotEmpty && result != _sectionName) {
       await sqlDB.updateSectionName(widget.section.id, result);
       if (mounted) {
         setState(() => _sectionName = result);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تم تحديث اسم القسم')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).snackbar_rename_done),
+          ),
         );
       }
     }
@@ -324,31 +347,31 @@ class _SectionScreenState extends State<SectionScreen> {
   Future<void> _openImageEditor() async {
     final state = itemCubit.state;
     if (state is! ItemSectionLoaded || state.items.isEmpty) {
-      _showSnackBar('لا توجد صور للتحرير');
+      _showSnackBar(AppLocalizations.of(context).no_images_to_edit);
       return;
     }
-    
+
     // فتح المحرر الداخلي الجاهز
     final firstImage = state.items.first.filePath;
     if (firstImage == null) {
-      _showSnackBar('لا يوجد مسار صورة صالح');
+      _showSnackBar(AppLocalizations.of(context).no_valid_image_path);
       return;
     }
-    
+
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => InternalEditorPage(initialImagePath: firstImage),
       ),
     );
-    
+
     // تحديث القائمة بعد التحرير
     itemCubit.fetchItemsBySectionId(widget.section.id);
   }
 
   Future<void> _showShareOptions() async {
     final nameController = TextEditingController(text: _sectionName);
-    
+
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -362,17 +385,17 @@ class _SectionScreenState extends State<SectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'خيارات المشاركة',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                AppLocalizations.of(context).share_options_title,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'اسم الملف',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.edit),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context).file_name_label,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.edit),
                 ),
               ),
               const SizedBox(height: 20),
@@ -380,9 +403,24 @@ class _SectionScreenState extends State<SectionScreen> {
                 child: ListView(
                   controller: controller,
                   children: [
-                    _shareOptionTile('PDF واحد', Icons.picture_as_pdf, Colors.red, () => _createAndSharePDF(nameController.text)),
-                    _shareOptionTile('صور متعددة', Icons.collections, Colors.teal, () => _shareAllImages(nameController.text)),
-                    _shareOptionTile('حفظ في المعرض', Icons.photo_library, Colors.pink, _saveToGallery),
+                    _shareOptionTile(
+                      AppLocalizations.of(context).share_pdf_single,
+                      Icons.picture_as_pdf,
+                      Colors.red,
+                      () => _createAndSharePDF(nameController.text),
+                    ),
+                    _shareOptionTile(
+                      AppLocalizations.of(context).share_images_multiple,
+                      Icons.collections,
+                      Colors.teal,
+                      () => _shareAllImages(nameController.text),
+                    ),
+                    _shareOptionTile(
+                      AppLocalizations.of(context).save_to_gallery_action,
+                      Icons.photo_library,
+                      Colors.pink,
+                      _saveToGallery,
+                    ),
                   ],
                 ),
               ),
@@ -393,7 +431,12 @@ class _SectionScreenState extends State<SectionScreen> {
     );
   }
 
-  Widget _shareOptionTile(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _shareOptionTile(
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -429,16 +472,39 @@ class _SectionScreenState extends State<SectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('خيارات شاملة', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(
+                AppLocalizations.of(context).all_options_title,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView(
                   controller: controller,
                   children: [
-                    _optionTile('دمج الكل في PDF', Icons.merge, Colors.purple, _mergeAllToPDF),
-                    _optionTile('استخراج نص (OCR)', Icons.text_fields, Colors.orange, _extractAllText),
-                    _optionTile('حفظ في المعرض', Icons.save_alt, Colors.green, _saveToGallery),
-                    _optionTile('نسخ', Icons.copy, Colors.teal, _copyFiles),
+                    _optionTile(
+                      AppLocalizations.of(context).merge_all_to_pdf,
+                      Icons.merge,
+                      Colors.purple,
+                      _mergeAllToPDF,
+                    ),
+                    _optionTile(
+                      AppLocalizations.of(context).extract_text_ocr,
+                      Icons.text_fields,
+                      Colors.orange,
+                      _extractAllText,
+                    ),
+                    _optionTile(
+                      AppLocalizations.of(context).save_to_gallery_action,
+                      Icons.save_alt,
+                      Colors.green,
+                      _saveToGallery,
+                    ),
+                    _optionTile(
+                      AppLocalizations.of(context).copy_action,
+                      Icons.copy,
+                      Colors.teal,
+                      _copyFiles,
+                    ),
                   ],
                 ),
               ),
@@ -449,7 +515,12 @@ class _SectionScreenState extends State<SectionScreen> {
     );
   }
 
-  Widget _optionTile(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _optionTile(
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -476,28 +547,31 @@ class _SectionScreenState extends State<SectionScreen> {
     try {
       final state = itemCubit.state;
       if (state is! ItemSectionLoaded || state.items.isEmpty) {
-        _showSnackBar('لا توجد عناصر للمشاركة');
+        _showSnackBar(AppLocalizations.of(context).no_items_to_share);
         return;
       }
-      
+
       setState(() => _isProcessing = true);
       final imagePaths = state.items
           .map((item) => item.filePath)
           .where((path) => path != null && File(path).existsSync())
           .cast<String>()
           .toList();
-      
+
       if (imagePaths.isEmpty) {
-        _showSnackBar('لا توجد صور صالحة');
+        _showSnackBar(AppLocalizations.of(context).no_valid_images);
         return;
       }
-      
-      final pdfFile = await PdfService().createPdfFromImages(imagePaths, fileName: '$fileName.pdf');
-      
+
+      final pdfFile = await PdfService().createPdfFromImages(
+        imagePaths,
+        fileName: '$fileName.pdf',
+      );
+
       await Share.shareXFiles([XFile(pdfFile.path)], subject: fileName);
-      _showSnackBar('تم إنشاء ومشاركة PDF بنجاح');
+      _showSnackBar(AppLocalizations.of(context).pdf_created_shared_success);
     } catch (e) {
-      _showSnackBar('خطأ: $e');
+      _showSnackBar('${AppLocalizations.of(context).error_prefix}$e');
     } finally {
       setState(() => _isProcessing = false);
     }
@@ -507,24 +581,24 @@ class _SectionScreenState extends State<SectionScreen> {
     try {
       final state = itemCubit.state;
       if (state is! ItemSectionLoaded || state.items.isEmpty) {
-        _showSnackBar('لا توجد صور للمشاركة');
+        _showSnackBar(AppLocalizations.of(context).no_images_to_share);
         return;
       }
-      
+
       final files = state.items
           .where((item) => item.filePath != null)
           .where((item) => File(item.filePath!).existsSync())
           .map((item) => XFile(item.filePath!))
           .toList();
-      
+
       if (files.isEmpty) {
-        _showSnackBar('لا توجد صور صالحة للمشاركة');
+        _showSnackBar(AppLocalizations.of(context).no_valid_images_to_share);
         return;
       }
-      
+
       await Share.shareXFiles(files, subject: fileName);
     } catch (e) {
-      _showSnackBar('خطأ: $e');
+      _showSnackBar('${AppLocalizations.of(context).error_prefix}$e');
     }
   }
 
@@ -532,30 +606,30 @@ class _SectionScreenState extends State<SectionScreen> {
     try {
       final state = itemCubit.state;
       if (state is! ItemSectionLoaded || state.items.isEmpty) {
-        _showSnackBar('لا توجد عناصر للدمج');
+        _showSnackBar(AppLocalizations.of(context).no_items_to_merge);
         return;
       }
-      
+
       setState(() => _isProcessing = true);
       final imagePaths = state.items
           .map((item) => item.filePath)
           .where((path) => path != null && File(path).existsSync())
           .cast<String>()
           .toList();
-      
+
       if (imagePaths.isEmpty) {
-        _showSnackBar('لا توجد صور صالحة');
+        _showSnackBar(AppLocalizations.of(context).no_valid_images);
         return;
       }
-      
+
       final pdfFile = await PdfService().createPdfFromImages(
         imagePaths,
         fileName: '${_sectionName}_merged.pdf',
       );
-      
-      _showSnackBar('تم الدمج: ${pdfFile.path}');
+
+      _showSnackBar('${AppLocalizations.of(context).merged_success_prefix}${pdfFile.path}');
     } catch (e) {
-      _showSnackBar('خطأ في الدمج: $e');
+      _showSnackBar('${AppLocalizations.of(context).merge_error_prefix}$e');
     } finally {
       setState(() => _isProcessing = false);
     }
@@ -565,14 +639,14 @@ class _SectionScreenState extends State<SectionScreen> {
     try {
       final state = itemCubit.state;
       if (state is! ItemSectionLoaded || state.items.isEmpty) {
-        _showSnackBar('لا توجد صور لاستخراج النص منها');
+        _showSnackBar(AppLocalizations.of(context).no_images_for_text_extraction);
         return;
       }
-      
+
       setState(() => _isProcessing = true);
       final ocr = OCRService();
       final allText = StringBuffer();
-      
+
       for (final item in state.items) {
         final path = item.filePath;
         if (path != null && File(path).existsSync()) {
@@ -584,48 +658,48 @@ class _SectionScreenState extends State<SectionScreen> {
           }
         }
       }
-      
+
       if (allText.isEmpty) {
-        _showSnackBar('لم يتم العثور على نص');
+        _showSnackBar(AppLocalizations.of(context).no_text_found);
         return;
       }
-      
+
       // حفظ النص في ملف
       final dir = await getApplicationDocumentsDirectory();
       final textFile = File('${dir.path}/${_sectionName}_extracted.txt');
       await textFile.writeAsString(allText.toString());
-      
-      _showSnackBar('تم استخراج النص: ${textFile.path}');
+
+      _showSnackBar('${AppLocalizations.of(context).text_extracted_prefix}${textFile.path}');
     } catch (e) {
-      _showSnackBar('خطأ في استخراج النص: $e');
+      _showSnackBar('${AppLocalizations.of(context).text_extraction_error_prefix}$e');
     } finally {
       setState(() => _isProcessing = false);
     }
   }
 
   Future<void> _saveToGallery() async {
-    _showSnackBar('جاري الحفظ في المعرض...');
+    _showSnackBar(AppLocalizations.of(context).saving_to_gallery);
     await Future.delayed(const Duration(seconds: 1));
-    _showSnackBar('تم الحفظ في المعرض');
+    _showSnackBar(AppLocalizations.of(context).saved_to_gallery);
   }
 
   Future<void> _copyFiles() async {
     try {
       final state = itemCubit.state;
       if (state is! ItemSectionLoaded || state.items.isEmpty) {
-        _showSnackBar('لا توجد ملفات للنسخ');
+        _showSnackBar(AppLocalizations.of(context).no_files_to_copy);
         return;
       }
-      
+
       final paths = state.items
           .map((item) => item.filePath)
           .where((path) => path != null)
           .join('\n');
-      
+
       await Clipboard.setData(ClipboardData(text: paths));
-      _showSnackBar('تم نسخ مسارات الملفات');
+      _showSnackBar(AppLocalizations.of(context).file_paths_copied);
     } catch (e) {
-      _showSnackBar('خطأ في النسخ: $e');
+      _showSnackBar('${AppLocalizations.of(context).copy_error_prefix}$e');
     }
   }
 

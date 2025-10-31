@@ -1873,6 +1873,654 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scanned text from selected image'**
   String get scanned_text_from_selected_image;
+
+  /// No description provided for @edit_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit_action;
+
+  /// No description provided for @options_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get options_action;
+
+  /// No description provided for @share_options_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Options'**
+  String get share_options_title;
+
+  /// No description provided for @file_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'File Name'**
+  String get file_name_label;
+
+  /// No description provided for @share_pdf_single.
+  ///
+  /// In en, this message translates to:
+  /// **'Single PDF'**
+  String get share_pdf_single;
+
+  /// No description provided for @share_images_multiple.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple Images'**
+  String get share_images_multiple;
+
+  /// No description provided for @save_to_gallery_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to Gallery'**
+  String get save_to_gallery_action;
+
+  /// No description provided for @all_options_title.
+  ///
+  /// In en, this message translates to:
+  /// **'All Options'**
+  String get all_options_title;
+
+  /// No description provided for @merge_all_to_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge All to PDF'**
+  String get merge_all_to_pdf;
+
+  /// No description provided for @extract_text_ocr.
+  ///
+  /// In en, this message translates to:
+  /// **'Extract Text (OCR)'**
+  String get extract_text_ocr;
+
+  /// No description provided for @no_images_to_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'No images to edit'**
+  String get no_images_to_edit;
+
+  /// No description provided for @no_valid_image_path.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid image path'**
+  String get no_valid_image_path;
+
+  /// No description provided for @no_items_to_share.
+  ///
+  /// In en, this message translates to:
+  /// **'No items to share'**
+  String get no_items_to_share;
+
+  /// No description provided for @no_valid_images.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid images'**
+  String get no_valid_images;
+
+  /// No description provided for @pdf_created_shared_success.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF created and shared successfully'**
+  String get pdf_created_shared_success;
+
+  /// No description provided for @error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: '**
+  String get error_prefix;
+
+  /// No description provided for @no_images_to_share.
+  ///
+  /// In en, this message translates to:
+  /// **'No images to share'**
+  String get no_images_to_share;
+
+  /// No description provided for @no_valid_images_to_share.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid images to share'**
+  String get no_valid_images_to_share;
+
+  /// No description provided for @no_items_to_merge.
+  ///
+  /// In en, this message translates to:
+  /// **'No items to merge'**
+  String get no_items_to_merge;
+
+  /// No description provided for @merged_success_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Merged: '**
+  String get merged_success_prefix;
+
+  /// No description provided for @merge_error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge error: '**
+  String get merge_error_prefix;
+
+  /// No description provided for @no_images_for_text_extraction.
+  ///
+  /// In en, this message translates to:
+  /// **'No images for text extraction'**
+  String get no_images_for_text_extraction;
+
+  /// No description provided for @no_text_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No text found'**
+  String get no_text_found;
+
+  /// No description provided for @text_extracted_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Text extracted: '**
+  String get text_extracted_prefix;
+
+  /// No description provided for @text_extraction_error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Text extraction error: '**
+  String get text_extraction_error_prefix;
+
+  /// No description provided for @saving_to_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving to gallery...'**
+  String get saving_to_gallery;
+
+  /// No description provided for @saved_to_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to gallery'**
+  String get saved_to_gallery;
+
+  /// No description provided for @no_files_to_copy.
+  ///
+  /// In en, this message translates to:
+  /// **'No files to copy'**
+  String get no_files_to_copy;
+
+  /// No description provided for @file_paths_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'File paths copied'**
+  String get file_paths_copied;
+
+  /// No description provided for @copy_error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy error: '**
+  String get copy_error_prefix;
+
+  /// No description provided for @ocr_language.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR Language'**
+  String get ocr_language;
+
+  /// No description provided for @ocr_auto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get ocr_auto;
+
+  /// No description provided for @ocr_arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get ocr_arabic;
+
+  /// No description provided for @ocr_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get ocr_english;
+
+  /// No description provided for @ai_info_header.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Features'**
+  String get ai_info_header;
+
+  /// No description provided for @ai_info_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'• Advanced local OCR for Arabic and English\n• Smart local text summarization\n• Instant translation (requires internet) 🌐\n• Smart local file organization\n• Optional Hugging Face key for enhancement'**
+  String get ai_info_desc;
+
+  /// No description provided for @select_image_for_ocr.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an image for OCR'**
+  String get select_image_for_ocr;
+
+  /// No description provided for @ocr_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing OCR...'**
+  String get ocr_processing;
+
+  /// No description provided for @ocr_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR completed!'**
+  String get ocr_completed;
+
+  /// No description provided for @ocr_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR failed: '**
+  String get ocr_failed_prefix;
+
+  /// No description provided for @translation_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Translating...'**
+  String get translation_processing;
+
+  /// No description provided for @translation_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation completed!'**
+  String get translation_completed;
+
+  /// No description provided for @translation_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation failed: '**
+  String get translation_failed_prefix;
+
+  /// No description provided for @summarization_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Summarizing...'**
+  String get summarization_processing;
+
+  /// No description provided for @summarization_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Summarization completed!'**
+  String get summarization_completed;
+
+  /// No description provided for @summarization_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Summarization failed: '**
+  String get summarization_failed_prefix;
+
+  /// No description provided for @smart_organization_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizing...'**
+  String get smart_organization_processing;
+
+  /// No description provided for @smart_organization_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization completed!'**
+  String get smart_organization_completed;
+
+  /// No description provided for @smart_organization_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization failed: '**
+  String get smart_organization_failed_prefix;
+
+  /// No description provided for @api_key_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Hugging Face API Key'**
+  String get api_key_dialog_title;
+
+  /// No description provided for @api_key_dialog_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Bearer Token (optional)'**
+  String get api_key_dialog_label;
+
+  /// No description provided for @api_key_dialog_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'hf_...'**
+  String get api_key_dialog_hint;
+
+  /// No description provided for @api_key_dialog_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty for local use only'**
+  String get api_key_dialog_helper;
+
+  /// No description provided for @api_key_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'API key saved'**
+  String get api_key_saved;
+
+  /// No description provided for @pdf_ocr_title.
+  ///
+  /// In en, this message translates to:
+  /// **'📄 PDF OCR'**
+  String get pdf_ocr_title;
+
+  /// No description provided for @pdf_ocr_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Extract text from PDF files'**
+  String get pdf_ocr_desc;
+
+  /// No description provided for @batch_ocr_title.
+  ///
+  /// In en, this message translates to:
+  /// **'📚 Batch OCR'**
+  String get batch_ocr_title;
+
+  /// No description provided for @batch_ocr_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Process multiple images at once'**
+  String get batch_ocr_desc;
+
+  /// No description provided for @editor_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Image Editor'**
+  String get editor_title;
+
+  /// No description provided for @editor_no_image.
+  ///
+  /// In en, this message translates to:
+  /// **'No image to edit'**
+  String get editor_no_image;
+
+  /// No description provided for @editor_save_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Image saved successfully!'**
+  String get editor_save_success;
+
+  /// No description provided for @editor_save_error_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Save error: '**
+  String get editor_save_error_prefix;
+
+  /// No description provided for @editor_rotate_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate Left'**
+  String get editor_rotate_left;
+
+  /// No description provided for @editor_rotate_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate Right'**
+  String get editor_rotate_right;
+
+  /// No description provided for @editor_flip_horizontal.
+  ///
+  /// In en, this message translates to:
+  /// **'Flip Horizontal'**
+  String get editor_flip_horizontal;
+
+  /// No description provided for @editor_flip_vertical.
+  ///
+  /// In en, this message translates to:
+  /// **'Flip Vertical'**
+  String get editor_flip_vertical;
+
+  /// No description provided for @editor_crop.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop'**
+  String get editor_crop;
+
+  /// No description provided for @editor_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get editor_filters;
+
+  /// No description provided for @editor_adjust.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust'**
+  String get editor_adjust;
+
+  /// No description provided for @editor_brightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get editor_brightness;
+
+  /// No description provided for @editor_contrast.
+  ///
+  /// In en, this message translates to:
+  /// **'Contrast'**
+  String get editor_contrast;
+
+  /// No description provided for @editor_saturation.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturation'**
+  String get editor_saturation;
+
+  /// No description provided for @editor_filter_none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get editor_filter_none;
+
+  /// No description provided for @editor_filter_grayscale.
+  ///
+  /// In en, this message translates to:
+  /// **'Grayscale'**
+  String get editor_filter_grayscale;
+
+  /// No description provided for @editor_filter_sepia.
+  ///
+  /// In en, this message translates to:
+  /// **'Sepia'**
+  String get editor_filter_sepia;
+
+  /// No description provided for @editor_filter_invert.
+  ///
+  /// In en, this message translates to:
+  /// **'Invert'**
+  String get editor_filter_invert;
+
+  /// No description provided for @editor_filter_blur.
+  ///
+  /// In en, this message translates to:
+  /// **'Blur'**
+  String get editor_filter_blur;
+
+  /// No description provided for @editor_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get editor_reset;
+
+  /// No description provided for @editor_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get editor_save;
+
+  /// No description provided for @editor_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get editor_cancel;
+
+  /// No description provided for @editor_undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get editor_undo;
+
+  /// No description provided for @editor_redo.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get editor_redo;
+
+  /// No description provided for @scanner_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Scanner'**
+  String get scanner_title;
+
+  /// No description provided for @scanner_capture.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture'**
+  String get scanner_capture;
+
+  /// No description provided for @scanner_flash_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash On'**
+  String get scanner_flash_on;
+
+  /// No description provided for @scanner_flash_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash Off'**
+  String get scanner_flash_off;
+
+  /// No description provided for @scanner_preview_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Preview'**
+  String get scanner_preview_title;
+
+  /// No description provided for @scanner_filter_original.
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get scanner_filter_original;
+
+  /// No description provided for @scanner_filter_enhance.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhance'**
+  String get scanner_filter_enhance;
+
+  /// No description provided for @scanner_filter_bw.
+  ///
+  /// In en, this message translates to:
+  /// **'B&W'**
+  String get scanner_filter_bw;
+
+  /// No description provided for @scanner_filter_grayscale.
+  ///
+  /// In en, this message translates to:
+  /// **'Grayscale'**
+  String get scanner_filter_grayscale;
+
+  /// No description provided for @scanner_filter_vivid.
+  ///
+  /// In en, this message translates to:
+  /// **'Vivid'**
+  String get scanner_filter_vivid;
+
+  /// No description provided for @scanner_retake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get scanner_retake;
+
+  /// No description provided for @scanner_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get scanner_save;
+
+  /// No description provided for @scanner_saved_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved '**
+  String get scanner_saved_prefix;
+
+  /// No description provided for @scanner_saved_suffix_singular.
+  ///
+  /// In en, this message translates to:
+  /// **' image successfully'**
+  String get scanner_saved_suffix_singular;
+
+  /// No description provided for @scanner_saved_suffix_plural.
+  ///
+  /// In en, this message translates to:
+  /// **' images successfully'**
+  String get scanner_saved_suffix_plural;
+
+  /// No description provided for @scanner_add_another.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Another Page?'**
+  String get scanner_add_another;
+
+  /// No description provided for @scanner_add_another_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to scan another page?'**
+  String get scanner_add_another_desc;
+
+  /// No description provided for @scanner_yes_another.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Add Another'**
+  String get scanner_yes_another;
+
+  /// No description provided for @scanner_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get scanner_done;
+
+  /// No description provided for @scanner_no_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'No camera available'**
+  String get scanner_no_camera;
+
+  /// No description provided for @scanner_camera_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera initialization error'**
+  String get scanner_camera_error;
+
+  /// No description provided for @zoom_reset_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Zoom'**
+  String get zoom_reset_tooltip;
+
+  /// No description provided for @file_info_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'File Info'**
+  String get file_info_tooltip;
+
+  /// No description provided for @name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name_label;
+
+  /// No description provided for @path_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Path'**
+  String get path_label;
+
+  /// No description provided for @file_missing_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'File deleted or moved from original location'**
+  String get file_missing_hint;
 }
 
 class _AppLocalizationsDelegate
