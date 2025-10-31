@@ -76,7 +76,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
               _ActionTile(
                 icon: Icons.document_scanner,
                 color: Colors.deepPurple,
-                title: 'ماسح المستندات الاحترافي',
+                title: AppLocalizations.of(context).professional_scanner_title,
                 onTap: () async {
                   Navigator.pop(ctx);
                   
@@ -158,8 +158,8 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                     if (paths.isEmpty) {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('لم يتم التقاط أي مستند'),
+                          SnackBar(
+                            content: Text(AppLocalizations.of(context).no_document_captured),
                             backgroundColor: Colors.orange,
                             behavior: SnackBarBehavior.floating,
                           ),
@@ -201,7 +201,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                         for (int p = 0; p < images.length; p++) {
                           final img = images[p];
                           final imgExt = (img.path.split('.').last).toLowerCase();
-                          final docName = 'مستند ${sectionName ?? "قسم"} $dateStr ${i + 1}-${p + 1}';
+                          final docName = '${AppLocalizations.of(context).document_prefix} ${sectionName ?? AppLocalizations.of(context).section_prefix} $dateStr ${i + 1}-${p + 1}';
                           await DatabaseService.instance.insertItem(
                             docName,
                             img.path,
@@ -218,7 +218,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                       final destPath = '${scansDir.path}/$newName';
                       await File(path).copy(destPath);
 
-                      final docName = 'مستند ${sectionName ?? "قسم"} $dateStr ${i + 1}';
+                      final docName = '${AppLocalizations.of(context).document_prefix} ${sectionName ?? AppLocalizations.of(context).section_prefix} $dateStr ${i + 1}';
                       await DatabaseService.instance.insertItem(
                         docName,
                         destPath,
@@ -234,10 +234,13 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                     
                     // رسالة نجاح
                     if (context.mounted) {
+                      final suffix = savedCount == 1
+                          ? AppLocalizations.of(context).scanner_saved_suffix_singular
+                          : AppLocalizations.of(context).scanner_saved_suffix_plural;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'تم حفظ $savedCount ${savedCount == 1 ? "صورة" : "صور"} بنجاح',
+                            '${AppLocalizations.of(context).scanner_saved_prefix}$savedCount$suffix',
                           ),
                           backgroundColor: Colors.green,
                           behavior: SnackBarBehavior.floating,
@@ -248,7 +251,7 @@ void showAddItemSheet(BuildContext context, int idSection, ItemSectionCubit item
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('فشل المسح: $e'),
+                          content: Text('${AppLocalizations.of(context).scan_failed_prefix}$e'),
                           backgroundColor: Colors.red,
                           behavior: SnackBarBehavior.floating,
                         ),

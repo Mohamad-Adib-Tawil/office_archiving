@@ -2521,6 +2521,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'File deleted or moved from original location'**
   String get file_missing_hint;
+
+  /// No description provided for @professional_scanner_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional Document Scanner'**
+  String get professional_scanner_title;
+
+  /// No description provided for @document_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Document'**
+  String get document_prefix;
+
+  /// No description provided for @section_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Section'**
+  String get section_prefix;
+
+  /// No description provided for @saved_images_success_singular.
+  ///
+  /// In en, this message translates to:
+  /// **'image saved successfully'**
+  String get saved_images_success_singular;
+
+  /// No description provided for @saved_images_success_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'images saved successfully'**
+  String get saved_images_success_plural;
+
+  /// No description provided for @add_signature.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Signature'**
+  String get add_signature;
+
+  /// No description provided for @add_watermark.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Watermark (Text)'**
+  String get add_watermark;
+
+  /// No description provided for @watermark_text_prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter watermark text'**
+  String get watermark_text_prompt;
+
+  /// No description provided for @watermark_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Confidential'**
+  String get watermark_hint;
+
+  /// No description provided for @image_saved_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Image saved successfully!'**
+  String get image_saved_success;
+
+  /// No description provided for @save_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Save failed: '**
+  String get save_failed_prefix;
+
+  /// No description provided for @no_image_to_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'No image to edit'**
+  String get no_image_to_edit;
+
+  /// No description provided for @edit_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Image'**
+  String get edit_image;
+
+  /// No description provided for @add_signature_watermark.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Signature/Watermark'**
+  String get add_signature_watermark;
+
+  /// No description provided for @export_to_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to PDF'**
+  String get export_to_pdf;
+
+  /// No description provided for @share_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Image'**
+  String get share_image;
+
+  /// No description provided for @open_ai_features.
+  ///
+  /// In en, this message translates to:
+  /// **'Open AI Features'**
+  String get open_ai_features;
+
+  /// No description provided for @watermark_added_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Watermark added to image'**
+  String get watermark_added_success;
+
+  /// No description provided for @watermark_add_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add watermark: '**
+  String get watermark_add_failed_prefix;
+
+  /// No description provided for @signature_added_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature added to image'**
+  String get signature_added_success;
+
+  /// No description provided for @signature_merge_failed_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to merge signature: '**
+  String get signature_merge_failed_prefix;
+
+  /// No description provided for @image_read_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to read base image'**
+  String get image_read_error;
 }
 
 class _AppLocalizationsDelegate

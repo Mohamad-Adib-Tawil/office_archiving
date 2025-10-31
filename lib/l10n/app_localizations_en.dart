@@ -1254,4 +1254,70 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get file_missing_hint =>
       'File deleted or moved from original location';
+
+  @override
+  String get professional_scanner_title => 'Professional Document Scanner';
+
+  @override
+  String get document_prefix => 'Document';
+
+  @override
+  String get section_prefix => 'Section';
+
+  @override
+  String get saved_images_success_singular => 'image saved successfully';
+
+  @override
+  String get saved_images_success_plural => 'images saved successfully';
+
+  @override
+  String get add_signature => 'Add Signature';
+
+  @override
+  String get add_watermark => 'Add Watermark (Text)';
+
+  @override
+  String get watermark_text_prompt => 'Enter watermark text';
+
+  @override
+  String get watermark_hint => 'e.g., Confidential';
+
+  @override
+  String get image_saved_success => 'Image saved successfully!';
+
+  @override
+  String get save_failed_prefix => 'Save failed: ';
+
+  @override
+  String get no_image_to_edit => 'No image to edit';
+
+  @override
+  String get edit_image => 'Edit Image';
+
+  @override
+  String get add_signature_watermark => 'Add Signature/Watermark';
+
+  @override
+  String get export_to_pdf => 'Export to PDF';
+
+  @override
+  String get share_image => 'Share Image';
+
+  @override
+  String get open_ai_features => 'Open AI Features';
+
+  @override
+  String get watermark_added_success => 'Watermark added to image';
+
+  @override
+  String get watermark_add_failed_prefix => 'Failed to add watermark: ';
+
+  @override
+  String get signature_added_success => 'Signature added to image';
+
+  @override
+  String get signature_merge_failed_prefix => 'Failed to merge signature: ';
+
+  @override
+  String get image_read_error => 'Failed to read base image';
 }

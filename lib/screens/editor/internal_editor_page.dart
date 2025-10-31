@@ -17,6 +17,7 @@ import 'package:office_archiving/screens/editor/signature_pad.dart';
 import 'package:office_archiving/screens/editor/signature_position_page.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:office_archiving/pages/ai_features_page.dart';
+import 'package:office_archiving/l10n/app_localizations.dart';
 
 class InternalEditorPage extends StatefulWidget {
   final String? initialImagePath; // مسار صورة افتراضي
@@ -59,12 +60,12 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
             children: [
               ListTile(
                 leading: const Icon(Icons.draw),
-                title: const Text('إضافة توقيع'),
+                title: Text(AppLocalizations.of(context).add_signature),
                 onTap: () => Navigator.pop(ctx, 'signature'),
               ),
               ListTile(
                 leading: const Icon(Icons.water_drop),
-                title: const Text('إضافة علامة مائية (نص)'),
+                title: Text(AppLocalizations.of(context).add_watermark),
                 onTap: () => Navigator.pop(ctx, 'watermark'),
               ),
             ],
@@ -86,14 +87,14 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('نص العلامة المائية'),
+          title: Text(AppLocalizations.of(context).watermark_text_prompt),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(hintText: 'أدخل النص'),
+            decoration: InputDecoration(hintText: AppLocalizations.of(context).watermark_hint),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('إلغاء')),
-            TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('تطبيق')),
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context).cancel)),
+            TextButton(onPressed: () => Navigator.pop(ctx, true), child: Text(AppLocalizations.of(context).ok_action)),
           ],
         );
       },
@@ -109,7 +110,7 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
     try {
       final baseBytes = await _image!.readAsBytes();
       final base = img.decodeImage(baseBytes);
-      if (base == null) throw Exception('تعذر قراءة الصورة الأساسية');
+      if (base == null) throw Exception(AppLocalizations.of(context).image_read_error);
 
       final padding = 24;
       // اختر حجم الخط حسب عرض الصورة لضمان الوضوح
@@ -141,12 +142,12 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       if (!mounted) return;
       setState(() => _imgVersion++);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تم إضافة العلامة المائية على الصورة')),
+        SnackBar(content: Text(AppLocalizations.of(context).watermark_added_success)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('فشل إضافة العلامة المائية: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context).watermark_add_failed_prefix}$e')),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -207,7 +208,7 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       // اقرأ صورة الأساس
       final baseBytes = await _image!.readAsBytes();
       final base = img.decodeImage(baseBytes);
-      if (base == null) throw Exception('تعذر قراءة الصورة الأساسية');
+      if (base == null) throw Exception(AppLocalizations.of(context).image_read_error);
 
       // اقرأ صورة التوقيع (PNG بخلفية شفافة)
       final sig = img.decodeImage(signaturePngBytes);
@@ -240,12 +241,12 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       if (!mounted) return;
       setState(() => _imgVersion++);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تم إضافة التوقيع على الصورة')),
+        SnackBar(content: Text(AppLocalizations.of(context).signature_added_success)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('فشل دمج التوقيع: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context).signature_merge_failed_prefix}$e')),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -329,7 +330,7 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
           Expanded(
             child: Center(
               child: _image == null
-                  ? const Text('لا توجد صورة')
+                  ? Text(AppLocalizations.of(context).no_image_to_edit)
                   : Image.file(
                       _image!,
                       key: ValueKey(_imgVersion),
