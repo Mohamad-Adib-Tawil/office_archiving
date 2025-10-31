@@ -1240,4 +1240,70 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get file_missing_hint => 'تم حذف الملف أو نقله من موقعه الأصلي';
+
+  @override
+  String get professional_scanner_title => 'ماسح المستندات الاحترافي';
+
+  @override
+  String get document_prefix => 'مستند';
+
+  @override
+  String get section_prefix => 'قسم';
+
+  @override
+  String get saved_images_success_singular => 'صورة بنجاح';
+
+  @override
+  String get saved_images_success_plural => 'صور بنجاح';
+
+  @override
+  String get add_signature => 'إضافة توقيع';
+
+  @override
+  String get add_watermark => 'إضافة علامة مائية (نص)';
+
+  @override
+  String get watermark_text_prompt => 'أدخل نص العلامة المائية';
+
+  @override
+  String get watermark_hint => 'مثلاً: سري';
+
+  @override
+  String get image_saved_success => 'تم حفظ الصورة بنجاح!';
+
+  @override
+  String get save_failed_prefix => 'فشل الحفظ: ';
+
+  @override
+  String get no_image_to_edit => 'لا توجد صورة للتحرير';
+
+  @override
+  String get edit_image => 'تحرير الصورة';
+
+  @override
+  String get add_signature_watermark => 'إضافة توقيع/علامة مائية';
+
+  @override
+  String get export_to_pdf => 'تصدير إلى PDF';
+
+  @override
+  String get share_image => 'مشاركة الصورة';
+
+  @override
+  String get open_ai_features => 'فتح ميزات AI';
+
+  @override
+  String get watermark_added_success => 'تم إضافة العلامة المائية على الصورة';
+
+  @override
+  String get watermark_add_failed_prefix => 'فشل إضافة العلامة المائية: ';
+
+  @override
+  String get signature_added_success => 'تم إضافة التوقيع على الصورة';
+
+  @override
+  String get signature_merge_failed_prefix => 'فشل دمج التوقيع: ';
+
+  @override
+  String get image_read_error => 'تعذر قراءة الصورة الأساسية';
 }

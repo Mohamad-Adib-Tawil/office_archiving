@@ -417,5 +417,31 @@
   "file_info_tooltip": "معلومات الملف",
   "name_label": "الاسم",
   "path_label": "المسار",
-  "file_missing_hint": "تم حذف الملف أو نقله من موقعه الأصلي"
+  "file_missing_hint": "تم حذف الملف أو نقله من موقعه الأصلي",
+  
+  "professional_scanner_title": "ماسح المستندات الاحترافي",
+  "document_prefix": "مستند",
+  "section_prefix": "قسم",
+  "saved_images_success_singular": "صورة بنجاح",
+  "saved_images_success_plural": "صور بنجاح",
+  
+  
+  "add_signature": "إضافة توقيع",
+  "add_watermark": "إضافة علامة مائية (نص)",
+  "watermark_text_prompt": "أدخل نص العلامة المائية",
+  "watermark_hint": "مثلاً: سري",
+  "image_saved_success": "تم حفظ الصورة بنجاح!",
+  "save_failed_prefix": "فشل الحفظ: ",
+  "no_image_to_edit": "لا توجد صورة للتحرير",
+  "edit_image": "تحرير الصورة",
+  "add_signature_watermark": "إضافة توقيع/علامة مائية",
+  "export_to_pdf": "تصدير إلى PDF",
+  "share_image": "مشاركة الصورة",
+  "open_ai_features": "فتح ميزات AI",
+  
+  "watermark_added_success": "تم إضافة العلامة المائية على الصورة",
+  "watermark_add_failed_prefix": "فشل إضافة العلامة المائية: ",
+  "signature_added_success": "تم إضافة التوقيع على الصورة",
+  "signature_merge_failed_prefix": "فشل دمج التوقيع: ",
+  "image_read_error": "تعذر قراءة الصورة الأساسية"
 }

@@ -416,5 +416,31 @@
   "file_info_tooltip": "File Info",
   "name_label": "Name",
   "path_label": "Path",
-  "file_missing_hint": "File deleted or moved from original location"
+  "file_missing_hint": "File deleted or moved from original location",
+  
+  "professional_scanner_title": "Professional Document Scanner",
+  "document_prefix": "Document",
+  "section_prefix": "Section",
+  "saved_images_success_singular": "image saved successfully",
+  "saved_images_success_plural": "images saved successfully",
+  
+  
+  "add_signature": "Add Signature",
+  "add_watermark": "Add Watermark (Text)",
+  "watermark_text_prompt": "Enter watermark text",
+  "watermark_hint": "e.g., Confidential",
+  "image_saved_success": "Image saved successfully!",
+  "save_failed_prefix": "Save failed: ",
+  "no_image_to_edit": "No image to edit",
+  "edit_image": "Edit Image",
+  "add_signature_watermark": "Add Signature/Watermark",
+  "export_to_pdf": "Export to PDF",
+  "share_image": "Share Image",
+  "open_ai_features": "Open AI Features",
+  
+  "watermark_added_success": "Watermark added to image",
+  "watermark_add_failed_prefix": "Failed to add watermark: ",
+  "signature_added_success": "Signature added to image",
+  "signature_merge_failed_prefix": "Failed to merge signature: ",
+  "image_read_error": "Failed to read base image"
 }
