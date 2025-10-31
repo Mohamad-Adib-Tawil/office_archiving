@@ -262,10 +262,10 @@ class ProfessionalToolsPage extends StatelessWidget {
                 children: [
                   Icon(Icons.auto_awesome, color: Colors.white, size: 32),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'أدوات احترافية لإدارة المستندات',
-                      style: TextStyle(
+                      AppLocalizations.of(context).header_title_prof_tools,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -275,9 +275,9 @@ class ProfessionalToolsPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              const Text(
-                'مجموعة شاملة من الأدوات المتقدمة لمسح وتحرير وحماية وإدارة المستندات بطريقة احترافية',
-                style: TextStyle(color: Colors.white, fontSize: 14),
+              Text(
+                AppLocalizations.of(context).header_sub_prof_tools,
+                style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),
@@ -396,8 +396,8 @@ class ProfessionalToolsPage extends StatelessWidget {
 
     if (sections.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('لا توجد أقسام متاحة. يرجى إنشاء قسم أولاً.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).no_sections_available),
           backgroundColor: Colors.orange,
         ),
       );
@@ -429,13 +429,13 @@ class ProfessionalToolsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.folder_outlined, color: Colors.blue, size: 28),
-                  SizedBox(width: 12),
+                  const Icon(Icons.folder_outlined, color: Colors.blue, size: 28),
+                  const SizedBox(width: 12),
                   Text(
-                    'اختر القسم للمسح',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    AppLocalizations.of(context).choose_section_to_scan_title,
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -459,7 +459,7 @@ class ProfessionalToolsPage extends StatelessWidget {
                           ),
                         ),
                         title: Text(
-                          section['name'] ?? 'قسم',
+                          section['name'] ?? AppLocalizations.of(context).section_default_name,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -580,8 +580,8 @@ class ProfessionalToolsPage extends StatelessWidget {
                             if (paths.isEmpty) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('لم يتم التقاط أي مستند'),
+                                  SnackBar(
+                                    content: Text(AppLocalizations.of(context).no_document_captured),
                                     backgroundColor: Colors.orange,
                                   ),
                                 );
@@ -677,7 +677,7 @@ class ProfessionalToolsPage extends StatelessWidget {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('فشل المسح: $e'),
+                                  content: Text('${AppLocalizations.of(context).scan_failed_prefix}$e'),
                                   backgroundColor: Colors.red,
                                 ),
                               );

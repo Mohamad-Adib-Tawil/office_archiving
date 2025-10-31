@@ -692,13 +692,20 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
   String _formatLastAccessed(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
+    final isArabic = Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ar');
     
     if (difference.inHours < 1) {
-      return 'منذ ${difference.inMinutes} ${AppLocalizations.of(context).minutes_ago}';
+      return isArabic
+          ? '${AppLocalizations.of(context).since} ${difference.inMinutes} ${AppLocalizations.of(context).minutes_ago}'
+          : '${difference.inMinutes} ${AppLocalizations.of(context).minutes_ago}';
     } else if (difference.inDays < 1) {
-      return 'منذ ${difference.inHours} ${AppLocalizations.of(context).hours_ago}';
+      return isArabic
+          ? '${AppLocalizations.of(context).since} ${difference.inHours} ${AppLocalizations.of(context).hours_ago}'
+          : '${difference.inHours} ${AppLocalizations.of(context).hours_ago}';
     } else {
-      return 'منذ ${difference.inDays} ${AppLocalizations.of(context).days_ago}';
+      return isArabic
+          ? '${AppLocalizations.of(context).since} ${difference.inDays} ${AppLocalizations.of(context).days_ago}'
+          : '${difference.inDays} ${AppLocalizations.of(context).days_ago}';
     }
   }
 }

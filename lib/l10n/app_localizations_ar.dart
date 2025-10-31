@@ -915,4 +915,329 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scanned_text_from_selected_image => 'نص ممسوح من الصورة المحددة';
+
+  @override
+  String get edit_action => 'تحرير';
+
+  @override
+  String get options_action => 'خيارات';
+
+  @override
+  String get share_options_title => 'خيارات المشاركة';
+
+  @override
+  String get file_name_label => 'اسم الملف';
+
+  @override
+  String get share_pdf_single => 'PDF واحد';
+
+  @override
+  String get share_images_multiple => 'صور متعددة';
+
+  @override
+  String get save_to_gallery_action => 'حفظ في المعرض';
+
+  @override
+  String get all_options_title => 'خيارات شاملة';
+
+  @override
+  String get merge_all_to_pdf => 'دمج الكل في PDF';
+
+  @override
+  String get extract_text_ocr => 'استخراج نص (OCR)';
+
+  @override
+  String get no_images_to_edit => 'لا توجد صور للتحرير';
+
+  @override
+  String get no_valid_image_path => 'لا يوجد مسار صورة صالح';
+
+  @override
+  String get no_items_to_share => 'لا توجد عناصر للمشاركة';
+
+  @override
+  String get no_valid_images => 'لا توجد صور صالحة';
+
+  @override
+  String get pdf_created_shared_success => 'تم إنشاء ومشاركة PDF بنجاح';
+
+  @override
+  String get error_prefix => 'خطأ: ';
+
+  @override
+  String get no_images_to_share => 'لا توجد صور للمشاركة';
+
+  @override
+  String get no_valid_images_to_share => 'لا توجد صور صالحة للمشاركة';
+
+  @override
+  String get no_items_to_merge => 'لا توجد عناصر للدمج';
+
+  @override
+  String get merged_success_prefix => 'تم الدمج: ';
+
+  @override
+  String get merge_error_prefix => 'خطأ في الدمج: ';
+
+  @override
+  String get no_images_for_text_extraction => 'لا توجد صور لاستخراج النص منها';
+
+  @override
+  String get no_text_found => 'لم يتم العثور على نص';
+
+  @override
+  String get text_extracted_prefix => 'تم استخراج النص: ';
+
+  @override
+  String get text_extraction_error_prefix => 'خطأ في استخراج النص: ';
+
+  @override
+  String get saving_to_gallery => 'جاري الحفظ في المعرض...';
+
+  @override
+  String get saved_to_gallery => 'تم الحفظ في المعرض';
+
+  @override
+  String get no_files_to_copy => 'لا توجد ملفات للنسخ';
+
+  @override
+  String get file_paths_copied => 'تم نسخ مسارات الملفات';
+
+  @override
+  String get copy_error_prefix => 'خطأ في النسخ: ';
+
+  @override
+  String get ocr_language => 'لغة OCR';
+
+  @override
+  String get ocr_auto => 'تلقائي';
+
+  @override
+  String get ocr_arabic => 'العربية';
+
+  @override
+  String get ocr_english => 'الإنجليزية';
+
+  @override
+  String get ai_info_header => 'ميزات الذكاء الاصطناعي';
+
+  @override
+  String get ai_info_desc =>
+      '• OCR متقدم محلي للعربية والإنجليزية\n• تلخيص ذكي محلي للنصوص\n• ترجمة فورية (تحتاج إنترنت) 🌐\n• تنظيم ذكي محلي للملفات\n• مفتاح Hugging Face اختياري للتحسين';
+
+  @override
+  String get select_image_for_ocr => 'اختر صورة لاستخراج النص';
+
+  @override
+  String get ocr_processing => 'جاري معالجة OCR...';
+
+  @override
+  String get ocr_completed => 'تم إكمال OCR!';
+
+  @override
+  String get ocr_failed_prefix => 'فشل OCR: ';
+
+  @override
+  String get translation_processing => 'جاري الترجمة...';
+
+  @override
+  String get translation_completed => 'تمت الترجمة!';
+
+  @override
+  String get translation_failed_prefix => 'فشلت الترجمة: ';
+
+  @override
+  String get summarization_processing => 'جاري التلخيص...';
+
+  @override
+  String get summarization_completed => 'تم التلخيص!';
+
+  @override
+  String get summarization_failed_prefix => 'فشل التلخيص: ';
+
+  @override
+  String get smart_organization_processing => 'جاري التنظيم...';
+
+  @override
+  String get smart_organization_completed => 'تم التنظيم!';
+
+  @override
+  String get smart_organization_failed_prefix => 'فشل التنظيم: ';
+
+  @override
+  String get api_key_dialog_title => 'مفتاح Hugging Face API';
+
+  @override
+  String get api_key_dialog_label => 'Bearer Token (اختياري)';
+
+  @override
+  String get api_key_dialog_hint => 'hf_...';
+
+  @override
+  String get api_key_dialog_helper => 'اتركه فارغاً للاستخدام المحلي فقط';
+
+  @override
+  String get api_key_saved => 'تم حفظ مفتاح API';
+
+  @override
+  String get pdf_ocr_title => '📄 PDF OCR';
+
+  @override
+  String get pdf_ocr_desc => 'استخراج النص من ملفات PDF';
+
+  @override
+  String get batch_ocr_title => '📚 OCR دفعي';
+
+  @override
+  String get batch_ocr_desc => 'معالجة عدة صور دفعة واحدة';
+
+  @override
+  String get editor_title => 'محرر الصور';
+
+  @override
+  String get editor_no_image => 'لا توجد صورة للتحرير';
+
+  @override
+  String get editor_save_success => 'تم حفظ الصورة بنجاح!';
+
+  @override
+  String get editor_save_error_prefix => 'خطأ في الحفظ: ';
+
+  @override
+  String get editor_rotate_left => 'تدوير يساراً';
+
+  @override
+  String get editor_rotate_right => 'تدوير يميناً';
+
+  @override
+  String get editor_flip_horizontal => 'قلب أفقي';
+
+  @override
+  String get editor_flip_vertical => 'قلب عمودي';
+
+  @override
+  String get editor_crop => 'قص';
+
+  @override
+  String get editor_filters => 'فلاتر';
+
+  @override
+  String get editor_adjust => 'ضبط';
+
+  @override
+  String get editor_brightness => 'السطوع';
+
+  @override
+  String get editor_contrast => 'التباين';
+
+  @override
+  String get editor_saturation => 'التشبع';
+
+  @override
+  String get editor_filter_none => 'بدون';
+
+  @override
+  String get editor_filter_grayscale => 'رمادي';
+
+  @override
+  String get editor_filter_sepia => 'بني داكن';
+
+  @override
+  String get editor_filter_invert => 'عكس الألوان';
+
+  @override
+  String get editor_filter_blur => 'ضبابية';
+
+  @override
+  String get editor_reset => 'إعادة ضبط';
+
+  @override
+  String get editor_save => 'حفظ';
+
+  @override
+  String get editor_cancel => 'إلغاء';
+
+  @override
+  String get editor_undo => 'تراجع';
+
+  @override
+  String get editor_redo => 'إعادة';
+
+  @override
+  String get scanner_title => 'ماسح ذكي';
+
+  @override
+  String get scanner_capture => 'التقاط';
+
+  @override
+  String get scanner_flash_on => 'الفلاش مفعل';
+
+  @override
+  String get scanner_flash_off => 'الفلاش مطفأ';
+
+  @override
+  String get scanner_preview_title => 'معاينة ذكية';
+
+  @override
+  String get scanner_filter_original => 'أصلي';
+
+  @override
+  String get scanner_filter_enhance => 'تحسين';
+
+  @override
+  String get scanner_filter_bw => 'أبيض وأسود';
+
+  @override
+  String get scanner_filter_grayscale => 'رمادي';
+
+  @override
+  String get scanner_filter_vivid => 'ألوان حية';
+
+  @override
+  String get scanner_retake => 'إعادة';
+
+  @override
+  String get scanner_save => 'حفظ';
+
+  @override
+  String get scanner_saved_prefix => 'تم حفظ ';
+
+  @override
+  String get scanner_saved_suffix_singular => ' صورة بنجاح';
+
+  @override
+  String get scanner_saved_suffix_plural => ' صور بنجاح';
+
+  @override
+  String get scanner_add_another => 'إضافة صفحة أخرى؟';
+
+  @override
+  String get scanner_add_another_desc => 'هل تريد مسح صفحة أخرى؟';
+
+  @override
+  String get scanner_yes_another => 'نعم، أضف أخرى';
+
+  @override
+  String get scanner_done => 'انتهيت';
+
+  @override
+  String get scanner_no_camera => 'لا توجد كاميرا متاحة';
+
+  @override
+  String get scanner_camera_error => 'خطأ في تهيئة الكاميرا';
+
+  @override
+  String get zoom_reset_tooltip => 'إعادة تعيين التكبير';
+
+  @override
+  String get file_info_tooltip => 'معلومات الملف';
+
+  @override
+  String get name_label => 'الاسم';
+
+  @override
+  String get path_label => 'المسار';
+
+  @override
+  String get file_missing_hint => 'تم حذف الملف أو نقله من موقعه الأصلي';
 }

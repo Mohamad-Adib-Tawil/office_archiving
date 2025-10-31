@@ -304,5 +304,118 @@
   "security_type_label": "نوع الأمان",
   "scanned_on_prefix": "تم المسح في ",
   "delete_action": "حذف",
-  "scanned_text_from_selected_image": "نص ممسوح من الصورة المحددة"
+  "scanned_text_from_selected_image": "نص ممسوح من الصورة المحددة",
+  
+  "edit_action": "تحرير",
+  "options_action": "خيارات",
+  "share_options_title": "خيارات المشاركة",
+  "file_name_label": "اسم الملف",
+  "share_pdf_single": "PDF واحد",
+  "share_images_multiple": "صور متعددة",
+  "save_to_gallery_action": "حفظ في المعرض",
+  "all_options_title": "خيارات شاملة",
+  "merge_all_to_pdf": "دمج الكل في PDF",
+  "extract_text_ocr": "استخراج نص (OCR)",
+  "no_images_to_edit": "لا توجد صور للتحرير",
+  "no_valid_image_path": "لا يوجد مسار صورة صالح",
+  "no_items_to_share": "لا توجد عناصر للمشاركة",
+  "no_valid_images": "لا توجد صور صالحة",
+  "pdf_created_shared_success": "تم إنشاء ومشاركة PDF بنجاح",
+  "error_prefix": "خطأ: ",
+  "no_images_to_share": "لا توجد صور للمشاركة",
+  "no_valid_images_to_share": "لا توجد صور صالحة للمشاركة",
+  "no_items_to_merge": "لا توجد عناصر للدمج",
+  "merged_success_prefix": "تم الدمج: ",
+  "merge_error_prefix": "خطأ في الدمج: ",
+  "no_images_for_text_extraction": "لا توجد صور لاستخراج النص منها",
+  "no_text_found": "لم يتم العثور على نص",
+  "text_extracted_prefix": "تم استخراج النص: ",
+  "text_extraction_error_prefix": "خطأ في استخراج النص: ",
+  "saving_to_gallery": "جاري الحفظ في المعرض...",
+  "saved_to_gallery": "تم الحفظ في المعرض",
+  "no_files_to_copy": "لا توجد ملفات للنسخ",
+  "file_paths_copied": "تم نسخ مسارات الملفات",
+  "copy_error_prefix": "خطأ في النسخ: ",
+  
+  "ocr_language": "لغة OCR",
+  "ocr_auto": "تلقائي",
+  "ocr_arabic": "العربية",
+  "ocr_english": "الإنجليزية",
+  "ai_info_header": "ميزات الذكاء الاصطناعي",
+  "ai_info_desc": "• OCR متقدم محلي للعربية والإنجليزية\n• تلخيص ذكي محلي للنصوص\n• ترجمة فورية (تحتاج إنترنت) 🌐\n• تنظيم ذكي محلي للملفات\n• مفتاح Hugging Face اختياري للتحسين",
+  "select_image_for_ocr": "اختر صورة لاستخراج النص",
+  "ocr_processing": "جاري معالجة OCR...",
+  "ocr_completed": "تم إكمال OCR!",
+  "ocr_failed_prefix": "فشل OCR: ",
+  "translation_processing": "جاري الترجمة...",
+  "translation_completed": "تمت الترجمة!",
+  "translation_failed_prefix": "فشلت الترجمة: ",
+  "summarization_processing": "جاري التلخيص...",
+  "summarization_completed": "تم التلخيص!",
+  "summarization_failed_prefix": "فشل التلخيص: ",
+  "smart_organization_processing": "جاري التنظيم...",
+  "smart_organization_completed": "تم التنظيم!",
+  "smart_organization_failed_prefix": "فشل التنظيم: ",
+  "api_key_dialog_title": "مفتاح Hugging Face API",
+  "api_key_dialog_label": "Bearer Token (اختياري)",
+  "api_key_dialog_hint": "hf_...",
+  "api_key_dialog_helper": "اتركه فارغاً للاستخدام المحلي فقط",
+  "api_key_saved": "تم حفظ مفتاح API",
+  "pdf_ocr_title": "📄 PDF OCR",
+  "pdf_ocr_desc": "استخراج النص من ملفات PDF",
+  "batch_ocr_title": "📚 OCR دفعي",
+  "batch_ocr_desc": "معالجة عدة صور دفعة واحدة",
+  
+  "editor_title": "محرر الصور",
+  "editor_no_image": "لا توجد صورة للتحرير",
+  "editor_save_success": "تم حفظ الصورة بنجاح!",
+  "editor_save_error_prefix": "خطأ في الحفظ: ",
+  "editor_rotate_left": "تدوير يساراً",
+  "editor_rotate_right": "تدوير يميناً",
+  "editor_flip_horizontal": "قلب أفقي",
+  "editor_flip_vertical": "قلب عمودي",
+  "editor_crop": "قص",
+  "editor_filters": "فلاتر",
+  "editor_adjust": "ضبط",
+  "editor_brightness": "السطوع",
+  "editor_contrast": "التباين",
+  "editor_saturation": "التشبع",
+  "editor_filter_none": "بدون",
+  "editor_filter_grayscale": "رمادي",
+  "editor_filter_sepia": "بني داكن",
+  "editor_filter_invert": "عكس الألوان",
+  "editor_filter_blur": "ضبابية",
+  "editor_reset": "إعادة ضبط",
+  "editor_save": "حفظ",
+  "editor_cancel": "إلغاء",
+  "editor_undo": "تراجع",
+  "editor_redo": "إعادة",
+  
+  "scanner_title": "ماسح ذكي",
+  "scanner_capture": "التقاط",
+  "scanner_flash_on": "الفلاش مفعل",
+  "scanner_flash_off": "الفلاش مطفأ",
+  "scanner_preview_title": "معاينة ذكية",
+  "scanner_filter_original": "أصلي",
+  "scanner_filter_enhance": "تحسين",
+  "scanner_filter_bw": "أبيض وأسود",
+  "scanner_filter_grayscale": "رمادي",
+  "scanner_filter_vivid": "ألوان حية",
+  "scanner_retake": "إعادة",
+  "scanner_save": "حفظ",
+  "scanner_saved_prefix": "تم حفظ ",
+  "scanner_saved_suffix_singular": " صورة بنجاح",
+  "scanner_saved_suffix_plural": " صور بنجاح",
+  "scanner_add_another": "إضافة صفحة أخرى؟",
+  "scanner_add_another_desc": "هل تريد مسح صفحة أخرى؟",
+  "scanner_yes_another": "نعم، أضف أخرى",
+  "scanner_done": "انتهيت",
+  "scanner_no_camera": "لا توجد كاميرا متاحة",
+  "scanner_camera_error": "خطأ في تهيئة الكاميرا",
+  
+  "zoom_reset_tooltip": "إعادة تعيين التكبير",
+  "file_info_tooltip": "معلومات الملف",
+  "name_label": "الاسم",
+  "path_label": "المسار",
+  "file_missing_hint": "تم حذف الملف أو نقله من موقعه الأصلي"
 }

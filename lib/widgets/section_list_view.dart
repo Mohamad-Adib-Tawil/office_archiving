@@ -526,18 +526,18 @@ class SectionListView extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('اختر مصدر الصورة'),
+          title: Text(AppLocalizations.of(context).choose_image_source),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('معرض الصور'),
+                title: Text(AppLocalizations.of(context).from_gallery),
                 onTap: () => Navigator.of(context).pop(ImageSource.gallery),
               ),
               ListTile(
                 leading: const Icon(Icons.camera_alt),
-                title: const Text('الكاميرا'),
+                title: Text(AppLocalizations.of(context).from_camera),
                 onTap: () => Navigator.of(context).pop(ImageSource.camera),
               ),
             ],
@@ -545,7 +545,7 @@ class SectionListView extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('إلغاء'),
+              child: Text(AppLocalizations.of(context).cancel),
             ),
           ],
         );
