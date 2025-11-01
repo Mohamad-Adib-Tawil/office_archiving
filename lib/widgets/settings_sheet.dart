@@ -353,7 +353,7 @@ class _AccentColorRow extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          current != null ? 'لون مخصص مُحدد' : 'اختر لون التمييز',
+                          AppLocalizations.of(context).accent_color_label,
                           style: TextStyle(
                             color: _getContrastColor(current ?? Theme.of(context).colorScheme.primary),
                             fontWeight: FontWeight.w600,
@@ -428,7 +428,7 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('اختر لون التمييز'),
+      title: Text(AppLocalizations.of(context).accent_color_label),
       content: SizedBox(
         width: 300,
         height: 520,
