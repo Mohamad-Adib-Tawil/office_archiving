@@ -17,7 +17,7 @@ val hasKeystore = keystorePropertiesFile.exists()
 
 android {
     namespace = "com.werewolf.office_archiving"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = "29.0.14206865"
 
     compileOptions {
@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId = "com.werewolf.office_archiving"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
