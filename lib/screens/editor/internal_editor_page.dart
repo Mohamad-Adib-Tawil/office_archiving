@@ -260,7 +260,7 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       _extractedText = await _ocr.extractTextFromImage(_image!.path);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تم استخراج النص')),
+        SnackBar(content: Text(AppLocalizations.of(context).snack_extraction_done)),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -274,7 +274,7 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       final pdf = await _pdf.createPdfFromImages([_image!.path]);
       if (!mounted) return;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('تم إنشاء PDF: ${pdf.path}')));
+          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).snack_pdf_created)));
       Navigator.pop(context, _image!.path); // إرجاع المسار للاستخدام إن لزم
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -294,7 +294,7 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
     if (!mounted) return;
     if (_extractedText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('لم يتم العثور على نص في الصورة')),
+        SnackBar(content: Text(AppLocalizations.of(context).no_text_found)),
       );
       return;
     }
@@ -317,11 +317,11 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('المحرر الداخلي'),
+        title: Text(AppLocalizations.of(context).editor_title),
         actions: [
           TextButton(
             onPressed: _image == null ? null : () => Navigator.pop(context, _image!.path),
-            child: const Text('حفظ', style: TextStyle(color: Colors.white)),
+            child: Text(AppLocalizations.of(context).editor_save, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -357,13 +357,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
                 child: ElevatedButton(
                   onPressed: _busy ? null : _openEditor,
                   style: btnStyle,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.tune, size: 18),
                       SizedBox(height: 2),
                       Text(
-                        'تحرير',
+                        AppLocalizations.of(context).edit_action,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12),
@@ -377,13 +377,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
                 child: ElevatedButton(
                   onPressed: _busy ? null : _chooseSignatureOrWatermark,
                   style: btnStyle,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.draw, size: 18),
                       SizedBox(height: 2),
                       Text(
-                        'توقيع',
+                        AppLocalizations.of(context).add_signature_watermark,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12),
@@ -397,13 +397,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
                 child: ElevatedButton(
                   onPressed: _busy ? null : _doOcr,
                   style: btnStyle,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.text_fields, size: 18),
                       SizedBox(height: 2),
                       Text(
-                        'OCR',
+                        AppLocalizations.of(context).extract_text_ocr,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12),
@@ -417,13 +417,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
                 child: ElevatedButton(
                   onPressed: _busy ? null : _exportPdf,
                   style: btnStyle,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.picture_as_pdf, size: 18),
                       SizedBox(height: 2),
                       Text(
-                        'PDF',
+                        AppLocalizations.of(context).export_to_pdf,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12),
@@ -437,13 +437,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
                 child: ElevatedButton(
                   onPressed: _busy ? null : _openAI,
                   style: btnStyle,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.auto_awesome, size: 18),
                       SizedBox(height: 2),
                       Text(
-                        'الذكاء الاصطناعي',
+                        AppLocalizations.of(context).ai_features_title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12),
@@ -457,13 +457,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
                 child: ElevatedButton(
                   onPressed: _busy ? null : _share,
                   style: btnStyle,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.share, size: 18),
                       SizedBox(height: 2),
                       Text(
-                        'مشاركة',
+                        AppLocalizations.of(context).share_action,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12),
