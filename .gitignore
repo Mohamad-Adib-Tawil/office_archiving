@@ -47,3 +47,33 @@ app.*.map.json
 # Markdown documentation (only keep README.md tracked)
 *.md
 !README.md
+
+## --- Added: broader ignores for all build artifacts ---
+# Gradle caches and build directories
+.gradle/
+android/.gradle/
+android/build/
+**/build/
+
+# Android outputs
+*.apk
+*.aab
+
+# iOS/macOS
+ios/Pods/
+ios/.symlinks/
+ios/build/
+macos/Pods/
+macos/build/
+macos/Flutter/ephemeral/
+
+# Xcode user data
+**/*.xcworkspace/xcuserdata/
+**/*.xcodeproj/xcuserdata/
+
+# Flutter ephemeral (redundant but explicit)
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
