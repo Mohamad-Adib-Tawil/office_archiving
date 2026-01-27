@@ -61,14 +61,14 @@ Professional preview of the app. Thumbnails are scaled for readability.
 
 <table>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.05 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.05 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.13 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.13 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.24 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.24 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.05 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.05 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.13 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.13 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.24 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.24 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.54 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.54 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.07.27 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.07.27 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.08.22 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.08.22 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.54 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.54 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.07.27 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.07.27 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.08.22 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.08.22 PM.png" /></td>
   </tr>
 </table>
 
@@ -83,87 +83,87 @@ Professional preview of the app. Thumbnails are scaled for readability.
 
 <table>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.05 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.05 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.13 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.13 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.24 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.24 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.05 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.05 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.13 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.13 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.24 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.24 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.06.54 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.54 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.07.27 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.07.27 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.08.22 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.08.22 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.06.54 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.06.54 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.07.27 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.07.27 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.08.22 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.08.22 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.09.33 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.09.33 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.09.56 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.09.56 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.10.08 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.10.08 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.09.33 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.09.33 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.09.56 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.09.56 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.10.08 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.10.08 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.14.20 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.20 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.14.40 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.40 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.14.45 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.45 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.14.20 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.20 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.14.40 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.40 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.14.45 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.45 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.14.51 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.51 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.15.15 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.15.15 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.16.36 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.16.36 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.14.51 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.14.51 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.15.15 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.15.15 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.16.36 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.16.36 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.16.47 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.16.47 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.16.55 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.16.55 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.17.14 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.14 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.16.47 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.16.47 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.16.55 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.16.55 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.17.14 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.14 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.17.31 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.31 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.17.41 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.41 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.17.51 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.51 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.17.31 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.31 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.17.41 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.41 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.17.51 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.17.51 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.18.18 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.18.18 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.18.59 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.18.59 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.21.12 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.12 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.18.18 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.18.18 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.18.59 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.18.59 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.21.12 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.12 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.21.17 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.17 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.21.43 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.43 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.21.49 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.49 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.21.17 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.17 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.21.43 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.43 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.21.49 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.21.49 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.22.59 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.22.59 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.23.11 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.11 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.23.21 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.21 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.22.59 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.22.59 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.23.11 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.11 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.23.21 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.21 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.23.31 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.31 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.23.43 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.43 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.23.55 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.55 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.23.31 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.31 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.23.43 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.43 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.23.55 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.23.55 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.24.14 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.14 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.24.19 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.19 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.24.24 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.24 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.24.14 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.14 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.24.19 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.19 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.24.24 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.24 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.24.36 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.36 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.24.45 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.45 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 10.25.16 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.25.16 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.24.36 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.36 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.24.45 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.24.45 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 10.25.16 PM.png" width="260" alt="Screenshot 2026-01-27 at 10.25.16 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.04.43 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.04.43 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.06.00 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.06.00 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.09.33 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.09.33 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.04.43 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.04.43 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.06.00 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.06.00 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.09.33 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.09.33 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.10.01 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.10.01 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.10.32 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.10.32 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.11.00 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.11.00 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.10.01 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.10.01 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.10.32 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.10.32 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.11.00 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.11.00 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.11.11 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.11.11 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.11.49 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.11.49 PM.png" /></td>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 5.13.30 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.13.30 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.11.11 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.11.11 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.11.49 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.11.49 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 5.13.30 PM.png" width="260" alt="Screenshot 2026-01-27 at 5.13.30 PM.png" /></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshotsط/Screenshot 2026-01-27 at 9.54.31 PM.png" width="260" alt="Screenshot 2026-01-27 at 9.54.31 PM.png" /></td>
+    <td><img src="screenshots/Screenshot 2026-01-27 at 9.54.31 PM.png" width="260" alt="Screenshot 2026-01-27 at 9.54.31 PM.png" /></td>
   </tr>
 </table>
 
