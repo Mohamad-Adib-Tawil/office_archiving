@@ -595,10 +595,14 @@ class _AnalyticsPageState extends State<AnalyticsPage> with TickerProviderStateM
             children: [
               Icon(Icons.calendar_month, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
-              Text(
-                '${AppLocalizations.of(context).monthly_report} $currentMonth',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  '${AppLocalizations.of(context).monthly_report} $currentMonth',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
