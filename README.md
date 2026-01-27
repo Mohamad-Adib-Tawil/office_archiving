@@ -52,7 +52,7 @@ A powerful, professional-grade Flutter application designed to bring order and e
    git clone https://github.com/Mohamad-Adib-Tawil/office_archiving.git
    cd office_archiving
 
-```
+   ```
 ## Screenshots
 
 Professional preview of the app. Thumbnails are scaled for readability.
