@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -85,6 +86,14 @@ class DatabaseService {
       }
     } catch (e) {
       log('items columns migration error: $e');
+    }
+    // Ensure helpful indexes exist for performance
+    try {
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_items_sectionId ON items(sectionId)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_items_name ON items(name)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_items_filePath ON items(filePath)');
+    } catch (e) {
+      log('create indexes error: $e');
     }
     
     _isInitialized = true;
@@ -260,6 +269,75 @@ class DatabaseService {
     }
   }
 
+  /// Unified delete: removes the item, optionally fixes section cover, and deletes the file on disk.
+  Future<void> deleteItemWithFile(
+    int id, {
+    bool fixSectionCover = true,
+    bool deleteFile = true,
+  }) async {
+    log('deleteItemWithFile id=$id');
+    try {
+      // Fetch item details before deletion
+      final rows = await db.query(
+        'items',
+        columns: ['sectionId', 'filePath'],
+        where: 'id = ?',
+        whereArgs: [id],
+        limit: 1,
+      );
+
+      int? sectionId;
+      String? filePath;
+      if (rows.isNotEmpty) {
+        sectionId = rows.first['sectionId'] as int?;
+        filePath = rows.first['filePath'] as String?;
+      }
+
+      // Delete the DB row
+      await db.delete('items', where: 'id = ?', whereArgs: [id]);
+
+      // Optionally fix section cover if it points to this file
+      if (fixSectionCover && sectionId != null && filePath != null) {
+        final coverRows = await db.query(
+          'section',
+          columns: ['coverPath'],
+          where: 'id = ?',
+          whereArgs: [sectionId],
+          limit: 1,
+        );
+        if (coverRows.isNotEmpty) {
+          final cover = coverRows.first['coverPath'] as String?;
+          if (cover == filePath) {
+            await db.update(
+              'section',
+              {'coverPath': null},
+              where: 'id = ?',
+              whereArgs: [sectionId],
+            );
+            log('Cleared section($sectionId) coverPath because file was deleted');
+          }
+        }
+      }
+
+      // Optionally delete the on-disk file
+      if (deleteFile && filePath != null && filePath.isNotEmpty) {
+        try {
+          final f = File(filePath);
+          if (await f.exists()) {
+            await f.delete();
+          }
+        } catch (e) {
+          log('deleteItemWithFile: failed to delete file $filePath: $e');
+        }
+      }
+
+      _notifyChange();
+    } catch (e) {
+      log('deleteItemWithFile error: $e');
+      rethrow;
+    }
+  }
+
   Future<List<Map<String, dynamic>>> searchItemsByName(String query) async {
     return await db.query(
       'items',
@@ -352,57 +430,88 @@ class DatabaseService {
 
   // Analytics methods
   Future<Map<String, dynamic>> getStorageAnalytics() async {
-    // Get total files and sections
+    // Totals
     final totalFiles = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM items')) ?? 0;
     final totalSections = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM section')) ?? 0;
-    
-    // Get file type distribution
-    final fileTypeRows = await db.rawQuery('''
-      SELECT fileType, COUNT(*) as count 
-      FROM items 
-      GROUP BY fileType 
-      ORDER BY count DESC
-    ''');
-    
-    Map<String, int> fileTypeCount = {};
-    for (var row in fileTypeRows) {
-      fileTypeCount[row['fileType'] as String] = row['count'] as int;
-    }
-    
-    // Get recent activity (last 7 days)
+
+    // File type distribution
+    final fileTypeRows = await db.rawQuery('SELECT fileType, COUNT(*) as count FROM items GROUP BY fileType ORDER BY count DESC');
+    final Map<String, int> fileTypeCount = {
+      for (var r in fileTypeRows) (r['fileType'] as String): r['count'] as int
+    };
+
+    // Recent activity (last 7 days) based on createdAt
     final now = DateTime.now();
-    
-    // Note: This is simplified since we don't have creation dates in the current schema
-    // In a real app, you'd have created_at timestamps
-    List<Map<String, dynamic>> dailyUsage = [];
-    for (int i = 6; i >= 0; i--) {
-      final date = now.subtract(Duration(days: i));
-      // Simulate some activity based on existing data
-      final dayActivity = (totalFiles / 7 * (0.5 + (i % 3) * 0.3)).round();
-      dailyUsage.add({
-        'date': date.toIso8601String(),
-        'filesAdded': dayActivity,
-        'sizeAdded': dayActivity * 1024 * 1024 * 2, // Simulate 2MB per file
-      });
+    final sevenDaysAgo = now.subtract(const Duration(days: 6));
+    final rows = await db.query(
+      'items',
+      columns: ['createdAt', 'filePath'],
+      where: 'createdAt IS NOT NULL AND createdAt >= ?',
+      whereArgs: [sevenDaysAgo.toIso8601String()],
+    );
+    // Initialize buckets per day (YYYY-MM-DD)
+    final Map<String, Map<String, num>> buckets = {};
+    for (int i = 0; i < 7; i++) {
+      final d = DateTime(now.year, now.month, now.day).subtract(Duration(days: 6 - i));
+      final key = d.toIso8601String().substring(0, 10);
+      buckets[key] = {'filesAdded': 0, 'sizeAdded': 0};
     }
-    
-    // Get most accessed files (simulate based on file names)
-    final allItems = await db.query('items', limit: 10);
-    List<Map<String, dynamic>> popularFiles = [];
-    for (int i = 0; i < allItems.length && i < 5; i++) {
-      final item = allItems[i];
-      popularFiles.add({
-        'name': item['name'],
-        'type': item['fileType'],
-        'accessCount': 20 - i * 3, // Simulate access counts
-        'lastAccessed': now.subtract(Duration(hours: i + 1)).toIso8601String(),
-      });
+    for (final r in rows) {
+      final createdAt = r['createdAt'] as String?;
+      final filePath = r['filePath'] as String?;
+      if (createdAt == null) continue;
+      final dayKey = createdAt.substring(0, 10);
+      if (!buckets.containsKey(dayKey)) continue;
+      buckets[dayKey]!['filesAdded'] = (buckets[dayKey]!['filesAdded'] as int) + 1;
+      // Approximate size by file length if exists
+      if (filePath != null) {
+        try {
+          final f = File(filePath);
+          if (f.existsSync()) {
+            buckets[dayKey]!['sizeAdded'] = (buckets[dayKey]!['sizeAdded'] as num) + f.lengthSync();
+          }
+        } catch (_) {}
+      }
     }
-    
+    final List<Map<String, dynamic>> dailyUsage = buckets.entries.map((e) {
+      final dateIso = '${e.key}T00:00:00.000';
+      return {
+        'date': dateIso,
+        'filesAdded': e.value['filesAdded'],
+        'sizeAdded': e.value['sizeAdded'],
+      };
+    }).toList();
+
+    // Popular files placeholder (no access metric yet)
+    final previewItems = await db.query('items', limit: 5);
+    final List<Map<String, dynamic>> popularFiles = [
+      for (int i = 0; i < previewItems.length; i++)
+        {
+          'name': previewItems[i]['name'],
+          'type': previewItems[i]['fileType'],
+          'accessCount': 0,
+          'lastAccessed': now.toIso8601String(),
+        }
+    ];
+
+    // Total size bytes (approximate by summing current files)
+    num totalSizeBytes = 0;
+    try {
+      final all = await db.query('items', columns: ['filePath']);
+      for (final r in all) {
+        final p = r['filePath'] as String?;
+        if (p == null) continue;
+        try {
+          final f = File(p);
+          if (f.existsSync()) totalSizeBytes += f.lengthSync();
+        } catch (_) {}
+      }
+    } catch (_) {}
+
     return {
       'totalFiles': totalFiles,
       'totalSections': totalSections,
-      'totalSizeBytes': totalFiles * 1024 * 1024 * 2.5, // Simulate 2.5MB per file
+      'totalSizeBytes': totalSizeBytes,
       'fileTypeCount': fileTypeCount,
       'dailyUsage': dailyUsage,
       'mostAccessedFiles': popularFiles,

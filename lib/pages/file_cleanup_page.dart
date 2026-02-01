@@ -96,22 +96,24 @@ class _FileCleanupPageState extends State<FileCleanupPage>
     }
   }
 
-  // Remove duplicates by file name, keep the largest file per name
+  // Remove duplicates by file name within the same section, keep the largest per (name, section)
   Future<void> _cleanupDuplicatesKeepLargest() async {
     try {
       setState(() {
         _isCleaningUp = true;
       });
       final allItems = await DatabaseService.instance.getAllItems();
-      final Map<String, List<Map<String, dynamic>>> byName = {};
+      final Map<String, List<Map<String, dynamic>>> byKey = {};
       for (final item in allItems) {
         final name = item['name'] as String?;
-        if (name == null) continue;
-        (byName[name] ??= []).add(item);
+        final sectionId = item['sectionId'] as int?;
+        if (name == null || sectionId == null) continue;
+        final key = '${name}|$sectionId';
+        (byKey[key] ??= []).add(item);
       }
 
       double saved = 0;
-      for (final entry in byName.entries) {
+      for (final entry in byKey.entries) {
         final list = entry.value;
         if (list.length <= 1) continue;
         // compute sizes
@@ -136,14 +138,12 @@ class _FileCleanupPageState extends State<FileCleanupPage>
           final id = r['id'] as int;
           final path = r['path'] as String?;
           final size = r['size'] as int;
-          await DatabaseService.instance.deleteItemAndFixSection(id);
+          await DatabaseService.instance.deleteItemWithFile(id);
           if (path != null) {
             final f = File(path);
-            if (f.existsSync()) {
-              try {
-                await f.delete();
-                saved += size.toDouble();
-              } catch (_) {}
+            // احتسب المساحة المحفوظة فقط إذا لم يعد الملف موجودًا
+            if (!f.existsSync()) {
+              saved += size.toDouble();
             }
           }
         }
@@ -210,11 +210,13 @@ class _FileCleanupPageState extends State<FileCleanupPage>
         return;
       }
 
-      Map<String, List<Map<String, dynamic>>> filesByName = {};
+      Map<String, List<Map<String, dynamic>>> filesByNameAndSection = {};
 
       for (var item in allItems) {
         final filePath = item['filePath'] as String;
         final fileName = item['name'] as String;
+        final sectionId = item['sectionId'] as int;
+        final key = '${fileName}|$sectionId';
         final itemId = item['id'];
 
         _totalFilesScanned++;
@@ -242,10 +244,10 @@ class _FileCleanupPageState extends State<FileCleanupPage>
           });
         }
 
-        if (!filesByName.containsKey(fileName)) {
-          filesByName[fileName] = [];
+        if (!filesByNameAndSection.containsKey(key)) {
+          filesByNameAndSection[key] = [];
         }
-        filesByName[fileName]!.add({
+        filesByNameAndSection[key]!.add({
           'id': itemId,
           'name': fileName,
           'path': filePath,
@@ -259,8 +261,8 @@ class _FileCleanupPageState extends State<FileCleanupPage>
         }
       }
 
-      // Find duplicates by name
-      for (var entry in filesByName.entries) {
+      // Find duplicates by (name, sectionId)
+      for (var entry in filesByNameAndSection.entries) {
         if (entry.value.length > 1) {
           for (var file in entry.value) {
             _duplicateFiles.add({
@@ -314,8 +316,7 @@ class _FileCleanupPageState extends State<FileCleanupPage>
       int cleanedCount = 0;
 
       for (var brokenFile in _brokenFiles) {
-        await DatabaseService.instance
-            .deleteItemAndFixSection(brokenFile['id']);
+        await DatabaseService.instance.deleteItemWithFile(brokenFile['id']);
         cleanedCount++;
         _spaceSaved += 1024;
       }
