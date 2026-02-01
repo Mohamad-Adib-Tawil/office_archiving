@@ -100,7 +100,5 @@
 	<string>We need photo library access to pick images and files to archive.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We may save processed images back to your photo library.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs microphone access for video recording features.</string>
 </dict>
 </plist>
