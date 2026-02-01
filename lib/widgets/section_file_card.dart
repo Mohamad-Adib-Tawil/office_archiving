@@ -160,15 +160,8 @@ class _SectionFileCardState extends State<SectionFileCard> {
 
     try {
       final itemId = widget.item['id'] as int;
-      final filePath = widget.item['filePath'] as String?;
-
-      // حذف من قاعدة البيانات
-      await DatabaseService.instance.deleteItemAndFixSection(itemId);
-
-      // حذف الملف من القرص
-      if (filePath != null) {
-        await deleteFileSafely(filePath);
-      }
+      // حذف موحّد: قاعدة البيانات + إصلاح غلاف القسم + حذف الملف
+      await DatabaseService.instance.deleteItemWithFile(itemId);
 
       if (mounted) {
         _showSuccessSnackBar('تم الحذف بنجاح');

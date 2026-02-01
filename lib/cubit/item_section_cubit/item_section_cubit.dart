@@ -55,7 +55,7 @@ class ItemSectionCubit extends Cubit<ItemSectionState> {
 
   Future<void> deleteItem(int itemId, int sectionId) async {
     try {
-      await _databaseService.deleteItem(itemId);  
+      await _databaseService.deleteItemWithFile(itemId);
       emit(ItemDeleted(itemId));
       fetchItemsBySectionId(sectionId);
     } catch (e) {

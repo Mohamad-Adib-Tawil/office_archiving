@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 
 /// أنواع الفلاتر المتاحة
@@ -18,39 +19,11 @@ class DocumentFilterService {
     FilterType filterType,
   ) async {
     try {
-      // قراءة الصورة
-      final imageBytes = await imageFile.readAsBytes();
-      var image = img.decodeImage(imageBytes);
-
-      if (image == null) {
-        throw Exception('فشل في فك تشفير الصورة');
-      }
-
-      // تطبيق الفلتر
-      switch (filterType) {
-        case FilterType.original:
-          // بدون معالجة
-          break;
-
-        case FilterType.blackWhite:
-          image = _applyBlackWhiteFilter(image);
-          break;
-
-        case FilterType.grayscale:
-          image = _applyGrayscaleFilter(image);
-          break;
-
-        case FilterType.enhance:
-          image = _applyEnhanceFilter(image);
-          break;
-      }
-
-      // حفظ الصورة المعالجة
-      final filteredBytes = img.encodeJpg(image, quality: 95);
-      final filteredFile = File(imageFile.path);
-      await filteredFile.writeAsBytes(filteredBytes);
-
-      return filteredFile;
+      final resultPath = await compute(_applyFilterSync, {
+        'path': imageFile.path,
+        'filter': filterType.index,
+      });
+      return File(resultPath as String);
     } catch (e) {
       throw Exception('خطأ في تطبيق الفلتر: $e');
     }
@@ -132,4 +105,36 @@ class DocumentFilterService {
       FilterType.enhance => '✨',
     };
   }
+}
+
+// تُنفَّذ في isolate باستخدام compute
+String _applyFilterSync(Map<String, dynamic> args) {
+  final String path = args['path'] as String;
+  final int filterIndex = args['filter'] as int;
+  final filterType = FilterType.values[filterIndex];
+
+  final file = File(path);
+  final bytes = file.readAsBytesSync();
+  var image = img.decodeImage(bytes);
+  if (image == null) {
+    throw Exception('فشل في فك تشفير الصورة');
+  }
+
+  switch (filterType) {
+    case FilterType.original:
+      break;
+    case FilterType.blackWhite:
+      image = DocumentFilterService._applyBlackWhiteFilter(image);
+      break;
+    case FilterType.grayscale:
+      image = DocumentFilterService._applyGrayscaleFilter(image);
+      break;
+    case FilterType.enhance:
+      image = DocumentFilterService._applyEnhanceFilter(image);
+      break;
+  }
+
+  final filteredBytes = img.encodeJpg(image, quality: 95);
+  file.writeAsBytesSync(filteredBytes);
+  return file.path;
 }
