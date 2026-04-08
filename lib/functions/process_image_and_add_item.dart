@@ -3,11 +3,21 @@ import 'dart:io';
 
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/document_storage_service.dart';
 import 'package:office_archiving/services/ocr_service.dart';
 
 Future<void> processImageAndAddItem(
-    File imageFile, int idSection, ItemSectionCubit itemCubit) async {
-  final filePath = imageFile.path;
+  File imageFile,
+  int idSection,
+  ItemSectionCubit itemCubit,
+) async {
+  final persistedFile = await DocumentStorageService.instance.persistFile(
+    sourcePath: imageFile.path,
+    directory: ManagedDirectory.scans,
+    preferredName: DocumentStorageService.instance.fileNameStem(imageFile.path),
+    prefix: 'scan',
+  );
+  final filePath = persistedFile.path;
 
   final fileNameWithExtension = filePath.split('/').last; // name.jpg
   final itemName = fileNameWithExtension.split('.').first; // name

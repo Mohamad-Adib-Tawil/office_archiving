@@ -1,3 +1,6 @@
+import com.android.build.gradle.LibraryExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 allprojects {
     repositories {
         google()
@@ -5,15 +8,41 @@ allprojects {
     }
 }
 
-// Match Flutter template exactly (helps Flutter locate flutter-apk output)
-rootProject.buildDir = file("../build")
+val newBuildDir: Directory =
+    rootProject.layout.buildDirectory
+        .dir("../../build")
+        .get()
+rootProject.layout.buildDirectory.value(newBuildDir)
+
 subprojects {
-    project.buildDir = file("${rootProject.buildDir}/${project.name}")
+    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
+    project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
+subprojects {
+    plugins.withId("com.android.library") {
+        extensions.findByType(LibraryExtension::class.java)?.apply {
+            if (namespace.isNullOrBlank()) {
+                namespace = project.group.toString()
+            }
+        }
+
+        afterEvaluate {
+            if (project.name == "flutter_doc_scanner") {
+                tasks.withType(KotlinCompile::class.java).configureEach {
+                    kotlinOptions {
+                        jvmTarget = JavaVersion.VERSION_1_8.toString()
+                    }
+                }
+            }
+        }
+    }
+}
+
 tasks.register<Delete>("clean") {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }

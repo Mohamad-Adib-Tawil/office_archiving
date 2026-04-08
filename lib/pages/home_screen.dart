@@ -1,8 +1,6 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/cubit/section_cubit/section_cubit.dart';
@@ -13,12 +11,8 @@ import 'package:office_archiving/pages/ai_features_page.dart';
 import 'package:office_archiving/pages/settings_page.dart';
 import 'package:office_archiving/pages/tools_documents_center_page.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
-import 'package:intl/intl.dart';
 
 import '../service/sqlite_service.dart';
-import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/pages/storage_center_page.dart';
 import 'package:office_archiving/widgets/first_open_animator.dart';
 
@@ -290,39 +284,39 @@ class _HomeScreenState extends State<HomeScreen> {
       body: FirstOpenAnimator(
         pageKey: 'home_screen',
         child: Column(
-        children: [
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: _buildStorageSummary(context),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: BlocBuilder<SectionCubit, SectionState>(
-              builder: (context, state) {
-                if (state is SectionLoading) {
-                  log('HomeScreen SectionLoading Received state');
-                  return buildSectionsShimmerGrid(context);
-                } else if (state is SectionLoaded) {
-                  log('Sections loaded successfully: ${state.sections}');
-                  return SectionListView(
-                    sections: state.sections,
-                    sectionCubit: sectionCubit,
-                  );
-                } else if (state is SectionError) {
-                  log('Failed to load sections: ${state.message}');
-                  return Center(
-                    child: Text('Failed to load sections: ${state.message}'),
-                  );
-                } else {
-                  log('else  $state');
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
+          children: [
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: _buildStorageSummary(context),
             ),
-          ),
-        ],
-      ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: BlocBuilder<SectionCubit, SectionState>(
+                builder: (context, state) {
+                  if (state is SectionLoading) {
+                    log('HomeScreen SectionLoading Received state');
+                    return buildSectionsShimmerGrid(context);
+                  } else if (state is SectionLoaded) {
+                    log('Sections loaded successfully: ${state.sections}');
+                    return SectionListView(
+                      sections: state.sections,
+                      sectionCubit: sectionCubit,
+                    );
+                  } else if (state is SectionError) {
+                    log('Failed to load sections: ${state.message}');
+                    return Center(
+                      child: Text('Failed to load sections: ${state.message}'),
+                    );
+                  } else {
+                    log('else  $state');
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -358,7 +352,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     // Storage Center (replaces Document Management)
                     IconButton(
-                      tooltip: AppLocalizations.of(context).storage_center_title,
+                      tooltip: AppLocalizations.of(
+                        context,
+                      ).storage_center_title,
                       icon: const Icon(Icons.storage_rounded),
                       color: scheme.primary,
                       onPressed: () {
@@ -391,7 +387,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ), // space reserved for center button
                     // Professional Tools (opens combined Tools & Documents center)
                     IconButton(
-                      tooltip: AppLocalizations.of(context).tooltip_professional_tools,
+                      tooltip: AppLocalizations.of(
+                        context,
+                      ).tooltip_professional_tools,
                       icon: const Icon(Icons.construction_rounded),
                       color: scheme.primary,
                       onPressed: () {
@@ -464,313 +462,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  /// عرض قائمة الأقسام لاختيار القسم قبل المسح
-  Future<void> _showSectionSelectionForScanner(BuildContext context) async {
-    final db = DatabaseService.instance;
-    final sections = await db.getAllSections();
-
-    if (!context.mounted) return;
-
-    if (sections.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).no_sections_available),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      return;
-    }
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        minChildSize: 0.4,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (_, controller) => Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  const Icon(Icons.folder_outlined, color: Colors.blue, size: 28),
-                  const SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context).choose_section_to_scan_title,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView.builder(
-                  controller: controller,
-                  itemCount: sections.length,
-                  itemBuilder: (context, index) {
-                    final section = sections[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primaryContainer,
-                          child: Icon(
-                            Icons.folder,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        title: Text(
-                          section['name'] ?? AppLocalizations.of(context).section_default_name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                        onTap: () async {
-                          Navigator.pop(ctx);
-
-                          final sectionId = section['id'] as int;
-                          final sectionName =
-                              section['name'] as String? ?? 'قسم';
-
-                          try {
-                            final result = await FlutterDocScanner()
-                                .getScanDocuments();
-                            debugPrint(
-                              'Scanner result type: ${result.runtimeType}',
-                            );
-                            debugPrint('Scanner raw result: $result');
-
-                            // تطبيع النتيجة إلى List<String>
-                            final paths = <String>[];
-                            if (result is String) {
-                              paths.add(result);
-                            } else if (result is List) {
-                              for (final item in result) {
-                                String? p;
-                                if (item is String) {
-                                  p = item;
-                                } else if (item is Map) {
-                                  final tmp =
-                                      item['path'] ??
-                                      item['filePath'] ??
-                                      item['imagePath'];
-                                  if (tmp is String) p = tmp;
-                                } else {
-                                  try {
-                                    p = (item as dynamic).path as String?;
-                                  } catch (_) {}
-                                }
-                                if (p != null && p.isNotEmpty) paths.add(p);
-                              }
-                            } else if (result is Map) {
-                              final maybeList =
-                                  result['paths'] ??
-                                  result['images'] ??
-                                  result['files'] ??
-                                  result['savedPaths'];
-                              if (maybeList is List) {
-                                for (final item in maybeList) {
-                                  String? p;
-                                  if (item is String) {
-                                    p = item;
-                                  } else if (item is Map) {
-                                    final tmp =
-                                        item['path'] ??
-                                        item['filePath'] ??
-                                        item['imagePath'];
-                                    if (tmp is String) p = tmp;
-                                  } else {
-                                    try {
-                                      p = (item as dynamic).path as String?;
-                                    } catch (_) {}
-                                  }
-                                  if (p != null && p.isNotEmpty) paths.add(p);
-                                }
-                              } else {
-                                final single =
-                                    result['path'] ??
-                                    result['filePath'] ??
-                                    result['imagePath'] ??
-                                    result['pdfUri'];
-                                if (single is String && single.isNotEmpty)
-                                  paths.add(single);
-                              }
-                            } else {
-                              // محاولة الوصول لخصائص ديناميكية
-                              try {
-                                final dynSaved =
-                                    (result as dynamic).savedPaths as List?;
-                                if (dynSaved != null) {
-                                  for (final item in dynSaved) {
-                                    String? p;
-                                    if (item is String)
-                                      p = item;
-                                    else {
-                                      try {
-                                        p = (item as dynamic).path as String?;
-                                      } catch (_) {}
-                                    }
-                                    if (p != null && p.isNotEmpty) paths.add(p);
-                                  }
-                                }
-                                final dynList =
-                                    (result as dynamic).paths as List?;
-                                if (dynList != null) {
-                                  for (final item in dynList) {
-                                    String? p;
-                                    if (item is String)
-                                      p = item;
-                                    else {
-                                      try {
-                                        p = (item as dynamic).path as String?;
-                                      } catch (_) {}
-                                    }
-                                    if (p != null && p.isNotEmpty) paths.add(p);
-                                  }
-                                } else {
-                                  final p =
-                                      (result as dynamic).path as String? ??
-                                      (result as dynamic).filePath as String? ??
-                                      (result as dynamic).imagePath
-                                          as String? ??
-                                      (result as dynamic).pdfUri as String?;
-                                  if (p != null && p.isNotEmpty) paths.add(p);
-                                }
-                              } catch (_) {}
-                            }
-
-                            if (paths.isEmpty) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(AppLocalizations.of(context).no_document_captured),
-                                    backgroundColor: Colors.orange,
-                                  ),
-                                );
-                              }
-                              return;
-                            }
-
-                            final now = DateTime.now();
-                            final dateStr = DateFormat(
-                              'yyyy-MM-dd',
-                            ).format(now);
-                            // تحضير مجلد scans للنسخ الدائم
-                            final docsDir =
-                                await getApplicationDocumentsDirectory();
-                            final scansDir = Directory('${docsDir.path}/scans');
-                            if (!await scansDir.exists()) {
-                              await scansDir.create(recursive: true);
-                            }
-
-                            int savedCount = 0;
-                            for (int i = 0; i < paths.length; i++) {
-                              String path = paths[i];
-                              if (path.startsWith('file://')) {
-                                try {
-                                  path = Uri.parse(path).toFilePath();
-                                } catch (_) {
-                                  path = path.replaceFirst('file://', '');
-                                }
-                              }
-                              if (!File(path).existsSync()) {
-                                debugPrint('Skipped non-existing file: $path');
-                                continue;
-                              }
-                              final ext = (path.split('.').length > 1)
-                                  ? path.split('.').last.toLowerCase()
-                                  : 'jpg';
-                              if (ext == 'pdf') {
-                                final images = await PdfService()
-                                    .rasterizePdfToImages(
-                                      File(path),
-                                      outputDir: scansDir,
-                                      namePrefix:
-                                          'scan_${now.millisecondsSinceEpoch}_$i',
-                                    );
-                                for (int p = 0; p < images.length; p++) {
-                                  final img = images[p];
-                                  final imgExt = (img.path.split('.').last)
-                                      .toLowerCase();
-                                  final docName =
-                                      'مستند $sectionName $dateStr ${i + 1}-${p + 1}';
-                                  await DatabaseService.instance.insertItem(
-                                    docName,
-                                    img.path,
-                                    imgExt,
-                                    sectionId,
-                                    createdAt: now.toIso8601String(),
-                                  );
-                                  savedCount++;
-                                }
-                                continue;
-                              }
-
-                              final newName =
-                                  'scan_${now.millisecondsSinceEpoch}_$i.$ext';
-                              final destPath = '${scansDir.path}/$newName';
-                              await File(path).copy(destPath);
-
-                              final docName =
-                                  'مستند $sectionName $dateStr ${i + 1}';
-                              await DatabaseService.instance.insertItem(
-                                docName,
-                                destPath,
-                                ext,
-                                sectionId,
-                                createdAt: now.toIso8601String(),
-                              );
-                              savedCount++;
-                            }
-
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'تم حفظ $savedCount ${savedCount == 1 ? "صورة" : "صور"} بنجاح',
-                                  ),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('${AppLocalizations.of(context).scan_failed_prefix}$e'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

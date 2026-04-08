@@ -32,7 +32,7 @@ android {
 
     defaultConfig {
         applicationId = "com.werewolf.office_archiving"
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName

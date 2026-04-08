@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:io';
 import 'package:office_archiving/pages/qr_barcode_scanner.dart';
+import 'dart:io';
 import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
-import 'package:intl/intl.dart';
 import 'package:office_archiving/pages/business_card_scanner.dart';
 import 'package:office_archiving/pages/pdf_security_page.dart';
 import 'package:office_archiving/pages/pdf_editor_page.dart';
 import 'package:office_archiving/pages/document_management_page.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/services/scanner_import_service.dart';
 import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class ProfessionalToolsPage extends StatelessWidget {
@@ -35,102 +33,113 @@ class ProfessionalToolsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            _buildHeaderCard(context),
-            const SizedBox(height: 24),
+              _buildHeaderCard(context),
+              const SizedBox(height: 24),
 
-            Text(
-              AppLocalizations.of(context).scan_capture_tools_title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
+              Text(
+                AppLocalizations.of(context).scan_capture_tools_title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
 
-            _buildToolGrid(context, [
-              ToolItem(
-                title: AppLocalizations.of(context).tool_scanner_title,
-                subtitle: AppLocalizations.of(context).tool_scanner_sub,
-                icon: Icons.document_scanner,
-                color: Colors.blue,
-                onTap: () => _showSectionSelectionForScanner(context),
-              ),
-              ToolItem(
-                title: AppLocalizations.of(context).tool_bizcard_title,
-                subtitle: AppLocalizations.of(context).tool_bizcard_sub,
-                icon: Icons.credit_card,
-                color: Colors.green,
-                page: const BusinessCardScannerPage(),
-              ),
-              ToolItem(
-                title: AppLocalizations.of(context).tool_qr_title,
-                subtitle: AppLocalizations.of(context).tool_qr_sub,
-                icon: Icons.qr_code_scanner,
-                color: Colors.orange,
-                page: const QRBarcodeScannerPage(),
-              ),
-            ]),
+              _buildToolGrid(context, [
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_scanner_title,
+                  subtitle: AppLocalizations.of(context).tool_scanner_sub,
+                  icon: Icons.document_scanner,
+                  color: Colors.blue,
+                  onTap: () => _showSectionSelectionForScanner(context),
+                ),
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_bizcard_title,
+                  subtitle: AppLocalizations.of(context).tool_bizcard_sub,
+                  icon: Icons.credit_card,
+                  color: Colors.green,
+                  page: const BusinessCardScannerPage(),
+                ),
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_qr_title,
+                  subtitle: AppLocalizations.of(context).tool_qr_sub,
+                  icon: Icons.qr_code_scanner,
+                  color: Colors.orange,
+                  page: const QRBarcodeScannerPage(),
+                ),
+              ]),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            Text(
-              AppLocalizations.of(context).advanced_pdf_tools_title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
+              Text(
+                AppLocalizations.of(context).advanced_pdf_tools_title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
 
-            _buildToolGrid(context, [
-              ToolItem(
-                title: 'PDF Security',
-                subtitle: AppLocalizations.of(context).tool_pdf_security_sub,
-                icon: Icons.security,
-                color: Colors.red,
-                onTap: () => _openPdfPickerForSecurity(context),
-              ),
-              ToolItem(
-                title: AppLocalizations.of(context).tool_pdf_editor_title,
-                subtitle: AppLocalizations.of(context).tool_pdf_editor_sub,
-                icon: Icons.edit_document,
-                color: Colors.purple,
-                onTap: () => _openPdfPickerForEditor(context),
-              ),
-              ToolItem(
-                title: AppLocalizations.of(context).tool_pdf_merge_title,
-                subtitle: AppLocalizations.of(context).tool_pdf_merge_sub,
-                icon: Icons.merge,
-                color: Colors.teal,
-                page: const DocumentManagementPage(),
-              ),
-            ]),
+              _buildToolGrid(context, [
+                ToolItem(
+                  title: 'PDF Security',
+                  subtitle: AppLocalizations.of(context).tool_pdf_security_sub,
+                  icon: Icons.security,
+                  color: Colors.red,
+                  onTap: () => _openPdfPickerForSecurity(context),
+                ),
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_pdf_editor_title,
+                  subtitle: AppLocalizations.of(context).tool_pdf_editor_sub,
+                  icon: Icons.edit_document,
+                  color: Colors.purple,
+                  onTap: () => _openPdfPickerForEditor(context),
+                ),
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_pdf_merge_title,
+                  subtitle: AppLocalizations.of(context).tool_pdf_merge_sub,
+                  icon: Icons.merge,
+                  color: Colors.teal,
+                  page: const DocumentManagementPage(),
+                ),
+              ]),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            Text(
-              AppLocalizations.of(context).extra_tools_title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
+              Text(
+                AppLocalizations.of(context).extra_tools_title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
 
-            _buildToolGrid(context, [
-              ToolItem(
-                title: AppLocalizations.of(context).tool_report_gen_title,
-                subtitle: AppLocalizations.of(context).tool_report_gen_sub,
-                icon: Icons.assessment,
-                color: Colors.indigo,
-                onTap: () => _showComingSoon(context),
-              ),
-              ToolItem(
-                title: AppLocalizations.of(context).tool_cloud_backup_title,
-                subtitle: AppLocalizations.of(context).tool_cloud_backup_sub,
-                icon: Icons.cloud_sync,
-                color: Colors.lightBlue,
-                onTap: () => _showComingSoon(context),
-              ),
-              ToolItem(
-                title: AppLocalizations.of(context).tool_advanced_share_title,
-                subtitle: AppLocalizations.of(context).tool_advanced_share_sub,
-                icon: Icons.share_outlined,
-                color: Colors.amber,
-                onTap: () => _showComingSoon(context),
-              ),
-            ]),
+              _buildToolGrid(context, [
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_report_gen_title,
+                  subtitle: AppLocalizations.of(context).tool_report_gen_sub,
+                  icon: Icons.assessment,
+                  color: Colors.indigo,
+                  onTap: () => _showComingSoon(context),
+                ),
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_cloud_backup_title,
+                  subtitle: AppLocalizations.of(context).tool_cloud_backup_sub,
+                  icon: Icons.cloud_sync,
+                  color: Colors.lightBlue,
+                  onTap: () => _showComingSoon(context),
+                ),
+                ToolItem(
+                  title: AppLocalizations.of(context).tool_advanced_share_title,
+                  subtitle: AppLocalizations.of(
+                    context,
+                  ).tool_advanced_share_sub,
+                  icon: Icons.share_outlined,
+                  color: Colors.amber,
+                  onTap: () => _showComingSoon(context),
+                ),
+              ]),
             ],
           ),
         ),
@@ -431,11 +440,18 @@ class ProfessionalToolsPage extends StatelessWidget {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  const Icon(Icons.folder_outlined, color: Colors.blue, size: 28),
+                  const Icon(
+                    Icons.folder_outlined,
+                    color: Colors.blue,
+                    size: 28,
+                  ),
                   const SizedBox(width: 12),
                   Text(
                     AppLocalizations.of(context).choose_section_to_scan_title,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -459,7 +475,8 @@ class ProfessionalToolsPage extends StatelessWidget {
                           ),
                         ),
                         title: Text(
-                          section['name'] ?? AppLocalizations.of(context).section_default_name,
+                          section['name'] ??
+                              AppLocalizations.of(context).section_default_name,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -473,115 +490,22 @@ class ProfessionalToolsPage extends StatelessWidget {
                           try {
                             final result = await FlutterDocScanner()
                                 .getScanDocuments();
-                            debugPrint(
-                              'Scanner result type: ${result.runtimeType}',
-                            );
-                            debugPrint('Scanner raw result: $result');
+                            final imported = await ScannerImportService.instance
+                                .importScannerResultToSection(
+                                  rawResult: result,
+                                  sectionId: sectionId,
+                                  sectionName: sectionName,
+                                );
 
-                            // تطبيع النتيجة إلى List<String>
-                            final paths = <String>[];
-                            if (result is String) {
-                              paths.add(result);
-                            } else if (result is List) {
-                              for (final item in result) {
-                                String? p;
-                                if (item is String) {
-                                  p = item;
-                                } else if (item is Map) {
-                                  final tmp =
-                                      item['path'] ??
-                                      item['filePath'] ??
-                                      item['imagePath'];
-                                  if (tmp is String) p = tmp;
-                                } else {
-                                  try {
-                                    p = (item as dynamic).path as String?;
-                                  } catch (_) {}
-                                }
-                                if (p != null && p.isNotEmpty) paths.add(p);
-                              }
-                            } else if (result is Map) {
-                              final maybeList =
-                                  result['paths'] ??
-                                  result['images'] ??
-                                  result['files'] ??
-                                  result['savedPaths'];
-                              if (maybeList is List) {
-                                for (final item in maybeList) {
-                                  String? p;
-                                  if (item is String) {
-                                    p = item;
-                                  } else if (item is Map) {
-                                    final tmp =
-                                        item['path'] ??
-                                        item['filePath'] ??
-                                        item['imagePath'];
-                                    if (tmp is String) p = tmp;
-                                  } else {
-                                    try {
-                                      p = (item as dynamic).path as String?;
-                                    } catch (_) {}
-                                  }
-                                  if (p != null && p.isNotEmpty) paths.add(p);
-                                }
-                              } else {
-                                final single =
-                                    result['path'] ??
-                                    result['filePath'] ??
-                                    result['imagePath'] ??
-                                    result['pdfUri'];
-                                if (single is String && single.isNotEmpty)
-                                  paths.add(single);
-                              }
-                            } else {
-                              // خصائص ديناميكية محتملة
-                              try {
-                                final dynSaved =
-                                    (result as dynamic).savedPaths as List?;
-                                if (dynSaved != null) {
-                                  for (final item in dynSaved) {
-                                    String? p;
-                                    if (item is String)
-                                      p = item;
-                                    else {
-                                      try {
-                                        p = (item as dynamic).path as String?;
-                                      } catch (_) {}
-                                    }
-                                    if (p != null && p.isNotEmpty) paths.add(p);
-                                  }
-                                }
-                                final dynList =
-                                    (result as dynamic).paths as List?;
-                                if (dynList != null) {
-                                  for (final item in dynList) {
-                                    String? p;
-                                    if (item is String)
-                                      p = item;
-                                    else {
-                                      try {
-                                        p = (item as dynamic).path as String?;
-                                      } catch (_) {}
-                                    }
-                                    if (p != null && p.isNotEmpty) paths.add(p);
-                                  }
-                                } else {
-                                  final p =
-                                      (result as dynamic).path as String? ??
-                                      (result as dynamic).filePath as String? ??
-                                      (result as dynamic).imagePath
-                                          as String? ??
-                                      (result as dynamic).pdfUri as String?;
-                                  if (p != null && p.isNotEmpty) paths.add(p);
-                                }
-                              } catch (_) {}
-                            }
-
-                            if (paths.isEmpty) {
+                            if (imported.savedCount == 0) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(AppLocalizations.of(context).no_document_captured),
+                                    content: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      ).no_document_captured,
+                                    ),
                                     backgroundColor: Colors.orange,
                                   ),
                                 );
@@ -589,85 +513,11 @@ class ProfessionalToolsPage extends StatelessWidget {
                               return;
                             }
 
-                            final now = DateTime.now();
-                            final dateStr = DateFormat(
-                              'yyyy-MM-dd',
-                            ).format(now);
-
-                            // تحضير مجلد scans للنسخ الدائم
-                            final docsDir =
-                                await getApplicationDocumentsDirectory();
-                            final scansDir = Directory('${docsDir.path}/scans');
-                            if (!await scansDir.exists()) {
-                              await scansDir.create(recursive: true);
-                            }
-
-                            int savedCount = 0;
-                            for (int i = 0; i < paths.length; i++) {
-                              String path = paths[i];
-                              if (path.startsWith('file://')) {
-                                try {
-                                  path = Uri.parse(path).toFilePath();
-                                } catch (_) {
-                                  path = path.replaceFirst('file://', '');
-                                }
-                              }
-                              if (!File(path).existsSync()) {
-                                debugPrint('Skipped non-existing file: $path');
-                                continue;
-                              }
-
-                              final ext = (path.split('.').length > 1)
-                                  ? path.split('.').last.toLowerCase()
-                                  : 'jpg';
-                              if (ext == 'pdf') {
-                                final images = await PdfService()
-                                    .rasterizePdfToImages(
-                                      File(path),
-                                      outputDir: scansDir,
-                                      namePrefix:
-                                          'scan_${now.millisecondsSinceEpoch}_$i',
-                                    );
-                                for (int p = 0; p < images.length; p++) {
-                                  final img = images[p];
-                                  final imgExt = (img.path.split('.').last)
-                                      .toLowerCase();
-                                  final docName =
-                                      'مستند $sectionName $dateStr ${i + 1}-${p + 1}';
-                                  await DatabaseService.instance.insertItem(
-                                    docName,
-                                    img.path,
-                                    imgExt,
-                                    sectionId,
-                                    createdAt: now.toIso8601String(),
-                                  );
-                                  savedCount++;
-                                }
-                                continue;
-                              }
-
-                              final newName =
-                                  'scan_${now.millisecondsSinceEpoch}_$i.$ext';
-                              final destPath = '${scansDir.path}/$newName';
-                              await File(path).copy(destPath);
-
-                              final docName =
-                                  'مستند $sectionName $dateStr ${i + 1}';
-                              await DatabaseService.instance.insertItem(
-                                docName,
-                                destPath,
-                                ext,
-                                sectionId,
-                                createdAt: now.toIso8601String(),
-                              );
-                              savedCount++;
-                            }
-
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'تم حفظ $savedCount ${savedCount == 1 ? "صورة" : "صور"} بنجاح',
+                                    'تم حفظ ${imported.savedCount} ${imported.savedCount == 1 ? "صورة" : "صور"} بنجاح',
                                   ),
                                   backgroundColor: Colors.green,
                                 ),
@@ -677,7 +527,9 @@ class ProfessionalToolsPage extends StatelessWidget {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('${AppLocalizations.of(context).scan_failed_prefix}$e'),
+                                  content: Text(
+                                    '${AppLocalizations.of(context).scan_failed_prefix}$e',
+                                  ),
                                   backgroundColor: Colors.red,
                                 ),
                               );

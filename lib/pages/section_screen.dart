@@ -12,11 +12,13 @@ import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/widgets/shimmers.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/functions/show_add_item_sheet.dart';
+import 'package:office_archiving/models/item.dart';
 import 'package:office_archiving/screens/editor/internal_editor_page.dart';
+import 'package:office_archiving/services/document_storage_service.dart';
 import 'package:office_archiving/services/pdf_service.dart';
 import 'package:office_archiving/services/ocr_service.dart';
+import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:office_archiving/widgets/first_open_animator.dart';
 
 class SectionScreen extends StatefulWidget {
@@ -35,6 +37,8 @@ class SectionScreen extends StatefulWidget {
 class _SectionScreenState extends State<SectionScreen> {
   late DatabaseService sqlDB;
   late ItemSectionCubit itemCubit;
+  final DocumentStorageService _storageService =
+      DocumentStorageService.instance;
   bool _isProcessing = false;
   late String _sectionName;
 
@@ -344,6 +348,34 @@ class _SectionScreenState extends State<SectionScreen> {
     }
   }
 
+  List<ItemSection> _existingImageItems(ItemSectionLoaded state) {
+    return state.items
+        .where((item) {
+          final path = item.filePath;
+          return path != null &&
+              path.isNotEmpty &&
+              File(path).existsSync() &&
+              _storageService.isImagePath(path);
+        })
+        .toList(growable: false);
+  }
+
+  List<String> _existingImagePaths(ItemSectionLoaded state) {
+    return _existingImageItems(
+      state,
+    ).map((item) => item.filePath!).toList(growable: false);
+  }
+
+  String _normalizedPdfFileName(String rawName) {
+    final trimmed = rawName.trim();
+    final baseName = trimmed.isEmpty ? _sectionName : trimmed;
+    final safeBaseName = _storageService.sanitizeStem(
+      baseName,
+      fallback: 'document',
+    );
+    return '$safeBaseName.pdf';
+  }
+
   Future<void> _openImageEditor() async {
     final state = itemCubit.state;
     if (state is! ItemSectionLoaded || state.items.isEmpty) {
@@ -351,12 +383,12 @@ class _SectionScreenState extends State<SectionScreen> {
       return;
     }
 
-    // فتح المحرر الداخلي الجاهز
-    final firstImage = state.items.first.filePath;
-    if (firstImage == null) {
+    final imageItems = _existingImageItems(state);
+    if (imageItems.isEmpty) {
       _showSnackBar(AppLocalizations.of(context).no_valid_image_path);
       return;
     }
+    final firstImage = imageItems.first.filePath!;
 
     await Navigator.push(
       context,
@@ -387,7 +419,10 @@ class _SectionScreenState extends State<SectionScreen> {
             children: [
               Text(
                 AppLocalizations.of(context).share_options_title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -474,7 +509,10 @@ class _SectionScreenState extends State<SectionScreen> {
             children: [
               Text(
                 AppLocalizations.of(context).all_options_title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -552,11 +590,7 @@ class _SectionScreenState extends State<SectionScreen> {
       }
 
       setState(() => _isProcessing = true);
-      final imagePaths = state.items
-          .map((item) => item.filePath)
-          .where((path) => path != null && File(path).existsSync())
-          .cast<String>()
-          .toList();
+      final imagePaths = _existingImagePaths(state);
 
       if (imagePaths.isEmpty) {
         _showSnackBar(AppLocalizations.of(context).no_valid_images);
@@ -565,7 +599,7 @@ class _SectionScreenState extends State<SectionScreen> {
 
       final pdfFile = await PdfService().createPdfFromImages(
         imagePaths,
-        fileName: '$fileName.pdf',
+        fileName: _normalizedPdfFileName(fileName),
       );
 
       await Share.shareXFiles([XFile(pdfFile.path)], subject: fileName);
@@ -585,11 +619,7 @@ class _SectionScreenState extends State<SectionScreen> {
         return;
       }
 
-      final files = state.items
-          .where((item) => item.filePath != null)
-          .where((item) => File(item.filePath!).existsSync())
-          .map((item) => XFile(item.filePath!))
-          .toList();
+      final files = _existingImagePaths(state).map(XFile.new).toList();
 
       if (files.isEmpty) {
         _showSnackBar(AppLocalizations.of(context).no_valid_images_to_share);
@@ -611,11 +641,7 @@ class _SectionScreenState extends State<SectionScreen> {
       }
 
       setState(() => _isProcessing = true);
-      final imagePaths = state.items
-          .map((item) => item.filePath)
-          .where((path) => path != null && File(path).existsSync())
-          .cast<String>()
-          .toList();
+      final imagePaths = _existingImagePaths(state);
 
       if (imagePaths.isEmpty) {
         _showSnackBar(AppLocalizations.of(context).no_valid_images);
@@ -624,10 +650,19 @@ class _SectionScreenState extends State<SectionScreen> {
 
       final pdfFile = await PdfService().createPdfFromImages(
         imagePaths,
-        fileName: '${_sectionName}_merged.pdf',
+        fileName: _normalizedPdfFileName('${_sectionName}_merged'),
       );
+      await sqlDB.insertItem(
+        p.basenameWithoutExtension(pdfFile.path),
+        pdfFile.path,
+        'pdf',
+        widget.section.id,
+      );
+      await itemCubit.refreshItems(widget.section.id);
 
-      _showSnackBar('${AppLocalizations.of(context).merged_success_prefix}${pdfFile.path}');
+      _showSnackBar(
+        '${AppLocalizations.of(context).merged_success_prefix}${pdfFile.path}',
+      );
     } catch (e) {
       _showSnackBar('${AppLocalizations.of(context).merge_error_prefix}$e');
     } finally {
@@ -639,7 +674,9 @@ class _SectionScreenState extends State<SectionScreen> {
     try {
       final state = itemCubit.state;
       if (state is! ItemSectionLoaded || state.items.isEmpty) {
-        _showSnackBar(AppLocalizations.of(context).no_images_for_text_extraction);
+        _showSnackBar(
+          AppLocalizations.of(context).no_images_for_text_extraction,
+        );
         return;
       }
 
@@ -647,15 +684,16 @@ class _SectionScreenState extends State<SectionScreen> {
       final ocr = OCRService();
       final allText = StringBuffer();
 
-      for (final item in state.items) {
+      for (final item in _existingImageItems(state)) {
         final path = item.filePath;
-        if (path != null && File(path).existsSync()) {
-          final text = await ocr.extractTextFromImage(path);
-          if (text.isNotEmpty) {
-            allText.writeln('--- ${item.name} ---');
-            allText.writeln(text);
-            allText.writeln();
-          }
+        if (path == null) {
+          continue;
+        }
+        final text = await ocr.extractTextFromImage(path);
+        if (text.isNotEmpty) {
+          allText.writeln('--- ${item.name} ---');
+          allText.writeln(text);
+          allText.writeln();
         }
       }
 
@@ -665,22 +703,50 @@ class _SectionScreenState extends State<SectionScreen> {
       }
 
       // حفظ النص في ملف
-      final dir = await getApplicationDocumentsDirectory();
-      final textFile = File('${dir.path}/${_sectionName}_extracted.txt');
-      await textFile.writeAsString(allText.toString());
+      final textFile = await _storageService.writeBytes(
+        bytes: allText.toString().codeUnits,
+        directory: ManagedDirectory.exports,
+        fileName:
+            '${_storageService.sanitizeStem(_sectionName, fallback: 'section')}_extracted.txt',
+      );
 
-      _showSnackBar('${AppLocalizations.of(context).text_extracted_prefix}${textFile.path}');
+      _showSnackBar(
+        '${AppLocalizations.of(context).text_extracted_prefix}${textFile.path}',
+      );
     } catch (e) {
-      _showSnackBar('${AppLocalizations.of(context).text_extraction_error_prefix}$e');
+      _showSnackBar(
+        '${AppLocalizations.of(context).text_extraction_error_prefix}$e',
+      );
     } finally {
       setState(() => _isProcessing = false);
     }
   }
 
   Future<void> _saveToGallery() async {
-    _showSnackBar(AppLocalizations.of(context).saving_to_gallery);
-    await Future.delayed(const Duration(seconds: 1));
-    _showSnackBar(AppLocalizations.of(context).saved_to_gallery);
+    try {
+      final state = itemCubit.state;
+      if (state is! ItemSectionLoaded || state.items.isEmpty) {
+        _showSnackBar(AppLocalizations.of(context).no_valid_images);
+        return;
+      }
+
+      setState(() => _isProcessing = true);
+      _showSnackBar(AppLocalizations.of(context).saving_to_gallery);
+      final savedPaths = await _storageService.saveImagesToGallery(
+        _existingImagePaths(state),
+      );
+      if (savedPaths.isEmpty) {
+        _showSnackBar(AppLocalizations.of(context).no_valid_images);
+        return;
+      }
+      _showSnackBar(AppLocalizations.of(context).saved_to_gallery);
+    } catch (e) {
+      _showSnackBar('${AppLocalizations.of(context).error_prefix}$e');
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
   }
 
   Future<void> _copyFiles() async {

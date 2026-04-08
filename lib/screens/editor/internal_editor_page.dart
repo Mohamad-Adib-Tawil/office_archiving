@@ -10,6 +10,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:office_archiving/services/ocr_service.dart';
 import 'package:office_archiving/services/pdf_service.dart';
@@ -29,6 +30,7 @@ class InternalEditorPage extends StatefulWidget {
 
 class _InternalEditorPageState extends State<InternalEditorPage> {
   File? _image;
+  final ImagePicker _picker = ImagePicker();
   final _ocr = OCRService();
   final _pdf = PdfService();
   String _extractedText = '';
@@ -47,6 +49,21 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
   void dispose() {
     _image = null;
     super.dispose();
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(
+      source: source,
+      imageQuality: 92,
+    );
+    if (pickedFile == null || !mounted) {
+      return;
+    }
+
+    setState(() {
+      _image = File(pickedFile.path);
+      _imgVersion++;
+    });
   }
 
   Future<void> _chooseSignatureOrWatermark() async {
@@ -90,11 +107,19 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
           title: Text(AppLocalizations.of(context).watermark_text_prompt),
           content: TextField(
             controller: controller,
-            decoration: InputDecoration(hintText: AppLocalizations.of(context).watermark_hint),
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context).watermark_hint,
+            ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context).cancel)),
-            TextButton(onPressed: () => Navigator.pop(ctx, true), child: Text(AppLocalizations.of(context).ok_action)),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(AppLocalizations.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(AppLocalizations.of(context).ok_action),
+            ),
           ],
         );
       },
@@ -110,14 +135,17 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
     try {
       final baseBytes = await _image!.readAsBytes();
       final base = img.decodeImage(baseBytes);
-      if (base == null) throw Exception(AppLocalizations.of(context).image_read_error);
+      if (base == null)
+        throw Exception(AppLocalizations.of(context).image_read_error);
 
       final padding = 24;
       // اختر حجم الخط حسب عرض الصورة لضمان الوضوح
       final bmFont = base.width >= 2000
           ? img.arial48
           : (base.width >= 1000 ? img.arial24 : img.arial14);
-      final approxH = bmFont == img.arial48 ? 48 : (bmFont == img.arial24 ? 24 : 14);
+      final approxH = bmFont == img.arial48
+          ? 48
+          : (bmFont == img.arial24 ? 24 : 14);
 
       // لون النص
       final white = img.ColorRgba8(255, 255, 255, 255);
@@ -127,7 +155,15 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       final y = (base.height - approxH - padding).clamp(0, base.height - 1);
 
       // نص واضح أسفل يمين (بدون تكرار/ظل)
-      img.drawString(base, text, font: bmFont, x: x, y: y, color: white, rightJustify: true);
+      img.drawString(
+        base,
+        text,
+        font: bmFont,
+        x: x,
+        y: y,
+        color: white,
+        rightJustify: true,
+      );
 
       final ext = p.extension(_image!.path).toLowerCase();
       late List<int> outBytes;
@@ -142,12 +178,18 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       if (!mounted) return;
       setState(() => _imgVersion++);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).watermark_added_success)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).watermark_added_success),
+        ),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppLocalizations.of(context).watermark_add_failed_prefix}$e')),
+        SnackBar(
+          content: Text(
+            '${AppLocalizations.of(context).watermark_add_failed_prefix}$e',
+          ),
+        ),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -208,20 +250,27 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       // اقرأ صورة الأساس
       final baseBytes = await _image!.readAsBytes();
       final base = img.decodeImage(baseBytes);
-      if (base == null) throw Exception(AppLocalizations.of(context).image_read_error);
+      if (base == null)
+        throw Exception(AppLocalizations.of(context).image_read_error);
 
       // اقرأ صورة التوقيع (PNG بخلفية شفافة)
       final sig = img.decodeImage(signaturePngBytes);
       if (sig == null) throw Exception('تعذر قراءة صورة التوقيع');
 
       // تحجيم التوقيع
-      final targetW = (targetBaseWidth ?? (base.width * 0.30)).clamp(1, base.width).toInt();
+      final targetW = (targetBaseWidth ?? (base.width * 0.30))
+          .clamp(1, base.width)
+          .toInt();
       final scaledSig = img.copyResize(sig, width: targetW);
 
       // الموضع: إما ما اختاره المستخدم، أو أسفل يمين مع هامش 20 بكسل
       const margin = 20;
-      final dx = (baseX ?? (base.width - scaledSig.width - margin)).clamp(0, base.width - 1).toInt();
-      final dy = (baseY ?? (base.height - scaledSig.height - margin)).clamp(0, base.height - 1).toInt();
+      final dx = (baseX ?? (base.width - scaledSig.width - margin))
+          .clamp(0, base.width - 1)
+          .toInt();
+      final dy = (baseY ?? (base.height - scaledSig.height - margin))
+          .clamp(0, base.height - 1)
+          .toInt();
 
       // دمج مع تفعيل المزج (يحترم الشفافية)
       img.compositeImage(base, scaledSig, dstX: dx, dstY: dy);
@@ -241,12 +290,18 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       if (!mounted) return;
       setState(() => _imgVersion++);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).signature_added_success)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).signature_added_success),
+        ),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppLocalizations.of(context).signature_merge_failed_prefix}$e')),
+        SnackBar(
+          content: Text(
+            '${AppLocalizations.of(context).signature_merge_failed_prefix}$e',
+          ),
+        ),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -260,7 +315,9 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
       _extractedText = await _ocr.extractTextFromImage(_image!.path);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).snack_extraction_done)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).snack_extraction_done),
+        ),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -273,9 +330,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
     try {
       final pdf = await _pdf.createPdfFromImages([_image!.path]);
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).snack_pdf_created)));
-      Navigator.pop(context, _image!.path); // إرجاع المسار للاستخدام إن لزم
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${AppLocalizations.of(context).snack_pdf_created}: ${pdf.path}',
+          ),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -320,8 +381,13 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
         title: Text(AppLocalizations.of(context).editor_title),
         actions: [
           TextButton(
-            onPressed: _image == null ? null : () => Navigator.pop(context, _image!.path),
-            child: Text(AppLocalizations.of(context).editor_save, style: const TextStyle(color: Colors.white)),
+            onPressed: _image == null
+                ? null
+                : () => Navigator.pop(context, _image!.path),
+            child: Text(
+              AppLocalizations.of(context).editor_save,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -330,7 +396,35 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
           Expanded(
             child: Center(
               child: _image == null
-                  ? Text(AppLocalizations.of(context).no_image_to_edit)
+                  ? Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(AppLocalizations.of(context).no_image_to_edit),
+                          const SizedBox(height: 20),
+                          FilledButton.icon(
+                            onPressed: _busy
+                                ? null
+                                : () => _pickImage(ImageSource.gallery),
+                            icon: const Icon(Icons.photo_library),
+                            label: Text(
+                              AppLocalizations.of(context).from_gallery,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          OutlinedButton.icon(
+                            onPressed: _busy
+                                ? null
+                                : () => _pickImage(ImageSource.camera),
+                            icon: const Icon(Icons.camera_alt),
+                            label: Text(
+                              AppLocalizations.of(context).from_camera,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   : Image.file(
                       _image!,
                       key: ValueKey(_imgVersion),
@@ -347,7 +441,11 @@ class _InternalEditorPageState extends State<InternalEditorPage> {
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             boxShadow: const [
-              BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -2)),
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                offset: Offset(0, -2),
+              ),
             ],
           ),
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
