@@ -366,6 +366,25 @@ class _SectionScreenState extends State<SectionScreen> {
     ).map((item) => item.filePath!).toList(growable: false);
   }
 
+  List<ItemSection> _existingMergeableItems(ItemSectionLoaded state) {
+    return state.items
+        .where((item) {
+          final path = item.filePath;
+          if (path == null || path.isEmpty || !File(path).existsSync()) {
+            return false;
+          }
+          return _storageService.isImagePath(path) ||
+              _storageService.isPdfPath(path);
+        })
+        .toList(growable: false);
+  }
+
+  List<String> _existingMergeablePaths(ItemSectionLoaded state) {
+    return _existingMergeableItems(
+      state,
+    ).map((item) => item.filePath!).toList(growable: false);
+  }
+
   String _normalizedPdfFileName(String rawName) {
     final trimmed = rawName.trim();
     final baseName = trimmed.isEmpty ? _sectionName : trimmed;
@@ -590,15 +609,15 @@ class _SectionScreenState extends State<SectionScreen> {
       }
 
       setState(() => _isProcessing = true);
-      final imagePaths = _existingImagePaths(state);
+      final sourcePaths = _existingMergeablePaths(state);
 
-      if (imagePaths.isEmpty) {
-        _showSnackBar(AppLocalizations.of(context).no_valid_images);
+      if (sourcePaths.isEmpty) {
+        _showSnackBar(AppLocalizations.of(context).no_items_to_share);
         return;
       }
 
-      final pdfFile = await PdfService().createPdfFromImages(
-        imagePaths,
+      final pdfFile = await PdfService().createPdfFromSources(
+        sourcePaths,
         fileName: _normalizedPdfFileName(fileName),
       );
 
@@ -641,15 +660,15 @@ class _SectionScreenState extends State<SectionScreen> {
       }
 
       setState(() => _isProcessing = true);
-      final imagePaths = _existingImagePaths(state);
+      final sourcePaths = _existingMergeablePaths(state);
 
-      if (imagePaths.isEmpty) {
-        _showSnackBar(AppLocalizations.of(context).no_valid_images);
+      if (sourcePaths.isEmpty) {
+        _showSnackBar(AppLocalizations.of(context).no_items_to_merge);
         return;
       }
 
-      final pdfFile = await PdfService().createPdfFromImages(
-        imagePaths,
+      final pdfFile = await PdfService().createPdfFromSources(
+        sourcePaths,
         fileName: _normalizedPdfFileName('${_sectionName}_merged'),
       );
       await sqlDB.insertItem(

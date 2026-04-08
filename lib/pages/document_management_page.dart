@@ -833,18 +833,23 @@ class _DocumentManagementPageState extends State<DocumentManagementPage>
 
   // دمج الملفات (فعلي)
   Future<void> _mergeDocuments() async {
-    if (_pdfFiles.length < 2) {
+    final sourcePaths = [
+      ..._documentImages.where((path) => File(path).existsSync()),
+      ..._pdfFiles.where((path) => File(path).existsSync()),
+    ];
+
+    if (sourcePaths.length < 2) {
       _showErrorSnackBar(AppLocalizations.of(context).error_merge_min_files);
       return;
     }
 
     try {
       setState(() => _isProcessing = true);
-      final pdfList = _pdfFiles
-          .where((p) => p.toLowerCase().endsWith('.pdf'))
-          .map((p) => File(p))
-          .toList();
-      final merged = await PdfService().mergePdfs(pdfList);
+      final merged = await PdfService().createPdfFromSources(
+        sourcePaths,
+        fileName:
+            'merged_documents_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
       setState(() => _pdfFiles.add(merged.path));
       _showSuccessSnackBar(AppLocalizations.of(context).snack_merge_success);
     } catch (e) {

@@ -67,42 +67,80 @@ class PdfService {
     return _savePdfBytes(bytes, name);
   }
 
-  Future<File> mergePdfs(List<File> pdfFiles, {String? fileName}) async {
+  Future<File> createPdfFromSources(
+    List<String> sourcePaths, {
+    String? fileName,
+  }) async {
+    if (sourcePaths.isEmpty) {
+      throw ArgumentError('At least one source is required to create a PDF.');
+    }
+
     final outDoc = pw.Document();
     var pageCount = 0;
 
-    for (final f in pdfFiles) {
-      if (!(await f.exists())) continue;
-      final data = await f.readAsBytes();
-      // Rasterize كل صفحات PDF المصدر ثم إضافتها كصور في مستند جديد
-      final pages = Printing.raster(data, dpi: 144.0);
-      await for (final page in pages) {
-        final Uint8List pngBytes = await page.toPng();
-        final img = pw.MemoryImage(pngBytes);
+    for (final sourcePath in sourcePaths) {
+      final sourceFile = File(sourcePath);
+      if (!await sourceFile.exists()) {
+        continue;
+      }
+
+      if (_storageService.isImagePath(sourcePath)) {
+        final bytes = await sourceFile.readAsBytes();
+        final image = pw.MemoryImage(bytes);
         outDoc.addPage(
           pw.Page(
-            pageFormat: PdfPageFormat(
-              page.width / 72.0 * PdfPageFormat.inch,
-              page.height / 72.0 * PdfPageFormat.inch,
+            pageFormat: PdfPageFormat.a4,
+            build: (_) => pw.Center(
+              child: pw.FittedBox(
+                fit: pw.BoxFit.contain,
+                child: pw.Image(image),
+              ),
             ),
-            build: (_) =>
-                pw.Center(child: pw.Image(img, fit: pw.BoxFit.contain)),
           ),
         );
         pageCount++;
+        continue;
+      }
+
+      if (_storageService.isPdfPath(sourcePath)) {
+        final pdfBytes = await sourceFile.readAsBytes();
+        final pages = Printing.raster(pdfBytes, dpi: 110.0);
+        await for (final page in pages) {
+          final pngBytes = await page.toPng();
+          final image = pw.MemoryImage(pngBytes);
+          outDoc.addPage(
+            pw.Page(
+              pageFormat: PdfPageFormat(
+                page.width / 72.0 * PdfPageFormat.inch,
+                page.height / 72.0 * PdfPageFormat.inch,
+              ),
+              build: (_) =>
+                  pw.Center(child: pw.Image(image, fit: pw.BoxFit.contain)),
+            ),
+          );
+          pageCount++;
+        }
       }
     }
 
     if (pageCount == 0) {
       throw const FileSystemException(
-        'No readable PDF pages were found to merge.',
+        'No readable images or PDF pages were found to build the PDF.',
       );
     }
 
     final name =
-        fileName ?? 'merged_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        fileName ?? 'document_${DateTime.now().millisecondsSinceEpoch}.pdf';
     final bytes = await outDoc.save();
     return _savePdfBytes(bytes, name);
+  }
+
+  Future<File> mergePdfs(List<File> pdfFiles, {String? fileName}) async {
+    return createPdfFromSources(
+      pdfFiles.map((file) => file.path).toList(growable: false),
+      fileName:
+          fileName ?? 'merged_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
   }
 
   Future<File> addWatermark(
