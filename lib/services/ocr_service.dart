@@ -9,6 +9,10 @@ import 'package:office_archiving/service/sqlite_service.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class OCRService {
+  static const int _safePdfOcrMaxPages = 3;
+  static const int _safePdfOcrDpi = 72;
+  static const int _safePdfOcrMaxFileSizeBytes = 12 * 1024 * 1024;
+
   static final OCRService _instance = OCRService._internal();
   factory OCRService() => _instance;
   OCRService._internal();
@@ -23,23 +27,56 @@ class OCRService {
   }
 
   /// OCR for multi-page PDF -> concatenated text
-  Future<String> recognizePdfToText(String pdfPath, {String lang = 'auto'}) async {
+  Future<String> recognizePdfToText(
+    String pdfPath, {
+    String lang = 'auto',
+    int maxPages = _safePdfOcrMaxPages,
+    int dpi = _safePdfOcrDpi,
+    int maxFileSizeBytes = _safePdfOcrMaxFileSizeBytes,
+  }) async {
     try {
-      final data = await File(pdfPath).readAsBytes();
-      final pages = Printing.raster(data, dpi: 144);
+      final sourceFile = File(pdfPath);
+      if (!await sourceFile.exists()) {
+        throw FileSystemException('PDF file does not exist', pdfPath);
+      }
+
+      final fileSize = await sourceFile.length();
+      if (fileSize > maxFileSizeBytes) {
+        log(
+          'recognizePdfToText skipped large PDF: '
+          'path=$pdfPath size=$fileSize limit=$maxFileSizeBytes',
+        );
+        return '';
+      }
+
+      final data = await sourceFile.readAsBytes();
+      final pages = Printing.raster(data, dpi: dpi.toDouble());
       final buffer = StringBuffer();
-      int index = 1;
+      var index = 1;
+
       await for (final page in pages) {
+        if (index > maxPages) {
+          break;
+        }
+
         final pngBytes = await page.toPng();
         final tmp = await _writeTempFile(pngBytes, suffix: '_pdf_$index.png');
-        final t = await recognizeTextAdvanced(tmp.path, lang: lang);
-        if (t.trim().isNotEmpty) {
-          buffer.writeln('--- Page $index ---');
-          buffer.writeln(t);
-          buffer.writeln();
+        try {
+          final t = await recognizeTextAdvanced(tmp.path, lang: lang);
+          if (t.trim().isNotEmpty) {
+            buffer.writeln('--- Page $index ---');
+            buffer.writeln(t);
+            buffer.writeln();
+          }
+        } finally {
+          if (await tmp.exists()) {
+            await tmp.delete();
+          }
         }
+
         index++;
       }
+
       return buffer.toString();
     } catch (e) {
       log('recognizePdfToText failed: $e');
@@ -53,10 +90,15 @@ class OCRService {
     required String filePath,
     required String fileType,
     String lang = 'auto',
+    bool allowPdf = true,
   }) async {
     String text;
     final t = fileType.toLowerCase();
     if (t == 'pdf') {
+      if (!allowPdf) {
+        log('Auto OCR skipped for PDF item id=$id path=$filePath');
+        return;
+      }
       text = await recognizePdfToText(filePath, lang: lang);
     } else {
       text = await recognizeTextAdvanced(filePath, lang: lang);
@@ -76,7 +118,9 @@ class OCRService {
     int? limit,
     void Function(int processed, int total)? onProgress,
   }) async {
-    final rows = await DatabaseService.instance.getItemsMissingOcr(limit: limit);
+    final rows = await DatabaseService.instance.getItemsMissingOcr(
+      limit: limit,
+    );
     int processed = 0;
     final total = rows.length;
     for (final row in rows) {
@@ -84,7 +128,12 @@ class OCRService {
       final path = row['filePath'] as String?;
       final type = (row['fileType'] as String?) ?? '';
       if (path == null || path.isEmpty) continue;
-      await processItemAndSaveOcr(id: id, filePath: path, fileType: type, lang: lang);
+      await processItemAndSaveOcr(
+        id: id,
+        filePath: path,
+        fileType: type,
+        lang: lang,
+      );
       processed++;
       if (onProgress != null) onProgress(processed, total);
     }
@@ -101,7 +150,10 @@ class OCRService {
     return recognizedText.text;
   }
 
-  Future<String> _extractWithTesseract(String imagePath, {required String languages}) async {
+  Future<String> _extractWithTesseract(
+    String imagePath, {
+    required String languages,
+  }) async {
     try {
       // languages like 'ara' or 'ara+eng'
       // Use bundled tessdata inside assets without config file
@@ -192,7 +244,10 @@ class OCRService {
 
   /// Advanced OCR: preprocessing + orientation trials + dual backend
   /// lang: 'auto' | 'ar' | 'en'
-  Future<String> recognizeTextAdvanced(String imagePath, {String lang = 'auto'}) async {
+  Future<String> recognizeTextAdvanced(
+    String imagePath, {
+    String lang = 'auto',
+  }) async {
     try {
       // 1) Preprocess
       final preprocessedPath = await _preprocessForOcr(imagePath);
@@ -214,12 +269,18 @@ class OCRService {
           text = await _extractWithMlkit(rotatedPath);
         } else {
           // auto: favor arabic if present, otherwise choose longer
-          final tText = await _extractWithTesseract(rotatedPath, languages: 'ara+eng');
+          final tText = await _extractWithTesseract(
+            rotatedPath,
+            languages: 'ara+eng',
+          );
           final mText = await _extractWithMlkit(rotatedPath);
           text = _chooseAuto(tText, mText);
         }
 
-        final score = _scoreText(text, preferArabic: lang == 'ar' || lang == 'auto');
+        final score = _scoreText(
+          text,
+          preferArabic: lang == 'ar' || lang == 'auto',
+        );
         if (score > bestScore) {
           bestScore = score;
           bestText = text;
@@ -243,10 +304,12 @@ class OCRService {
       final recognizedText = await _textRecognizer.processImage(inputImage);
 
       final blocks = recognizedText.blocks
-          .map((b) => {
-                'text': b.text,
-                'lines': b.lines.map((l) => {'text': l.text}).toList(),
-              })
+          .map(
+            (b) => {
+              'text': b.text,
+              'lines': b.lines.map((l) => {'text': l.text}).toList(),
+            },
+          )
           .toList();
 
       return {
@@ -275,18 +338,21 @@ class OCRService {
   Future<List<String>> extractKeywords(String imagePath) async {
     try {
       final text = await extractTextFromImage(imagePath);
-      
+
       // استخراج الكلمات المفتاحية البسيط
-      final words = text.split(RegExp(r'\s+'))
+      final words = text
+          .split(RegExp(r'\s+'))
           .where((word) => word.length > 3) // كلمات أطول من 3 أحرف
-          .map((word) => word.replaceAll(RegExp(r'[^\w\u0600-\u06FF]'), '')) // إزالة الرموز
+          .map(
+            (word) => word.replaceAll(RegExp(r'[^\w\u0600-\u06FF]'), ''),
+          ) // إزالة الرموز
           .where((word) => word.isNotEmpty)
           .toSet() // إزالة التكرار
           .toList();
-      
+
       // ترتيب حسب الطول (الكلمات الأطول أولاً)
       words.sort((a, b) => b.length.compareTo(a.length));
-      
+
       return words.take(10).toList(); // أفضل 10 كلمات مفتاحية
     } catch (e) {
       log('OCR extractKeywords failed: $e');

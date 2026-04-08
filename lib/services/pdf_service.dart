@@ -138,7 +138,10 @@ class PdfService {
                       opacity: 0.12,
                       child: pw.Text(
                         watermark,
-                        style: pw.TextStyle(fontSize: 48, color: PdfColors.red),
+                        style: const pw.TextStyle(
+                          fontSize: 48,
+                          color: PdfColors.red,
+                        ),
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
@@ -159,6 +162,107 @@ class PdfService {
     }
 
     final name = 'watermarked_${DateTime.now().millisecondsSinceEpoch}.pdf';
+    final bytes = await outDoc.save();
+    return _savePdfBytes(bytes, name);
+  }
+
+  Future<File> createProtectedCopy({
+    required File source,
+    String? watermark,
+    Uint8List? signatureBytes,
+    String? fileName,
+    PdfColor watermarkColor = PdfColors.grey700,
+    double watermarkOpacity = 0.14,
+  }) async {
+    if (!(await source.exists())) {
+      throw FileSystemException('Source PDF does not exist', source.path);
+    }
+
+    final data = await source.readAsBytes();
+    final renderedPages = <_RasterizedPdfPage>[];
+    final pageStream = Printing.raster(data, dpi: 170.0);
+
+    await for (final page in pageStream) {
+      renderedPages.add(
+        _RasterizedPdfPage(
+          pngBytes: await page.toPng(),
+          width: page.width.toDouble(),
+          height: page.height.toDouble(),
+        ),
+      );
+    }
+
+    if (renderedPages.isEmpty) {
+      throw const FileSystemException(
+        'No readable PDF pages were found to protect.',
+      );
+    }
+
+    final outDoc = pw.Document();
+    final normalizedWatermark = watermark?.trim();
+    final signatureImage = (signatureBytes != null && signatureBytes.isNotEmpty)
+        ? pw.MemoryImage(signatureBytes)
+        : null;
+
+    for (var index = 0; index < renderedPages.length; index++) {
+      final renderedPage = renderedPages[index];
+      final pageImage = pw.MemoryImage(renderedPage.pngBytes);
+      outDoc.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat(
+            renderedPage.width / 72.0 * PdfPageFormat.inch,
+            renderedPage.height / 72.0 * PdfPageFormat.inch,
+          ),
+          build: (_) => pw.Stack(
+            children: [
+              pw.Positioned.fill(
+                child: pw.Image(pageImage, fit: pw.BoxFit.contain),
+              ),
+              if (normalizedWatermark != null && normalizedWatermark.isNotEmpty)
+                pw.Positioned.fill(
+                  child: pw.Center(
+                    child: pw.Transform.rotate(
+                      angle: -0.45,
+                      child: pw.Opacity(
+                        opacity: watermarkOpacity,
+                        child: pw.Text(
+                          normalizedWatermark,
+                          style: pw.TextStyle(
+                            fontSize: 44,
+                            color: watermarkColor,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                          textAlign: pw.TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (signatureImage != null && index == renderedPages.length - 1)
+                pw.Positioned(
+                  right: 20,
+                  bottom: 20,
+                  child: pw.Container(
+                    width: 120,
+                    padding: const pw.EdgeInsets.all(8),
+                    decoration: pw.BoxDecoration(
+                      color: PdfColors.white,
+                      border: pw.Border.all(color: PdfColors.grey300),
+                      borderRadius: const pw.BorderRadius.all(
+                        pw.Radius.circular(8),
+                      ),
+                    ),
+                    child: pw.Image(signatureImage, fit: pw.BoxFit.contain),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final name =
+        fileName ?? 'protected_${DateTime.now().millisecondsSinceEpoch}.pdf';
     final bytes = await outDoc.save();
     return _savePdfBytes(bytes, name);
   }
@@ -201,4 +305,16 @@ class PdfService {
       return [];
     }
   }
+}
+
+class _RasterizedPdfPage {
+  const _RasterizedPdfPage({
+    required this.pngBytes,
+    required this.width,
+    required this.height,
+  });
+
+  final Uint8List pngBytes;
+  final double width;
+  final double height;
 }

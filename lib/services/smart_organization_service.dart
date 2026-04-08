@@ -2,33 +2,43 @@ import 'dart:io';
 import 'package:office_archiving/services/ocr_service.dart';
 
 class SmartOrganizationService {
-  static final SmartOrganizationService _instance = SmartOrganizationService._internal();
+  static final SmartOrganizationService _instance =
+      SmartOrganizationService._internal();
   factory SmartOrganizationService() => _instance;
   SmartOrganizationService._internal();
 
   final OCRService _ocrService = OCRService();
 
   // اقتراح تصنيف للملف بناءً على محتواه
-  Future<OrganizationSuggestion> suggestOrganization(String filePath, String fileName) async {
+  Future<OrganizationSuggestion> suggestOrganization(
+    String filePath,
+    String fileName,
+  ) async {
     try {
       String content = '';
-      
+
       // استخراج المحتوى حسب نوع الملف
       if (_isImageFile(filePath)) {
         content = await _ocrService.extractTextFromImage(filePath);
       } else if (_isPdfFile(filePath)) {
-        // دعم PDF عبر تحويل الصفحات إلى صور ومعالجة OCR
-        content = await _ocrService.recognizePdfToText(filePath, lang: 'auto');
+        // استخدم OCR محدوداً وآمناً حتى لا يستهلك الذاكرة مع ملفات PDF الكبيرة.
+        content = await _ocrService.recognizePdfToText(
+          filePath,
+          lang: 'auto',
+          maxPages: 2,
+          dpi: 72,
+          maxFileSizeBytes: 8 * 1024 * 1024,
+        );
       } else if (_isTextFile(filePath)) {
         content = await File(filePath).readAsString();
       }
-      
+
       // تحليل المحتوى واقتراح التصنيف
       final category = _categorizeContent(content, fileName);
       final tags = await _generateTags(content, fileName);
       final suggestedName = _generateSuggestedName(content, fileName);
       final priority = _calculatePriority(content, fileName);
-      
+
       return OrganizationSuggestion(
         originalFileName: fileName,
         suggestedName: suggestedName,
@@ -49,7 +59,15 @@ class SmartOrganizationService {
   }
 
   bool _isImageFile(String filePath) {
-    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff'];
+    const imageExtensions = [
+      'jpg',
+      'jpeg',
+      'png',
+      'gif',
+      'bmp',
+      'webp',
+      'tiff',
+    ];
     final extension = _getFileType(filePath);
     return imageExtensions.contains(extension);
   }
@@ -68,53 +86,139 @@ class SmartOrganizationService {
   String _categorizeContent(String content, String fileName) {
     final contentLower = content.toLowerCase();
     final fileNameLower = fileName.toLowerCase();
-    
+
     final categories = {
       'المستندات الرسمية': [
-        'شهادة', 'certificate', 'رخصة', 'license', 'جواز', 'passport',
-        'هوية', 'id', 'بطاقة', 'card', 'وثيقة', 'document'
+        'شهادة',
+        'certificate',
+        'رخصة',
+        'license',
+        'جواز',
+        'passport',
+        'هوية',
+        'id',
+        'بطاقة',
+        'card',
+        'وثيقة',
+        'document',
       ],
       'الفواتير والإيصالات': [
-        'فاتورة', 'invoice', 'إيصال', 'receipt', 'دفع', 'payment',
-        'مبلغ', 'amount', 'ريال', 'sar', 'دولار', 'dollar'
+        'فاتورة',
+        'invoice',
+        'إيصال',
+        'receipt',
+        'دفع',
+        'payment',
+        'مبلغ',
+        'amount',
+        'ريال',
+        'sar',
+        'دولار',
+        'dollar',
       ],
       'العقود والاتفاقيات': [
-        'عقد', 'contract', 'اتفاقية', 'agreement', 'شروط', 'terms',
-        'بنود', 'clauses', 'توقيع', 'signature'
+        'عقد',
+        'contract',
+        'اتفاقية',
+        'agreement',
+        'شروط',
+        'terms',
+        'بنود',
+        'clauses',
+        'توقيع',
+        'signature',
       ],
       'التقارير': [
-        'تقرير', 'report', 'تحليل', 'analysis', 'نتائج', 'results',
-        'إحصائيات', 'statistics', 'بيانات', 'data'
+        'تقرير',
+        'report',
+        'تحليل',
+        'analysis',
+        'نتائج',
+        'results',
+        'إحصائيات',
+        'statistics',
+        'بيانات',
+        'data',
       ],
       'الصور الشخصية': [
-        'صورة', 'photo', 'شخصية', 'personal', 'عائلة', 'family',
-        'ذكريات', 'memories'
+        'صورة',
+        'photo',
+        'شخصية',
+        'personal',
+        'عائلة',
+        'family',
+        'ذكريات',
+        'memories',
       ],
       'المراسلات': [
-        'رسالة', 'letter', 'إيميل', 'email', 'مراسلة', 'correspondence',
-        'رد', 'reply', 'مرسل', 'sender'
+        'رسالة',
+        'letter',
+        'إيميل',
+        'email',
+        'مراسلة',
+        'correspondence',
+        'رد',
+        'reply',
+        'مرسل',
+        'sender',
       ],
       'الدراسة والتعليم': [
-        'دراسة', 'study', 'تعليم', 'education', 'جامعة', 'university',
-        'مدرسة', 'school', 'درجة', 'grade', 'امتحان', 'exam'
+        'دراسة',
+        'study',
+        'تعليم',
+        'education',
+        'جامعة',
+        'university',
+        'مدرسة',
+        'school',
+        'درجة',
+        'grade',
+        'امتحان',
+        'exam',
       ],
       'العمل': [
-        'عمل', 'work', 'وظيفة', 'job', 'شركة', 'company',
-        'مشروع', 'project', 'اجتماع', 'meeting'
+        'عمل',
+        'work',
+        'وظيفة',
+        'job',
+        'شركة',
+        'company',
+        'مشروع',
+        'project',
+        'اجتماع',
+        'meeting',
       ],
       'الصحة': [
-        'طبي', 'medical', 'صحة', 'health', 'مستشفى', 'hospital',
-        'طبيب', 'doctor', 'دواء', 'medicine', 'تحليل', 'test'
+        'طبي',
+        'medical',
+        'صحة',
+        'health',
+        'مستشفى',
+        'hospital',
+        'طبيب',
+        'doctor',
+        'دواء',
+        'medicine',
+        'تحليل',
+        'test',
       ],
       'المالية': [
-        'بنك', 'bank', 'حساب', 'account', 'استثمار', 'investment',
-        'قرض', 'loan', 'تأمين', 'insurance'
-      ]
+        'بنك',
+        'bank',
+        'حساب',
+        'account',
+        'استثمار',
+        'investment',
+        'قرض',
+        'loan',
+        'تأمين',
+        'insurance',
+      ],
     };
-    
+
     String bestCategory = 'عام';
     int maxMatches = 0;
-    
+
     for (final category in categories.entries) {
       int matches = 0;
       for (final keyword in category.value) {
@@ -127,25 +231,27 @@ class SmartOrganizationService {
         bestCategory = category.key;
       }
     }
-    
+
     return bestCategory;
   }
 
   Future<List<String>> _generateTags(String content, String fileName) async {
     final tags = <String>[];
-    
+
     // استخراج التاريخ
-    final dateRegex = RegExp(r'\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{4}');
+    final dateRegex = RegExp(
+      r'\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{4}',
+    );
     if (dateRegex.hasMatch(content) || dateRegex.hasMatch(fileName)) {
       tags.add('مؤرخ');
     }
-    
+
     // استخراج الأرقام المهمة
     final numberRegex = RegExp(r'\d+');
     if (numberRegex.hasMatch(content)) {
       tags.add('يحتوي على أرقام');
     }
-    
+
     // تحديد اللغة
     if (RegExp(r'[\u0600-\u06FF]').hasMatch(content)) {
       tags.add('عربي');
@@ -153,17 +259,17 @@ class SmartOrganizationService {
     if (RegExp(r'[a-zA-Z]').hasMatch(content)) {
       tags.add('إنجليزي');
     }
-    
+
     // تحديد نوع الملف
     final extension = _getFileType(fileName);
     tags.add(extension.toUpperCase());
-    
+
     // كلمات مفتاحية من المحتوى
     if (content.isNotEmpty) {
       final keywords = await _ocrService.extractKeywords(fileName);
       tags.addAll(keywords.take(3));
     }
-    
+
     return tags;
   }
 
@@ -177,7 +283,7 @@ class SmartOrganizationService {
         }
       }
     }
-    
+
     // إذا لم نجد عنوان مناسب، استخدم اسم الملف الأصلي مع تحسينات
     return _cleanFileName(fileName.split('.').first);
   }
@@ -192,27 +298,42 @@ class SmartOrganizationService {
 
   int _calculatePriority(String content, String fileName) {
     int priority = 1; // أولوية منخفضة افتراضياً
-    
+
     // كلمات تدل على أولوية عالية
     const highPriorityWords = [
-      'عاجل', 'urgent', 'مهم', 'important', 'ضروري', 'critical',
-      'جواز', 'passport', 'هوية', 'id', 'رخصة', 'license'
+      'عاجل',
+      'urgent',
+      'مهم',
+      'important',
+      'ضروري',
+      'critical',
+      'جواز',
+      'passport',
+      'هوية',
+      'id',
+      'رخصة',
+      'license',
     ];
-    
+
     const mediumPriorityWords = [
-      'فاتورة', 'invoice', 'عقد', 'contract', 'تقرير', 'report'
+      'فاتورة',
+      'invoice',
+      'عقد',
+      'contract',
+      'تقرير',
+      'report',
     ];
-    
+
     final contentLower = content.toLowerCase();
     final fileNameLower = fileName.toLowerCase();
-    
+
     for (final word in highPriorityWords) {
       if (contentLower.contains(word) || fileNameLower.contains(word)) {
         priority = 3; // أولوية عالية
         break;
       }
     }
-    
+
     if (priority == 1) {
       for (final word in mediumPriorityWords) {
         if (contentLower.contains(word) || fileNameLower.contains(word)) {
@@ -221,7 +342,7 @@ class SmartOrganizationService {
         }
       }
     }
-    
+
     return priority;
   }
 
@@ -231,28 +352,32 @@ class SmartOrganizationService {
     return 0.8; // ثقة عالية إذا تم تصنيف المحتوى
   }
 
-  String _generateReasoning(String content, String category, List<String> tags) {
+  String _generateReasoning(
+    String content,
+    String category,
+    List<String> tags,
+  ) {
     final reasons = <String>[];
-    
+
     if (category != 'عام') {
       reasons.add('تم تصنيفه كـ "$category" بناءً على المحتوى');
     }
-    
+
     if (tags.isNotEmpty) {
       reasons.add('العلامات المقترحة: ${tags.take(3).join(', ')}');
     }
-    
+
     if (content.isNotEmpty) {
       reasons.add('تم تحليل المحتوى النصي');
     }
-    
+
     return reasons.join('. ');
   }
 
   OrganizationSuggestion _fallbackSuggestion(String fileName) {
     final extension = _getFileType(fileName);
     String category = 'عام';
-    
+
     // تصنيف بسيط بناءً على امتداد الملف
     if (['jpg', 'jpeg', 'png', 'gif'].contains(extension)) {
       category = 'الصور';
@@ -261,7 +386,7 @@ class SmartOrganizationService {
     } else if (['doc', 'docx', 'txt'].contains(extension)) {
       category = 'النصوص';
     }
-    
+
     return OrganizationSuggestion(
       originalFileName: fileName,
       suggestedName: fileName,
@@ -275,49 +400,59 @@ class SmartOrganizationService {
 
   // اقتراح إعادة تنظيم شامل للأرشيف
   Future<List<OrganizationRecommendation>> suggestArchiveReorganization(
-    List<Map<String, dynamic>> allFiles
+    List<Map<String, dynamic>> allFiles,
   ) async {
     final recommendations = <OrganizationRecommendation>[];
-    
+
     // تجميع الملفات حسب النوع
     final filesByType = <String, List<Map<String, dynamic>>>{};
     for (final file in allFiles) {
       final extension = _getFileType(file['filePath']);
       filesByType[extension] = (filesByType[extension] ?? [])..add(file);
     }
-    
+
     // اقتراحات لكل نوع ملف
     for (final entry in filesByType.entries) {
       if (entry.value.length >= 3) {
-        recommendations.add(OrganizationRecommendation(
-          type: 'group_by_type',
-          title: 'تجميع ملفات ${entry.key.toUpperCase()}',
-          description: 'يمكن تجميع ${entry.value.length} ملف من نوع ${entry.key} في قسم منفصل',
-          affectedFiles: entry.value.map((f) => f['name'].toString()).toList(),
-          priority: entry.value.length > 10 ? 3 : 2,
-        ));
+        recommendations.add(
+          OrganizationRecommendation(
+            type: 'group_by_type',
+            title: 'تجميع ملفات ${entry.key.toUpperCase()}',
+            description:
+                'يمكن تجميع ${entry.value.length} ملف من نوع ${entry.key} في قسم منفصل',
+            affectedFiles: entry.value
+                .map((f) => f['name'].toString())
+                .toList(),
+            priority: entry.value.length > 10 ? 3 : 2,
+          ),
+        );
       }
     }
-    
+
     // اقتراح حذف الملفات المكررة
     final duplicates = await _findDuplicateFiles(allFiles);
     if (duplicates.isNotEmpty) {
-      recommendations.add(OrganizationRecommendation(
-        type: 'remove_duplicates',
-        title: 'حذف الملفات المكررة',
-        description: 'تم العثور على ${duplicates.length} ملف مكرر يمكن حذفه لتوفير المساحة',
-        affectedFiles: duplicates,
-        priority: 3,
-      ));
+      recommendations.add(
+        OrganizationRecommendation(
+          type: 'remove_duplicates',
+          title: 'حذف الملفات المكررة',
+          description:
+              'تم العثور على ${duplicates.length} ملف مكرر يمكن حذفه لتوفير المساحة',
+          affectedFiles: duplicates,
+          priority: 3,
+        ),
+      );
     }
-    
+
     return recommendations;
   }
 
-  Future<List<String>> _findDuplicateFiles(List<Map<String, dynamic>> files) async {
+  Future<List<String>> _findDuplicateFiles(
+    List<Map<String, dynamic>> files,
+  ) async {
     final duplicates = <String>[];
     final seenNames = <String, String>{};
-    
+
     for (final file in files) {
       final name = file['name'].toString();
       if (seenNames.containsKey(name)) {
@@ -326,7 +461,7 @@ class SmartOrganizationService {
         seenNames[name] = file['filePath'];
       }
     }
-    
+
     return duplicates;
   }
 }

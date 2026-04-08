@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:signature/signature.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
+import 'package:office_archiving/services/pdf_service.dart';
+import 'package:path/path.dart' as p;
+import 'package:pdf/pdf.dart';
+import 'package:signature/signature.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PdfSecurityPage extends StatefulWidget {
   final String? inputPdfPath;
@@ -29,10 +29,10 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
   final _confirmPasswordController = TextEditingController();
   final _ownerPasswordController = TextEditingController();
 
-  bool _enablePrint = true;
-  bool _enableCopy = true;
-  bool _enableEdit = false;
-  bool _enableAnnotate = true;
+  final bool _enablePrint = true;
+  final bool _enableCopy = true;
+  final bool _enableEdit = false;
+  final bool _enableAnnotate = true;
   bool _isProcessing = false;
 
   String? _watermarkText;
@@ -65,9 +65,18 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(icon: const Icon(Icons.security), text: AppLocalizations.of(context).tab_security),
-            Tab(icon: const Icon(Icons.edit), text: AppLocalizations.of(context).tab_signature),
-            Tab(icon: const Icon(Icons.branding_watermark), text: AppLocalizations.of(context).tab_watermark),
+            Tab(
+              icon: const Icon(Icons.security),
+              text: AppLocalizations.of(context).tab_security,
+            ),
+            Tab(
+              icon: const Icon(Icons.edit),
+              text: AppLocalizations.of(context).tab_signature,
+            ),
+            Tab(
+              icon: const Icon(Icons.branding_watermark),
+              text: AppLocalizations.of(context).tab_watermark,
+            ),
           ],
         ),
       ),
@@ -91,9 +100,11 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                 ),
               )
             : const Icon(Icons.security),
-        label: Text(_isProcessing
-            ? AppLocalizations.of(context).processing_ellipsis
-            : AppLocalizations.of(context).protect_pdf_action),
+        label: Text(
+          _isProcessing
+              ? AppLocalizations.of(context).processing_ellipsis
+              : AppLocalizations.of(context).protect_pdf_action,
+        ),
         backgroundColor: _isProcessing ? Colors.grey : scheme.primary,
       ),
     );
@@ -107,121 +118,196 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
         children: [
           _buildInfoCard(),
           const SizedBox(height: 16),
-
-          // كلمة المرور للفتح
           Card(
+            color: Colors.orange[50],
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(Icons.lock, color: Colors.blue),
-                      SizedBox(width: 8),
-                      Text('كلمة مرور الفتح', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'كلمة المرور',
-                      hintText: 'أدخل كلمة مرور قوية',
-                      prefixIcon: Icon(Icons.password),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _confirmPasswordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'تأكيد كلمة المرور',
-                      prefixIcon: Icon(Icons.password),
+                  const Icon(Icons.info_outline, color: Colors.orange),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _text(
+                        ar: 'هذه الشاشة تنشئ نسخة حماية بصرية حقيقية من المستند الأصلي عبر العلامة المائية والتوقيع. التشفير بكلمة مرور وصلاحيات قارئ الـ PDF غير مدعومين فعليًا بالحزم الحالية، لذلك تم تعطيلهما بدل تقديم سلوك مضلل.',
+                        en: 'This screen creates a real visual protection copy from the original PDF using watermarking and signatures. Password encryption and viewer permissions are not actually supported by the current packages, so they are intentionally disabled instead of pretending to work.',
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-
           const SizedBox(height: 16),
-
-          // كلمة مرور المالك
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+          Opacity(
+            opacity: 0.55,
+            child: IgnorePointer(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(Icons.admin_panel_settings, color: Colors.orange),
-                      SizedBox(width: 8),
-                      Text('كلمة مرور المالك', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const Text('للتحكم في صلاحيات الطباعة والتحرير', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _ownerPasswordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'كلمة مرور المالك (اختيارية)',
-                      prefixIcon: Icon(Icons.admin_panel_settings),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.lock, color: Colors.blue),
+                              const SizedBox(width: 8),
+                              Text(
+                                _text(
+                                  ar: 'كلمة مرور الفتح',
+                                  en: 'Open password',
+                                ),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: _text(
+                                ar: 'كلمة المرور',
+                                en: 'Password',
+                              ),
+                              prefixIcon: const Icon(Icons.password),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _confirmPasswordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: _text(
+                                ar: 'تأكيد كلمة المرور',
+                                en: 'Confirm password',
+                              ),
+                              prefixIcon: const Icon(Icons.password),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // الصلاحيات
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.settings, color: Colors.green),
-                      SizedBox(width: 8),
-                      Text('الصلاحيات', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
+                  const SizedBox(height: 16),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.admin_panel_settings,
+                                color: Colors.orange,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                _text(
+                                  ar: 'كلمة مرور المالك',
+                                  en: 'Owner password',
+                                ),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _text(
+                              ar: 'هذا الخيار معطل إلى أن تتوفر حماية PDF مشفرة حقيقية.',
+                              en: 'This option is disabled until real encrypted PDF protection is available.',
+                            ),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _ownerPasswordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: _text(
+                                ar: 'كلمة مرور المالك',
+                                en: 'Owner password',
+                              ),
+                              prefixIcon: const Icon(
+                                Icons.admin_panel_settings,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 12),
-
-                  SwitchListTile(
-                    title: const Text('السماح بالطباعة'),
-                    subtitle: const Text('يمكن للمستخدم طباعة المستند'),
-                    value: _enablePrint,
-                    onChanged: (v) => setState(() => _enablePrint = v),
-                  ),
-
-                  SwitchListTile(
-                    title: const Text('السماح بالنسخ'),
-                    subtitle: const Text('يمكن نسخ النص من المستند'),
-                    value: _enableCopy,
-                    onChanged: (v) => setState(() => _enableCopy = v),
-                  ),
-
-                  SwitchListTile(
-                    title: const Text('السماح بالتحرير'),
-                    subtitle: const Text('يمكن تعديل محتوى المستند'),
-                    value: _enableEdit,
-                    onChanged: (v) => setState(() => _enableEdit = v),
-                  ),
-
-                  SwitchListTile(
-                    title: const Text('السماح بالتعليقات'),
-                    subtitle: const Text('يمكن إضافة تعليقات وملاحظات'),
-                    value: _enableAnnotate,
-                    onChanged: (v) => setState(() => _enableAnnotate = v),
+                  const SizedBox(height: 16),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.settings, color: Colors.green),
+                              const SizedBox(width: 8),
+                              Text(
+                                _text(
+                                  ar: 'صلاحيات قارئ PDF',
+                                  en: 'PDF viewer permissions',
+                                ),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          SwitchListTile(
+                            title: Text(
+                              _text(
+                                ar: 'السماح بالطباعة',
+                                en: 'Allow printing',
+                              ),
+                            ),
+                            value: _enablePrint,
+                            onChanged: (_) {},
+                          ),
+                          SwitchListTile(
+                            title: Text(
+                              _text(ar: 'السماح بالنسخ', en: 'Allow copying'),
+                            ),
+                            value: _enableCopy,
+                            onChanged: (_) {},
+                          ),
+                          SwitchListTile(
+                            title: Text(
+                              _text(ar: 'السماح بالتحرير', en: 'Allow editing'),
+                            ),
+                            value: _enableEdit,
+                            onChanged: (_) {},
+                          ),
+                          SwitchListTile(
+                            title: Text(
+                              _text(
+                                ar: 'السماح بالتعليقات',
+                                en: 'Allow annotations',
+                              ),
+                            ),
+                            value: _enableAnnotate,
+                            onChanged: (_) {},
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -293,13 +379,22 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context).signature_options_title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  AppLocalizations.of(context).signature_options_title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 12),
 
                 ListTile(
                   leading: const Icon(Icons.location_on),
-                  title: Text(AppLocalizations.of(context).signature_location_title),
-                  subtitle: Text(AppLocalizations.of(context).signature_location_hint_last_page_br),
+                  title: Text(
+                    AppLocalizations.of(context).signature_location_title,
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.of(
+                      context,
+                    ).signature_location_hint_last_page_br,
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     // TODO: فتح حوار اختيار موقع التوقيع
@@ -308,8 +403,12 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
 
                 ListTile(
                   leading: const Icon(Icons.format_size),
-                  title: Text(AppLocalizations.of(context).signature_size_title),
-                  subtitle: Text(AppLocalizations.of(context).signature_size_medium),
+                  title: Text(
+                    AppLocalizations.of(context).signature_size_title,
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.of(context).signature_size_medium,
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     // TODO: فتح حوار اختيار حجم التوقيع
@@ -335,7 +434,13 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.of(context).watermark_settings_title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    AppLocalizations.of(context).watermark_settings_title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 16),
 
                   TextField(
@@ -343,15 +448,21 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                       () => _watermarkText = value.isEmpty ? null : value,
                     ),
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).watermark_text_label,
-                      hintText: AppLocalizations.of(context).watermark_text_hint,
+                      labelText: AppLocalizations.of(
+                        context,
+                      ).watermark_text_label,
+                      hintText: AppLocalizations.of(
+                        context,
+                      ).watermark_text_hint,
                       prefixIcon: const Icon(Icons.text_fields),
                     ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  Text('${AppLocalizations.of(context).transparency_label}: ${(_watermarkOpacity * 100).round()}%'),
+                  Text(
+                    '${AppLocalizations.of(context).transparency_label}: ${(_watermarkOpacity * 100).round()}%',
+                  ),
                   Slider(
                     value: _watermarkOpacity,
                     onChanged: (v) => setState(() => _watermarkOpacity = v),
@@ -453,7 +564,10 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.of(context).watermark_templates_title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    AppLocalizations.of(context).watermark_templates_title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 12),
 
                   Wrap(
@@ -500,7 +614,10 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                 Icon(Icons.info, color: Colors.blue[700]),
                 const SizedBox(width: 8),
                 Text(
-                  'حماية متقدمة للمستندات',
+                  _text(
+                    ar: 'حماية بصرية للمستندات',
+                    en: 'Visual document protection',
+                  ),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.blue[700],
@@ -509,13 +626,22 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
               ],
             ),
             const SizedBox(height: 8),
-            const Text(
-              '• حماية بكلمة مرور قوية\n'
-              '• تحكم في صلاحيات الوصول\n'
-              '• توقيع إلكتروني احترافي\n'
-              '• علامة مائية مخصصة\n'
-              '• أمان على مستوى enterprise',
-              style: TextStyle(fontSize: 13),
+            Text(
+              _text(
+                ar:
+                    '• إنشاء نسخة جديدة من نفس المستند الأصلي\n'
+                    '• إضافة علامة مائية فعلية فوق المحتوى\n'
+                    '• إضافة توقيع في الصفحة الأخيرة\n'
+                    '• مشاركة النسخة الناتجة فورًا\n'
+                    '• لا يتم ادعاء أي تشفير غير مطبق فعليًا',
+                en:
+                    '• Create a new copy from the original PDF\n'
+                    '• Apply a real watermark over the content\n'
+                    '• Add a signature to the last page\n'
+                    '• Share the resulting copy immediately\n'
+                    '• No unsupported encryption is falsely claimed',
+              ),
+              style: const TextStyle(fontSize: 13),
             ),
           ],
         ),
@@ -572,134 +698,111 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
 
   Future<void> _processPdf() async {
     if (widget.inputPdfPath == null) {
-      _showError('لم يتم تحديد ملف PDF للمعالجة');
+      _showError(
+        _text(
+          ar: 'لم يتم تحديد ملف PDF للمعالجة',
+          en: 'No PDF file was selected for processing.',
+        ),
+      );
       return;
     }
 
-    if (_passwordController.text != _confirmPasswordController.text) {
-      _showError('كلمة المرور وتأكيدها غير متطابقتين');
+    final normalizedWatermark = _watermarkText?.trim();
+    final hasSignature = _signatureController.isNotEmpty;
+
+    if ((normalizedWatermark == null || normalizedWatermark.isEmpty) &&
+        !hasSignature) {
+      _showError(
+        _text(
+          ar: 'أضف علامة مائية أو توقيعًا واحدًا على الأقل قبل إنشاء النسخة المحمية.',
+          en: 'Add at least a watermark or a signature before creating the protected copy.',
+        ),
+      );
       return;
     }
 
     setState(() => _isProcessing = true);
 
     try {
-      // إنشاء PDF جديد محمي
-      final pdf = pw.Document();
-
-      // TODO: هنا يجب إضافة منطق معقد لقراءة PDF الأصلي وإعادة إنشاؤه
-      // هذا مثال مبسط:
-
-      pdf.addPage(
-        pw.Page(
-          build: (context) => pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'مستند محمي',
-                style: pw.TextStyle(
-                  fontSize: 24,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 20),
-
-              if (_watermarkText != null)
-                pw.Watermark(
-                  angle: -30,
-                  child: pw.Text(
-                    _watermarkText!,
-                    style: pw.TextStyle(
-                      fontSize: 48,
-                      color: PdfColor.fromInt(_watermarkColor.value),
-                    ),
-                  ),
-                ),
-
-              pw.Expanded(
-                child: pw.Center(child: pw.Text('محتوى المستند الأصلي هنا')),
-              ),
-
-              // إضافة التوقيع إذا وُجد
-              if (_signatureController.isNotEmpty) ...[
-                pw.Spacer(),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.end,
-                  children: [
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.end,
-                      children: [
-                        // TODO: إضافة صورة التوقيع
-                        pw.Text('التوقيع: _____________________'),
-                        pw.SizedBox(height: 5),
-                        pw.Text(
-                          'تاريخ: ${DateTime.now().toString().split(' ')[0]}',
-                          style: const pw.TextStyle(fontSize: 10),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ],
-          ),
-        ),
+      final signatureBytes = hasSignature
+          ? await _signatureController.toPngBytes()
+          : null;
+      final sourceFile = File(widget.inputPdfPath!);
+      final protectedFile = await PdfService().createProtectedCopy(
+        source: sourceFile,
+        watermark: normalizedWatermark,
+        signatureBytes: signatureBytes,
+        fileName:
+            '${p.basenameWithoutExtension(sourceFile.path)}_visual_protection_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        watermarkColor: PdfColor.fromInt(_watermarkColor.toARGB32()),
+        watermarkOpacity: _watermarkOpacity.clamp(0.1, 0.8),
       );
-
-      // حفظ PDF المحمي
-      final dir = await getApplicationDocumentsDirectory();
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final protectedFile = File('${dir.path}/protected_$timestamp.pdf');
-
-      List<int> pdfBytes = await pdf.save();
-
-      // تطبيق الحماية (هذا مثال مبسط - في الواقع يتطلب مكتبة أكثر تقدماً)
-      if (_passwordController.text.isNotEmpty) {
-        // TODO: تشفير PDF بكلمة مرور
-        // يتطلب مكتبة مثل pointycastle أو native plugin
-      }
-
-      await protectedFile.writeAsBytes(pdfBytes);
 
       if (!mounted) return;
 
-      // عرض النتيجة
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('تم إنشاء PDF محمي'),
+          title: Text(
+            _text(
+              ar: 'تم إنشاء النسخة المحمية بصريًا',
+              en: 'Visual protection copy created',
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.check_circle, color: Colors.green, size: 64),
               const SizedBox(height: 16),
               Text(
-                'الحجم: ${(protectedFile.lengthSync() / 1024).toStringAsFixed(2)} KB',
+                _text(
+                  ar: 'الملف: ${p.basename(protectedFile.path)}',
+                  en: 'File: ${p.basename(protectedFile.path)}',
+                ),
               ),
               const SizedBox(height: 8),
-              const Text('تم تطبيق جميع إعدادات الحماية'),
+              Text(
+                _text(
+                  ar: 'الحجم: ${(protectedFile.lengthSync() / 1024).toStringAsFixed(2)} KB',
+                  en: 'Size: ${(protectedFile.lengthSync() / 1024).toStringAsFixed(2)} KB',
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _text(
+                  ar: 'تم تطبيق التوقيع والعلامة المائية فوق محتوى المستند الأصلي، دون ادعاء تشفير غير مدعوم.',
+                  en: 'The watermark and signature were applied over the original document content without claiming unsupported encryption.',
+                ),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('إغلاق'),
+              child: Text(_text(ar: 'إغلاق', en: 'Close')),
             ),
             FilledButton(
               onPressed: () {
                 Navigator.pop(ctx);
                 Share.shareXFiles([XFile(protectedFile.path)]);
               },
-              child: const Text('مشاركة'),
+              child: Text(_text(ar: 'مشاركة', en: 'Share')),
             ),
           ],
         ),
       );
     } catch (e) {
-      _showError('خطأ في معالجة PDF: $e');
+      _showError(
+        _text(ar: 'خطأ في معالجة PDF: $e', en: 'PDF processing failed: $e'),
+      );
     } finally {
       setState(() => _isProcessing = false);
     }
+  }
+
+  String _text({required String ar, required String en}) {
+    return Localizations.localeOf(context).languageCode == 'ar' ? ar : en;
   }
 
   void _showError(String message) {

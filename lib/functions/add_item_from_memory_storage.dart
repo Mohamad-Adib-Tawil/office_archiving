@@ -38,7 +38,7 @@ void addItemFromMemoryStorage(
 
       await itemCubit.addItem(fileName, filePath, fileType, idSection);
 
-      if (DocumentStorageService.instance.supportsOcr(filePath)) {
+      if (DocumentStorageService.instance.isImagePath(filePath)) {
         final itemRow = await DatabaseService.instance.getItemByFilePath(
           filePath,
         );
@@ -50,6 +50,7 @@ void addItemFromMemoryStorage(
             filePath: filePath,
             fileType: fileType,
             lang: 'auto',
+            allowPdf: false,
           );
         }
       }

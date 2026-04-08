@@ -83,14 +83,22 @@ class ProfessionalToolsPage extends StatelessWidget {
               _buildToolGrid(context, [
                 ToolItem(
                   title: 'PDF Security',
-                  subtitle: AppLocalizations.of(context).tool_pdf_security_sub,
+                  subtitle: _toolText(
+                    context,
+                    ar: 'علامة مائية وتوقيع وإنشاء نسخة حماية بصرية',
+                    en: 'Watermark, signature, and visual protection copy',
+                  ),
                   icon: Icons.security,
                   color: Colors.red,
                   onTap: () => _openPdfPickerForSecurity(context),
                 ),
                 ToolItem(
                   title: AppLocalizations.of(context).tool_pdf_editor_title,
-                  subtitle: AppLocalizations.of(context).tool_pdf_editor_sub,
+                  subtitle: _toolText(
+                    context,
+                    ar: 'إدارة الصفحات، ترتيبها، تدويرها، واستخراجها',
+                    en: 'Manage, reorder, rotate, and extract PDF pages',
+                  ),
                   icon: Icons.edit_document,
                   color: Colors.purple,
                   onTap: () => _openPdfPickerForEditor(context),
@@ -269,7 +277,7 @@ class ProfessionalToolsPage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.auto_awesome, color: Colors.white, size: 32),
+                  const Icon(Icons.auto_awesome, color: Colors.white, size: 32),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -293,6 +301,14 @@ class ProfessionalToolsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _toolText(
+    BuildContext context, {
+    required String ar,
+    required String en,
+  }) {
+    return Localizations.localeOf(context).languageCode == 'ar' ? ar : en;
   }
 
   Widget _buildToolGrid(BuildContext context, List<ToolItem> tools) {
