@@ -1,12 +1,6 @@
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:flutter_tesseract_ocr/flutter_tesseract_ocr.dart';
-import 'package:image/image.dart' as img;
-import 'package:printing/printing.dart';
 import 'package:office_archiving/service/sqlite_service.dart';
-
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:office_archiving/services/professional_ocr_service.dart';
 
 class OCRService {
   static const int _safePdfOcrMaxPages = 3;
@@ -16,14 +10,10 @@ class OCRService {
   static final OCRService _instance = OCRService._internal();
   factory OCRService() => _instance;
   OCRService._internal();
-  late final TextRecognizer _textRecognizer;
-  bool _isInitialized = false;
+  final ProfessionalOcrService _engine = ProfessionalOcrService.instance;
 
   Future<void> initialize() async {
-    if (_isInitialized) return;
-    // Initialize ML Kit Text Recognizer (Latin script works for most English docs)
-    _textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    _isInitialized = true;
+    await _engine.initialize();
   }
 
   /// OCR for multi-page PDF -> concatenated text
@@ -35,49 +25,16 @@ class OCRService {
     int maxFileSizeBytes = _safePdfOcrMaxFileSizeBytes,
   }) async {
     try {
-      final sourceFile = File(pdfPath);
-      if (!await sourceFile.exists()) {
-        throw FileSystemException('PDF file does not exist', pdfPath);
-      }
-
-      final fileSize = await sourceFile.length();
-      if (fileSize > maxFileSizeBytes) {
-        log(
-          'recognizePdfToText skipped large PDF: '
-          'path=$pdfPath size=$fileSize limit=$maxFileSizeBytes',
-        );
-        return '';
-      }
-
-      final data = await sourceFile.readAsBytes();
-      final pages = Printing.raster(data, dpi: dpi.toDouble());
-      final buffer = StringBuffer();
-      var index = 1;
-
-      await for (final page in pages) {
-        if (index > maxPages) {
-          break;
-        }
-
-        final pngBytes = await page.toPng();
-        final tmp = await _writeTempFile(pngBytes, suffix: '_pdf_$index.png');
-        try {
-          final t = await recognizeTextAdvanced(tmp.path, lang: lang);
-          if (t.trim().isNotEmpty) {
-            buffer.writeln('--- Page $index ---');
-            buffer.writeln(t);
-            buffer.writeln();
-          }
-        } finally {
-          if (await tmp.exists()) {
-            await tmp.delete();
-          }
-        }
-
-        index++;
-      }
-
-      return buffer.toString();
+      final result = await _engine.recognizePdf(
+        pdfPath,
+        options: ProfessionalOcrOptions(
+          languageProfile: _profileFromLang(lang),
+          pdfMaxPages: maxPages,
+          pdfDpi: dpi,
+          pdfMaxFileSizeBytes: maxFileSizeBytes,
+        ),
+      );
+      return result.text;
     } catch (e) {
       log('recognizePdfToText failed: $e');
       rethrow;
@@ -140,106 +97,37 @@ class OCRService {
     return processed;
   }
 
-  // --------- Internal helpers ---------
-  Future<String> _extractWithMlkit(String imagePath) async {
-    if (!_isInitialized) {
-      await initialize();
-    }
-    final inputImage = InputImage.fromFilePath(imagePath);
-    final recognizedText = await _textRecognizer.processImage(inputImage);
-    return recognizedText.text;
-  }
-
-  Future<String> _extractWithTesseract(
-    String imagePath, {
-    required String languages,
-  }) async {
-    try {
-      // languages like 'ara' or 'ara+eng'
-      // Use bundled tessdata inside assets without config file
-      final args = {
-        'psm': '6', // single uniform block
-        'oem': '3', // default engine mode
-        'preserve_interword_spaces': '1',
-      };
-      final text = await FlutterTesseractOcr.extractText(
-        imagePath,
-        language: languages,
-        args: args,
-      );
-      return text;
-    } catch (e) {
-      log('Tesseract OCR failed: $e');
-      // Fallback to ML Kit only
-      return await _extractWithMlkit(imagePath);
-    }
-  }
-
-  String _chooseAuto(String tesseractText, String mlkitText) {
-    // Prefer Arabic-rich text; otherwise pick longer
-    int arCount(String s) => RegExp(r'[\u0600-\u06FF]').allMatches(s).length;
-    final tAr = arCount(tesseractText);
-    final mAr = arCount(mlkitText);
-    if (tAr >= mAr && tAr > 0) return tesseractText;
-    if (mAr > tAr && mAr > 0) return mlkitText;
-    return tesseractText.trim().length >= mlkitText.trim().length
-        ? tesseractText
-        : mlkitText;
-  }
-
-  int _scoreText(String text, {bool preferArabic = true}) {
-    final len = text.trim().length;
-    int score = len;
-    if (preferArabic) {
-      final ar = RegExp(r'[\u0600-\u06FF]').allMatches(text).length;
-      score += ar * 5; // weight Arabic characters higher
-    }
-    return score;
-  }
-
-  Future<String> _preprocessForOcr(String imagePath) async {
-    try {
-      final bytes = await File(imagePath).readAsBytes();
-      final decoded = img.decodeImage(bytes);
-      if (decoded == null) return imagePath; // fallback
-
-      // Auto orient and grayscale + slight contrast
-      final oriented = img.bakeOrientation(decoded);
-      var gray = img.grayscale(oriented);
-      gray = img.adjustColor(gray, contrast: 1.2);
-
-      final outBytes = img.encodePng(gray);
-      final tmp = await _writeTempFile(outBytes, suffix: '_pre.png');
-      return tmp.path;
-    } catch (_) {
-      return imagePath;
-    }
-  }
-
-  Future<String> _rotateImageToTemp(String path, int angle) async {
-    try {
-      final bytes = await File(path).readAsBytes();
-      final decoded = img.decodeImage(bytes);
-      if (decoded == null) return path;
-      final rotated = img.copyRotate(decoded, angle: angle);
-      final out = img.encodePng(rotated);
-      final tmp = await _writeTempFile(out, suffix: '_r$angle.png');
-      return tmp.path;
-    } catch (_) {
-      return path;
-    }
-  }
-
-  Future<File> _writeTempFile(List<int> bytes, {String suffix = '.png'}) async {
-    final dir = Directory.systemTemp.createTempSync('ocr_');
-    final file = File('${dir.path}/img$suffix');
-    await file.writeAsBytes(bytes, flush: true);
-    return file;
-  }
-
   Future<String> extractTextFromImage(String imagePath) async {
     // Backward compatible API -> use advanced pipeline with auto language
     return recognizeTextAdvanced(imagePath, lang: 'auto');
+  }
+
+  Future<ProfessionalOcrResult> recognizeImageProfessionally(
+    String imagePath, {
+    String lang = 'auto',
+  }) {
+    return _engine.recognizeImage(
+      imagePath,
+      options: ProfessionalOcrOptions(languageProfile: _profileFromLang(lang)),
+    );
+  }
+
+  Future<ProfessionalOcrResult> recognizePdfProfessionally(
+    String pdfPath, {
+    String lang = 'auto',
+    int maxPages = _safePdfOcrMaxPages,
+    int dpi = _safePdfOcrDpi,
+    int maxFileSizeBytes = _safePdfOcrMaxFileSizeBytes,
+  }) {
+    return _engine.recognizePdf(
+      pdfPath,
+      options: ProfessionalOcrOptions(
+        languageProfile: _profileFromLang(lang),
+        pdfMaxPages: maxPages,
+        pdfDpi: dpi,
+        pdfMaxFileSizeBytes: maxFileSizeBytes,
+      ),
+    );
   }
 
   /// Advanced OCR: preprocessing + orientation trials + dual backend
@@ -249,45 +137,13 @@ class OCRService {
     String lang = 'auto',
   }) async {
     try {
-      // 1) Preprocess
-      final preprocessedPath = await _preprocessForOcr(imagePath);
-
-      // 2) Try rotations with slight deskew around 0 and 90/180/270 if needed
-      final angles = [0, -5, 5, 90, 180, 270];
-      String bestText = '';
-      int bestScore = -1;
-
-      for (final angle in angles) {
-        final rotatedPath = angle == 0
-            ? preprocessedPath
-            : await _rotateImageToTemp(preprocessedPath, angle);
-
-        String text = '';
-        if (lang == 'ar') {
-          text = await _extractWithTesseract(rotatedPath, languages: 'ara');
-        } else if (lang == 'en') {
-          text = await _extractWithMlkit(rotatedPath);
-        } else {
-          // auto: favor arabic if present, otherwise choose longer
-          final tText = await _extractWithTesseract(
-            rotatedPath,
-            languages: 'ara+eng',
-          );
-          final mText = await _extractWithMlkit(rotatedPath);
-          text = _chooseAuto(tText, mText);
-        }
-
-        final score = _scoreText(
-          text,
-          preferArabic: lang == 'ar' || lang == 'auto',
-        );
-        if (score > bestScore) {
-          bestScore = score;
-          bestText = text;
-        }
-      }
-
-      return bestText;
+      final result = await _engine.recognizeImage(
+        imagePath,
+        options: ProfessionalOcrOptions(
+          languageProfile: _profileFromLang(lang),
+        ),
+      );
+      return result.text;
     } catch (e) {
       log('OCR recognizeTextAdvanced failed: $e');
       throw Exception('فشل في استخراج النص: $e');
@@ -295,29 +151,8 @@ class OCRService {
   }
 
   Future<Map<String, dynamic>> extractTextWithDetails(String imagePath) async {
-    if (!_isInitialized) {
-      await initialize();
-    }
-
     try {
-      final inputImage = InputImage.fromFilePath(imagePath);
-      final recognizedText = await _textRecognizer.processImage(inputImage);
-
-      final blocks = recognizedText.blocks
-          .map(
-            (b) => {
-              'text': b.text,
-              'lines': b.lines.map((l) => {'text': l.text}).toList(),
-            },
-          )
-          .toList();
-
-      return {
-        'fullText': recognizedText.text,
-        'blocks': blocks,
-        'totalBlocks': blocks.length,
-        'hasText': recognizedText.text.trim().isNotEmpty,
-      };
+      return await _engine.extractLatinDetails(imagePath);
     } catch (e) {
       log('OCR extractTextWithDetails failed: $e');
       throw Exception('فشل في تحليل الصورة: $e');
@@ -326,9 +161,7 @@ class OCRService {
 
   Future<bool> isTextDetected(String imagePath) async {
     try {
-      final inputImage = InputImage.fromFilePath(imagePath);
-      final recognizedText = await _textRecognizer.processImage(inputImage);
-      return recognizedText.text.trim().isNotEmpty;
+      return await _engine.isLatinTextDetected(imagePath);
     } catch (e) {
       log('OCR isTextDetected failed: $e');
       return false;
@@ -361,9 +194,20 @@ class OCRService {
   }
 
   void dispose() {
-    if (_isInitialized) {
-      _textRecognizer.close();
-      _isInitialized = false;
+    _engine.dispose();
+  }
+
+  OcrLanguageProfile _profileFromLang(String lang) {
+    switch (lang.toLowerCase()) {
+      case 'ar':
+        return OcrLanguageProfile.arabic;
+      case 'en':
+        return OcrLanguageProfile.english;
+      case 'mixed':
+        return OcrLanguageProfile.mixed;
+      case 'auto':
+      default:
+        return OcrLanguageProfile.auto;
     }
   }
 }
