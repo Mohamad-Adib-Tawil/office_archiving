@@ -7,6 +7,12 @@ import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
 import 'package:office_archiving/services/scanner_import_service.dart';
+import 'package:office_archiving/pages/text_editor_page.dart';
+import 'package:office_archiving/pages/word_editor_page.dart';
+import 'package:office_archiving/pages/excel_editor_page.dart';
+
+bool _isArabic(BuildContext context) =>
+    Localizations.localeOf(context).languageCode == 'ar';
 
 void showAddItemSheet(
   BuildContext context,
@@ -76,6 +82,59 @@ void showAddItemSheet(
                 onTap: () {
                   Navigator.pop(ctx);
                   addItemFromCamera(idSection, itemCubit, context);
+                },
+              ),
+              _ActionTile(
+                icon: Icons.text_snippet,
+                color: Colors.indigo,
+                title: _isArabic(context)
+                    ? 'مستند نصّي جديد'
+                    : 'New text document',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => TextEditorPage(
+                        sectionId: idSection,
+                        itemCubit: itemCubit,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              _ActionTile(
+                icon: Icons.description,
+                color: const Color(0xFF2B579A),
+                title: _isArabic(context) ? 'ملف Word جديد' : 'New Word file',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => WordEditorPage(
+                        sectionId: idSection,
+                        itemCubit: itemCubit,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              _ActionTile(
+                icon: Icons.table_chart,
+                color: const Color(0xFF217346),
+                title: _isArabic(context) ? 'ملف Excel جديد' : 'New Excel file',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ExcelEditorPage(
+                        sectionId: idSection,
+                        itemCubit: itemCubit,
+                      ),
+                    ),
+                  );
                 },
               ),
               _ActionTile(
