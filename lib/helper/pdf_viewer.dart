@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path/path.dart' as p;
+import 'package:pdfrx/pdfrx.dart';
+import 'package:share_plus/share_plus.dart';
 
+/// عارض PDF احترافي مبني على pdfrx (PDFium):
+/// تكبير سلس، تحديد نص، بحث داخل المستند، تنقّل بين الصفحات، ومشاركة.
 class MyPdfViewer extends StatefulWidget {
   const MyPdfViewer({super.key, required this.filePath});
 
@@ -14,10 +17,36 @@ class MyPdfViewer extends StatefulWidget {
 }
 
 class _MyPdfViewerState extends State<MyPdfViewer> {
-  int _currentPage = 0;
-  int _totalPages = 0;
-  bool _isReady = false;
-  String? _errorMessage;
+  final _controller = PdfViewerController();
+  final _searchController = TextEditingController();
+  PdfTextSearcher? _searcher;
+
+  int _pageNumber = 1;
+  int _pageCount = 0;
+  bool _ready = false;
+  bool _showSearch = false;
+
+  bool get _ar => Localizations.localeOf(context).languageCode == 'ar';
+
+  void _onSearchUpdate() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _searcher?.removeListener(_onSearchUpdate);
+    _searcher?.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _runSearch(String text) {
+    if (text.trim().isEmpty) {
+      _searcher?.resetTextSearch();
+    } else {
+      _searcher?.startTextSearch(text, caseInsensitive: true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,62 +55,110 @@ class _MyPdfViewerState extends State<MyPdfViewer> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          p.basename(widget.filePath),
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: _showSearch
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                  hintText: _ar ? 'بحث في المستند...' : 'Search in document...',
+                  border: InputBorder.none,
+                ),
+                onSubmitted: _runSearch,
+                onChanged: (v) {
+                  if (v.isEmpty) _searcher?.resetTextSearch();
+                },
+              )
+            : Text(
+                p.basename(widget.filePath),
+                overflow: TextOverflow.ellipsis,
+              ),
+        actions: [
+          if (_showSearch && (_searcher?.hasMatches ?? false)) ...[
+            Center(
+              child: Text(
+                '${(_searcher?.currentIndex ?? 0) + 1}/${_searcher?.matches.length ?? 0}',
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.keyboard_arrow_up),
+              tooltip: _ar ? 'السابق' : 'Previous',
+              onPressed: () => _searcher?.goToPrevMatch(),
+            ),
+            IconButton(
+              icon: const Icon(Icons.keyboard_arrow_down),
+              tooltip: _ar ? 'التالي' : 'Next',
+              onPressed: () => _searcher?.goToNextMatch(),
+            ),
+          ],
+          IconButton(
+            icon: Icon(_showSearch ? Icons.close : Icons.search),
+            tooltip: _showSearch
+                ? (_ar ? 'إغلاق البحث' : 'Close search')
+                : (_ar ? 'بحث' : 'Search'),
+            onPressed: () {
+              setState(() {
+                _showSearch = !_showSearch;
+                if (!_showSearch) {
+                  _searchController.clear();
+                  _searcher?.resetTextSearch();
+                }
+              });
+            },
+          ),
+          if (!_showSearch)
+            IconButton(
+              icon: const Icon(Icons.share),
+              tooltip: _ar ? 'مشاركة' : 'Share',
+              onPressed: () => Share.shareXFiles([XFile(widget.filePath)]),
+            ),
+        ],
       ),
       body: !exists
-          ? const Center(child: Text('PDF file was not found.'))
+          ? Center(
+              child: Text(_ar ? 'ملف PDF غير موجود' : 'PDF file was not found.'),
+            )
           : Stack(
               children: [
-                PDFView(
-                  filePath: widget.filePath,
-                  fitEachPage: true,
-                  fitPolicy: FitPolicy.BOTH,
-                  onRender: (pages) {
-                    if (!mounted) {
-                      return;
-                    }
-                    setState(() {
-                      _totalPages = pages ?? 0;
-                      _isReady = true;
-                    });
-                  },
-                  onError: (error) {
-                    if (!mounted) {
-                      return;
-                    }
-                    setState(() => _errorMessage = error.toString());
-                  },
-                  onPageError: (page, error) {
-                    if (!mounted) {
-                      return;
-                    }
-                    setState(() => _errorMessage = 'Page $page: $error');
-                  },
-                  onViewCreated: (controller) async {
-                    final pageCount = await controller.getPageCount() ?? 0;
-                    if (!mounted) {
-                      return;
-                    }
-                    setState(() => _totalPages = pageCount);
-                  },
-                  onPageChanged: (page, total) {
-                    if (!mounted) {
-                      return;
-                    }
-                    setState(() {
-                      _currentPage = page ?? 0;
-                      _totalPages = total ?? _totalPages;
-                    });
-                  },
+                PdfViewer.file(
+                  widget.filePath,
+                  controller: _controller,
+                  params: PdfViewerParams(
+                    textSelectionParams: const PdfTextSelectionParams(
+                      enabled: true,
+                    ),
+                    pagePaintCallbacks: [
+                      if (_searcher != null) _searcher!.pageTextMatchPaintCallback,
+                    ],
+                    loadingBannerBuilder: (context, downloaded, total) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorBannerBuilder: (context, error, stack, ref) => Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Text(
+                          '${_ar ? 'تعذّر فتح الملف' : 'Could not open file'}'
+                          ': $error',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    onViewerReady: (document, controller) {
+                      if (!mounted) return;
+                      final searcher = PdfTextSearcher(_controller)
+                        ..addListener(_onSearchUpdate);
+                      setState(() {
+                        _searcher = searcher;
+                        _pageCount = document.pages.length;
+                        _ready = true;
+                      });
+                    },
+                    onPageChanged: (pageNumber) {
+                      if (!mounted) return;
+                      setState(() => _pageNumber = pageNumber ?? 1);
+                    },
+                  ),
                 ),
-                if (_errorMessage != null)
-                  Center(child: Text(_errorMessage!))
-                else if (!_isReady)
-                  const Center(child: CircularProgressIndicator()),
-                if (_isReady && _errorMessage == null && _totalPages > 0)
+                if (_ready && _pageCount > 0)
                   Positioned(
                     right: 16,
                     bottom: 16,
@@ -96,7 +173,7 @@ class _MyPdfViewerState extends State<MyPdfViewer> {
                           vertical: 8,
                         ),
                         child: Text(
-                          '${_currentPage + 1} / $_totalPages',
+                          '$_pageNumber / $_pageCount',
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
