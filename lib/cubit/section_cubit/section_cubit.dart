@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/models/section.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:flutter/material.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 

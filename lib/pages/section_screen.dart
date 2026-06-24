@@ -7,7 +7,7 @@ import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dar
 import 'package:office_archiving/models/section.dart';
 import 'package:office_archiving/pages/item_search_page.dart';
 import 'package:office_archiving/widgets/grid_view_items_success.dart';
-import '../service/sqlite_service.dart';
+import '../services/sqlite_service.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/widgets/shimmers.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';

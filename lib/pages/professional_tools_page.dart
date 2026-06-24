@@ -7,7 +7,7 @@ import 'package:office_archiving/pages/business_card_scanner.dart';
 import 'package:office_archiving/pages/pdf_security_page.dart';
 import 'package:office_archiving/pages/pdf_editor_page.dart';
 import 'package:office_archiving/pages/document_management_page.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/services/scanner_import_service.dart';

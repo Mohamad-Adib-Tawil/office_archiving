@@ -1,7 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:office_archiving/models/item.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 part 'item_section_state.dart';
 
 class ItemSectionCubit extends Cubit<ItemSectionState> {

@@ -710,6 +710,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signature_size_medium => 'متوسط';
 
   @override
+  String get signature_choose_location_title => 'اختيار موقع التوقيع';
+
+  @override
+  String get signature_choose_size_title => 'اختيار حجم التوقيع';
+
+  @override
+  String get signature_pos_bottom_right => 'أسفل يمين الصفحة الأخيرة';
+
+  @override
+  String get signature_pos_bottom_left => 'أسفل يسار الصفحة الأخيرة';
+
+  @override
+  String get signature_pos_bottom_center => 'أسفل منتصف الصفحة الأخيرة';
+
+  @override
+  String get signature_pos_top_right => 'أعلى يمين الصفحة الأخيرة';
+
+  @override
+  String get signature_size_small => 'صغير';
+
+  @override
+  String get signature_size_large => 'كبير';
+
+  @override
   String get watermark_settings_title => 'إعدادات العلامة المائية';
 
   @override

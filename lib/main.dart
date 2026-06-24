@@ -7,12 +7,12 @@ import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/cubit/locale_cubit/locale_cubit.dart';
 import 'package:office_archiving/cubit/theme_cubit/theme_cubit.dart';
 import 'package:flutter/services.dart';
-import 'package:office_archiving/helper/pdf_viwer.dart';
+import 'package:office_archiving/helper/pdf_viewer.dart';
 import 'package:office_archiving/helper/text_viewer.dart';
 import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'service/sqlite_service.dart';
+import 'services/sqlite_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

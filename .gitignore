@@ -77,3 +77,6 @@ macos/Flutter/ephemeral/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
+
+# FVM Version Cache
+.fvm/

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:office_archiving/models/storage_analytics.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/services/first_open_service.dart';
 

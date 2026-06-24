@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:office_archiving/services/professional_ocr_service.dart';
 
 class OCRService {

@@ -1466,6 +1466,54 @@ abstract class AppLocalizations {
   /// **'Medium'**
   String get signature_size_medium;
 
+  /// No description provided for @signature_choose_location_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose signature location'**
+  String get signature_choose_location_title;
+
+  /// No description provided for @signature_choose_size_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose signature size'**
+  String get signature_choose_size_title;
+
+  /// No description provided for @signature_pos_bottom_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom right of the last page'**
+  String get signature_pos_bottom_right;
+
+  /// No description provided for @signature_pos_bottom_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom left of the last page'**
+  String get signature_pos_bottom_left;
+
+  /// No description provided for @signature_pos_bottom_center.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom center of the last page'**
+  String get signature_pos_bottom_center;
+
+  /// No description provided for @signature_pos_top_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Top right of the last page'**
+  String get signature_pos_top_right;
+
+  /// No description provided for @signature_size_small.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get signature_size_small;
+
+  /// No description provided for @signature_size_large.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get signature_size_large;
+
   /// No description provided for @watermark_settings_title.
   ///
   /// In en, this message translates to:

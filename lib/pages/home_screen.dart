@@ -12,7 +12,7 @@ import 'package:office_archiving/pages/settings_page.dart';
 import 'package:office_archiving/pages/tools_documents_center_page.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 
-import '../service/sqlite_service.dart';
+import '../services/sqlite_service.dart';
 import 'package:office_archiving/pages/storage_center_page.dart';
 import 'package:office_archiving/widgets/first_open_animator.dart';
 

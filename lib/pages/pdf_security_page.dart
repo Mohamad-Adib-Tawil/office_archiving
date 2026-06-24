@@ -39,6 +39,9 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
   double _watermarkOpacity = 0.3;
   Color _watermarkColor = Colors.grey;
 
+  SignaturePlacement _signaturePlacement = SignaturePlacement.bottomRight;
+  SignatureSize _signatureSize = SignatureSize.medium;
+
   @override
   void initState() {
     super.initState();
@@ -390,15 +393,9 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                   title: Text(
                     AppLocalizations.of(context).signature_location_title,
                   ),
-                  subtitle: Text(
-                    AppLocalizations.of(
-                      context,
-                    ).signature_location_hint_last_page_br,
-                  ),
+                  subtitle: Text(_placementLabel(context, _signaturePlacement)),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    // TODO: فتح حوار اختيار موقع التوقيع
-                  },
+                  onTap: _pickSignaturePlacement,
                 ),
 
                 ListTile(
@@ -406,13 +403,9 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
                   title: Text(
                     AppLocalizations.of(context).signature_size_title,
                   ),
-                  subtitle: Text(
-                    AppLocalizations.of(context).signature_size_medium,
-                  ),
+                  subtitle: Text(_sizeLabel(context, _signatureSize)),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    // TODO: فتح حوار اختيار حجم التوقيع
-                  },
+                  onTap: _pickSignatureSize,
                 ),
               ],
             ),
@@ -696,6 +689,96 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
     );
   }
 
+  String _placementLabel(BuildContext context, SignaturePlacement placement) {
+    final l = AppLocalizations.of(context);
+    switch (placement) {
+      case SignaturePlacement.bottomRight:
+        return l.signature_pos_bottom_right;
+      case SignaturePlacement.bottomLeft:
+        return l.signature_pos_bottom_left;
+      case SignaturePlacement.bottomCenter:
+        return l.signature_pos_bottom_center;
+      case SignaturePlacement.topRight:
+        return l.signature_pos_top_right;
+    }
+  }
+
+  String _sizeLabel(BuildContext context, SignatureSize size) {
+    final l = AppLocalizations.of(context);
+    switch (size) {
+      case SignatureSize.small:
+        return l.signature_size_small;
+      case SignatureSize.medium:
+        return l.signature_size_medium;
+      case SignatureSize.large:
+        return l.signature_size_large;
+    }
+  }
+
+  Future<void> _pickSignaturePlacement() async {
+    final selected = await showModalBottomSheet<SignaturePlacement>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: RadioGroup<SignaturePlacement>(
+          groupValue: _signaturePlacement,
+          onChanged: (value) => Navigator.pop(ctx, value),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  AppLocalizations.of(ctx).signature_choose_location_title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              for (final placement in SignaturePlacement.values)
+                RadioListTile<SignaturePlacement>(
+                  value: placement,
+                  title: Text(_placementLabel(ctx, placement)),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (selected != null) {
+      setState(() => _signaturePlacement = selected);
+    }
+  }
+
+  Future<void> _pickSignatureSize() async {
+    final selected = await showModalBottomSheet<SignatureSize>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: RadioGroup<SignatureSize>(
+          groupValue: _signatureSize,
+          onChanged: (value) => Navigator.pop(ctx, value),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  AppLocalizations.of(ctx).signature_choose_size_title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              for (final size in SignatureSize.values)
+                RadioListTile<SignatureSize>(
+                  value: size,
+                  title: Text(_sizeLabel(ctx, size)),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (selected != null) {
+      setState(() => _signatureSize = selected);
+    }
+  }
+
   Future<void> _processPdf() async {
     if (widget.inputPdfPath == null) {
       _showError(
@@ -736,6 +819,8 @@ class _PdfSecurityPageState extends State<PdfSecurityPage>
             '${p.basenameWithoutExtension(sourceFile.path)}_visual_protection_${DateTime.now().millisecondsSinceEpoch}.pdf',
         watermarkColor: PdfColor.fromInt(_watermarkColor.toARGB32()),
         watermarkOpacity: _watermarkOpacity.clamp(0.1, 0.8),
+        signaturePlacement: _signaturePlacement,
+        signatureSize: _signatureSize,
       );
 
       if (!mounted) return;

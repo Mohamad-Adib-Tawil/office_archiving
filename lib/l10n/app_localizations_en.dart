@@ -720,6 +720,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signature_size_medium => 'Medium';
 
   @override
+  String get signature_choose_location_title => 'Choose signature location';
+
+  @override
+  String get signature_choose_size_title => 'Choose signature size';
+
+  @override
+  String get signature_pos_bottom_right => 'Bottom right of the last page';
+
+  @override
+  String get signature_pos_bottom_left => 'Bottom left of the last page';
+
+  @override
+  String get signature_pos_bottom_center => 'Bottom center of the last page';
+
+  @override
+  String get signature_pos_top_right => 'Top right of the last page';
+
+  @override
+  String get signature_size_small => 'Small';
+
+  @override
+  String get signature_size_large => 'Large';
+
+  @override
   String get watermark_settings_title => 'Watermark Settings';
 
   @override

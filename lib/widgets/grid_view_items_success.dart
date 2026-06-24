@@ -10,7 +10,7 @@ import 'package:office_archiving/models/item.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/widgets/empty_state.dart';
-import 'package:office_archiving/helper/pdf_viwer.dart';
+import 'package:office_archiving/helper/pdf_viewer.dart';
 import 'package:office_archiving/constants.dart';
 import 'package:office_archiving/screens/editor/internal_editor_page.dart';
 import 'package:printing/printing.dart';

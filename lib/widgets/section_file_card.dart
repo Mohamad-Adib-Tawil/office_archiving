@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:office_archiving/utils/image_utils.dart';
 import 'package:office_archiving/pages/document_view_page.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 
 /// بطاقة عرض ملف/مستند داخل القسم
 class SectionFileCard extends StatefulWidget {

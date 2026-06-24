@@ -9,6 +9,26 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
+/// موضع التوقيع على الصفحة الأخيرة من النسخة المحمية.
+enum SignaturePlacement { bottomRight, bottomLeft, bottomCenter, topRight }
+
+/// حجم صورة التوقيع المضافة.
+enum SignatureSize { small, medium, large }
+
+extension SignatureSizeWidth on SignatureSize {
+  /// عرض صندوق التوقيع بالنقاط (points) داخل مستند PDF.
+  double get boxWidth {
+    switch (this) {
+      case SignatureSize.small:
+        return 80;
+      case SignatureSize.medium:
+        return 120;
+      case SignatureSize.large:
+        return 170;
+    }
+  }
+}
+
 class PdfService {
   PdfService._();
   static final PdfService _instance = PdfService._();
@@ -211,6 +231,8 @@ class PdfService {
     String? fileName,
     PdfColor watermarkColor = PdfColors.grey700,
     double watermarkOpacity = 0.14,
+    SignaturePlacement signaturePlacement = SignaturePlacement.bottomRight,
+    SignatureSize signatureSize = SignatureSize.medium,
   }) async {
     if (!(await source.exists())) {
       throw FileSystemException('Source PDF does not exist', source.path);
@@ -277,21 +299,10 @@ class PdfService {
                   ),
                 ),
               if (signatureImage != null && index == renderedPages.length - 1)
-                pw.Positioned(
-                  right: 20,
-                  bottom: 20,
-                  child: pw.Container(
-                    width: 120,
-                    padding: const pw.EdgeInsets.all(8),
-                    decoration: pw.BoxDecoration(
-                      color: PdfColors.white,
-                      border: pw.Border.all(color: PdfColors.grey300),
-                      borderRadius: const pw.BorderRadius.all(
-                        pw.Radius.circular(8),
-                      ),
-                    ),
-                    child: pw.Image(signatureImage, fit: pw.BoxFit.contain),
-                  ),
+                _buildSignatureOverlay(
+                  signatureImage,
+                  signaturePlacement,
+                  signatureSize,
                 ),
             ],
           ),
@@ -303,6 +314,41 @@ class PdfService {
         fileName ?? 'protected_${DateTime.now().millisecondsSinceEpoch}.pdf';
     final bytes = await outDoc.save();
     return _savePdfBytes(bytes, name);
+  }
+
+  /// يبني صندوق التوقيع ويضعه على الصفحة وفق [placement] و[size].
+  pw.Widget _buildSignatureOverlay(
+    pw.ImageProvider signatureImage,
+    SignaturePlacement placement,
+    SignatureSize size,
+  ) {
+    final box = pw.Container(
+      width: size.boxWidth,
+      padding: const pw.EdgeInsets.all(8),
+      decoration: pw.BoxDecoration(
+        color: PdfColors.white,
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+      ),
+      child: pw.Image(signatureImage, fit: pw.BoxFit.contain),
+    );
+
+    const margin = 20.0;
+    switch (placement) {
+      case SignaturePlacement.bottomRight:
+        return pw.Positioned(right: margin, bottom: margin, child: box);
+      case SignaturePlacement.bottomLeft:
+        return pw.Positioned(left: margin, bottom: margin, child: box);
+      case SignaturePlacement.topRight:
+        return pw.Positioned(right: margin, top: margin, child: box);
+      case SignaturePlacement.bottomCenter:
+        return pw.Positioned(
+          left: 0,
+          right: 0,
+          bottom: margin,
+          child: pw.Center(child: box),
+        );
+    }
   }
 
   // Rasterize a PDF to PNG images and save them to outputDir (default: Documents/scans)

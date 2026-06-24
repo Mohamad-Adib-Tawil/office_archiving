@@ -6,7 +6,7 @@ import 'package:office_archiving/functions/handle_delete_section.dart';
 import 'package:office_archiving/functions/handle_rename_section.dart';
 import 'package:office_archiving/models/section.dart';
 import 'package:office_archiving/pages/section_screen.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:office_archiving/theme/app_icons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:animations/animations.dart';

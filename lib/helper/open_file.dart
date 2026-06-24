@@ -3,7 +3,7 @@ import 'package:office_archiving/functions/show_snack_bar.dart';
 import 'package:open_file/open_file.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'dart:developer';
-import 'package:office_archiving/helper/pdf_viwer.dart';
+import 'package:office_archiving/helper/pdf_viewer.dart';
 import 'package:office_archiving/helper/text_viewer.dart';
 
 Future<void> openFile({

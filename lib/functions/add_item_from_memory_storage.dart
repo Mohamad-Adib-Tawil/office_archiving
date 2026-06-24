@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
 import 'package:office_archiving/functions/show_snack_bar.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:office_archiving/services/document_storage_service.dart';
 import 'package:office_archiving/services/ocr_service.dart';
 

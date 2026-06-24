@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:office_archiving/helper/pdf_viwer.dart';
+import 'package:office_archiving/helper/pdf_viewer.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:office_archiving/services/ocr_service.dart';
 import 'package:office_archiving/services/pdf_page_editing_service.dart';

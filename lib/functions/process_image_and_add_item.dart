@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:office_archiving/cubit/item_section_cubit/item_section_cubit.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:office_archiving/services/document_storage_service.dart';
 import 'package:office_archiving/services/ocr_service.dart';
 

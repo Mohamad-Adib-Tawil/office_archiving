@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:intl/intl.dart';
-import 'package:office_archiving/service/sqlite_service.dart';
+import 'package:office_archiving/services/sqlite_service.dart';
 import 'package:office_archiving/services/document_storage_service.dart';
 import 'package:office_archiving/services/pdf_service.dart';
 
