@@ -2,56 +2,126 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
   <script src="js/jszip.min.js"></script>
   <script src="js/docx-preview.min.js"></script>
   <style>
-    html, body { margin: 0; padding: 0; background: #e9ebee; }
-    #container { padding: 12px 0; }
-    .docx-wrapper { background: #e9ebee !important; padding: 12px !important; }
-    .docx-wrapper > section.docx {
-      box-shadow: 0 1px 6px rgba(0,0,0,0.18);
-      margin-bottom: 14px !important;
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: #f2f3f5;
+      width: 100%; overflow-x: hidden;
     }
+    /* حاوية المستند - تملأ عرض الشاشة */
+    #container { width: 100%; }
+
+    /* تجاوز تنسيقات docx-preview الافتراضية لصفحة A4 */
+    .docx-wrapper {
+      background: #f2f3f5 !important;
+      padding: 10px 0 20px !important;
+      width: 100% !important;
+    }
+    .docx-wrapper > section.docx {
+      width: 100% !important;
+      min-width: unset !important;
+      max-width: 100% !important;
+      min-height: unset !important;
+      padding: 20px 16px !important;
+      margin: 0 0 12px !important;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.15) !important;
+      background: #fff !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+    }
+    /* تنسيق النص بشكل عام */
+    .docx-wrapper * {
+      max-width: 100% !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+    }
+    /* الجداول داخل المستند - تمرير أفقي */
+    .docx-wrapper table {
+      display: block !important;
+      overflow-x: auto !important;
+      max-width: 100% !important;
+    }
+    /* الصور داخل المستند */
+    .docx-wrapper img {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    /* شريط التحميل */
+    #loading {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: #f2f3f5; flex-direction: column; gap: 16px;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid #ddd; border-top-color: #333;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading p { color: #555; font-family: -apple-system, Roboto, sans-serif; font-size: 14px; }
+
+    /* رسالة الخطأ */
     #error {
       color: #b00020; font-family: -apple-system, Roboto, sans-serif;
-      padding: 24px; text-align: center; display: none;
+      padding: 32px 20px; text-align: center; display: none;
+      font-size: 14px; line-height: 1.6;
     }
+    #error svg { margin-bottom: 12px; }
   </style>
 </head>
 <body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>جارٍ تحميل المستند...</p>
+  </div>
   <div id="container"></div>
   <div id="error"></div>
   <script>
-    function _fail(msg) {
+    var isRtl = false;
+
+    function _showError(msg) {
+      document.getElementById('loading').style.display = 'none';
       var e = document.getElementById('error');
       e.style.display = 'block';
-      e.textContent = msg;
+      e.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b00020" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><br>' + msg;
       if (window.flutter_inappwebview) {
         window.flutter_inappwebview.callHandler('onError', String(msg));
       }
     }
-    function renderDocx(base64) {
+
+    function renderDocx(base64, rtl) {
       try {
+        isRtl = rtl === true || rtl === 'true';
+        if (isRtl) document.body.dir = 'rtl';
+
         var raw = atob(base64);
         var bytes = new Uint8Array(raw.length);
         for (var i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
         var blob = new Blob([bytes]);
         var container = document.getElementById('container');
+
         docx.renderAsync(blob, container, null, {
           className: 'docx',
           inWrapper: true,
-          ignoreWidth: false,
-          ignoreHeight: false,
+          ignoreWidth: true,        /* الأهم: يتجاهل عرض A4 ويتكيّف مع الشاشة */
+          ignoreHeight: true,       /* لا حواجز ارتفاع */
+          ignoreFonts: false,
           breakPages: true,
           useBase64URL: true,
-          experimental: true
+          experimental: true,
+          trimXmlDeclaration: true
         }).then(function () {
+          document.getElementById('loading').style.display = 'none';
           if (window.flutter_inappwebview) {
             window.flutter_inappwebview.callHandler('onRendered');
           }
-        }).catch(function (err) { _fail('' + err); });
-      } catch (err) { _fail('' + err); }
+        }).catch(function (err) { _showError(String(err)); });
+      } catch (err) { _showError(String(err)); }
     }
   </script>
 </body>

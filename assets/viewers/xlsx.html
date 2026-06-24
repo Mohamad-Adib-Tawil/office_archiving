@@ -2,44 +2,98 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
   <script src="js/xlsx.full.min.js"></script>
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
     html, body {
       margin: 0; padding: 0; background: #fff;
       font-family: -apple-system, Roboto, "Segoe UI", sans-serif;
+      font-size: 13px;
     }
+
+    /* تبويبات الأوراق */
     #tabs {
       position: sticky; top: 0; z-index: 10;
-      display: flex; flex-wrap: wrap; gap: 4px;
-      padding: 8px; background: #f4f5f7;
-      border-bottom: 1px solid #d0d4d9;
+      display: flex; flex-wrap: nowrap; overflow-x: auto;
+      padding: 8px 10px 0; gap: 4px;
+      background: #f4f5f7;
+      border-bottom: 2px solid #d0d4d9;
+      -webkit-overflow-scrolling: touch;
     }
+    #tabs::-webkit-scrollbar { display: none; }
     .tab {
-      padding: 6px 14px; border-radius: 16px; cursor: pointer;
-      background: #e2e5e9; color: #333; font-size: 13px; user-select: none;
-      white-space: nowrap;
+      padding: 7px 16px; border-radius: 8px 8px 0 0;
+      cursor: pointer; background: #e2e5e9; color: #555;
+      font-size: 12px; white-space: nowrap; user-select: none;
+      border: 1px solid #ccc; border-bottom: none;
+      flex-shrink: 0;
     }
-    .tab.active { background: #217346; color: #fff; }
-    #sheet { overflow: auto; padding: 8px; }
-    table { border-collapse: collapse; font-size: 13px; }
+    .tab.active { background: #fff; color: #217346; font-weight: 700; border-color: #d0d4d9; }
+
+    /* منطقة الجدول */
+    #sheet {
+      overflow-x: auto; overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0;
+    }
+    table { border-collapse: collapse; width: max-content; min-width: 100%; }
     td, th {
-      border: 1px solid #cfd4da; padding: 5px 9px;
-      white-space: nowrap; min-width: 56px;
+      border: 1px solid #d0d5da;
+      padding: 6px 10px;
+      white-space: nowrap;
+      vertical-align: middle;
+      min-width: 60px;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    tr:first-child td { background: #f0f7f2; font-weight: 600; }
+    /* ترويسة عمود (A, B, C...) */
+    tr.header-row td {
+      background: #f0f7f2;
+      font-weight: 700;
+      color: #1a5c35;
+      text-align: center;
+      position: sticky; top: 0; z-index: 5;
+    }
+    tr:nth-child(even) td { background: #fafafa; }
+    tr:hover td { background: #eef8f2 !important; }
+
+    /* تحميل */
+    #loading {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: #fff; flex-direction: column; gap: 14px;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #e2e5e9; border-top-color: #217346;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading p { color: #555; font-size: 13px; margin: 0; }
+
+    /* خطأ */
     #error {
-      color: #b00020; padding: 24px; text-align: center; display: none;
+      color: #b00020; padding: 32px 20px;
+      text-align: center; display: none; line-height: 1.6;
     }
   </style>
 </head>
 <body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>جارٍ تحميل الجدول...</p>
+  </div>
   <div id="tabs"></div>
   <div id="sheet"></div>
   <div id="error"></div>
+
   <script>
     var WB = null;
+
     function _fail(msg) {
+      document.getElementById('loading').style.display = 'none';
       var e = document.getElementById('error');
       e.style.display = 'block';
       e.textContent = msg;
@@ -47,31 +101,75 @@
         window.flutter_inappwebview.callHandler('onError', String(msg));
       }
     }
-    function _showSheet(name, el) {
+
+    function _colLabel(idx) {
+      var s = '';
+      var i = idx;
+      while (i >= 0) {
+        s = String.fromCharCode(65 + (i % 26)) + s;
+        i = Math.floor(i / 26) - 1;
+      }
+      return s;
+    }
+
+    function _showSheet(name, activeTab) {
       try {
         var ws = WB.Sheets[name];
+        var range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+        var colCount = range.e.c - range.s.c + 1;
+
+        // بناء رأس الأعمدة (A, B, C...)
+        var headerHtml = '<tr class="header-row">';
+        for (var c = 0; c <= colCount; c++) {
+          headerHtml += '<td>' + (c === 0 ? '' : _colLabel(c - 1)) + '</td>';
+        }
+        headerHtml += '</tr>';
+
+        // بيانات الورقة
+        var dataHtml = XLSX.utils.sheet_to_html(ws, { editable: false, header: '' });
+        // استخراج محتوى tbody فقط
+        var bodyMatch = dataHtml.match(/<tbody[^>]*>([\s\S]*?)<\/tbody>/i);
+        var bodyContent = bodyMatch ? bodyMatch[1] : dataHtml;
+
+        // إضافة أرقام الصفوف
+        var rowNum = 1;
+        bodyContent = bodyContent.replace(/<tr>/gi, function() {
+          return '<tr><td style="background:#f0f7f2;font-weight:700;color:#888;text-align:center;min-width:36px">' + (rowNum++) + '</td>';
+        });
+
         document.getElementById('sheet').innerHTML =
-          XLSX.utils.sheet_to_html(ws, { editable: false });
+          '<table>' + headerHtml + bodyContent + '</table>';
+
+        // تفعيل التبويب
         var tabs = document.querySelectorAll('.tab');
-        for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-        if (el) el.classList.add('active');
+        for (var t = 0; t < tabs.length; t++) tabs[t].classList.remove('active');
+        if (activeTab) activeTab.classList.add('active');
       } catch (err) { _fail('' + err); }
     }
-    function renderXlsx(base64, isRtl) {
+
+    function renderXlsx(base64, rtl) {
       try {
-        if (isRtl) document.body.dir = 'rtl';
-        WB = XLSX.read(base64, { type: 'base64', cellStyles: true });
+        if (rtl === true || rtl === 'true') document.body.dir = 'rtl';
+        WB = XLSX.read(base64, { type: 'base64', cellStyles: true, cellDates: true });
+
         var tabsEl = document.getElementById('tabs');
         tabsEl.innerHTML = '';
-        WB.SheetNames.forEach(function (name, idx) {
+
+        WB.SheetNames.forEach(function(name, idx) {
           var t = document.createElement('div');
           t.className = 'tab' + (idx === 0 ? ' active' : '');
           t.textContent = name;
-          t.onclick = function () { _showSheet(name, t); };
+          (function(n, el) {
+            el.onclick = function() { _showSheet(n, el); };
+          })(name, t);
           tabsEl.appendChild(t);
         });
+
         if (WB.SheetNames.length <= 1) tabsEl.style.display = 'none';
-        _showSheet(WB.SheetNames[0], null);
+
+        _showSheet(WB.SheetNames[0], tabsEl.firstChild);
+
+        document.getElementById('loading').style.display = 'none';
         if (window.flutter_inappwebview) {
           window.flutter_inappwebview.callHandler('onRendered');
         }
