@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <script src="js/xlsx.full.min.js"></script>
+  <style>
+    html, body {
+      margin: 0; padding: 0; background: #fff;
+      font-family: -apple-system, Roboto, "Segoe UI", sans-serif;
+    }
+    #tabs {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; flex-wrap: wrap; gap: 4px;
+      padding: 8px; background: #f4f5f7;
+      border-bottom: 1px solid #d0d4d9;
+    }
+    .tab {
+      padding: 6px 14px; border-radius: 16px; cursor: pointer;
+      background: #e2e5e9; color: #333; font-size: 13px; user-select: none;
+      white-space: nowrap;
+    }
+    .tab.active { background: #217346; color: #fff; }
+    #sheet { overflow: auto; padding: 8px; }
+    table { border-collapse: collapse; font-size: 13px; }
+    td, th {
+      border: 1px solid #cfd4da; padding: 5px 9px;
+      white-space: nowrap; min-width: 56px;
+    }
+    tr:first-child td { background: #f0f7f2; font-weight: 600; }
+    #error {
+      color: #b00020; padding: 24px; text-align: center; display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="tabs"></div>
+  <div id="sheet"></div>
+  <div id="error"></div>
+  <script>
+    var WB = null;
+    function _fail(msg) {
+      var e = document.getElementById('error');
+      e.style.display = 'block';
+      e.textContent = msg;
+      if (window.flutter_inappwebview) {
+        window.flutter_inappwebview.callHandler('onError', String(msg));
+      }
+    }
+    function _showSheet(name, el) {
+      try {
+        var ws = WB.Sheets[name];
+        document.getElementById('sheet').innerHTML =
+          XLSX.utils.sheet_to_html(ws, { editable: false });
+        var tabs = document.querySelectorAll('.tab');
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+        if (el) el.classList.add('active');
+      } catch (err) { _fail('' + err); }
+    }
+    function renderXlsx(base64, isRtl) {
+      try {
+        if (isRtl) document.body.dir = 'rtl';
+        WB = XLSX.read(base64, { type: 'base64', cellStyles: true });
+        var tabsEl = document.getElementById('tabs');
+        tabsEl.innerHTML = '';
+        WB.SheetNames.forEach(function (name, idx) {
+          var t = document.createElement('div');
+          t.className = 'tab' + (idx === 0 ? ' active' : '');
+          t.textContent = name;
+          t.onclick = function () { _showSheet(name, t); };
+          tabsEl.appendChild(t);
+        });
+        if (WB.SheetNames.length <= 1) tabsEl.style.display = 'none';
+        _showSheet(WB.SheetNames[0], null);
+        if (window.flutter_inappwebview) {
+          window.flutter_inappwebview.callHandler('onRendered');
+        }
+      } catch (err) { _fail('' + err); }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <script src="js/jszip.min.js"></script>
+  <script src="js/docx-preview.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: #e9ebee; }
+    #container { padding: 12px 0; }
+    .docx-wrapper { background: #e9ebee !important; padding: 12px !important; }
+    .docx-wrapper > section.docx {
+      box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+      margin-bottom: 14px !important;
+    }
+    #error {
+      color: #b00020; font-family: -apple-system, Roboto, sans-serif;
+      padding: 24px; text-align: center; display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="error"></div>
+  <script>
+    function _fail(msg) {
+      var e = document.getElementById('error');
+      e.style.display = 'block';
+      e.textContent = msg;
+      if (window.flutter_inappwebview) {
+        window.flutter_inappwebview.callHandler('onError', String(msg));
+      }
+    }
+    function renderDocx(base64) {
+      try {
+        var raw = atob(base64);
+        var bytes = new Uint8Array(raw.length);
+        for (var i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+        var blob = new Blob([bytes]);
+        var container = document.getElementById('container');
+        docx.renderAsync(blob, container, null, {
+          className: 'docx',
+          inWrapper: true,
+          ignoreWidth: false,
+          ignoreHeight: false,
+          breakPages: true,
+          useBase64URL: true,
+          experimental: true
+        }).then(function () {
+          if (window.flutter_inappwebview) {
+            window.flutter_inappwebview.callHandler('onRendered');
+          }
+        }).catch(function (err) { _fail('' + err); });
+      } catch (err) { _fail('' + err); }
+    }
+  </script>
+</body>
+</html>

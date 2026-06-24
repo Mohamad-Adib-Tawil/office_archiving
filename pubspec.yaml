@@ -53,6 +53,7 @@ dependencies:
   archive: ^3.6.1
   photo_view: ^0.15.0
   pdfrx: ^2.4.4
+  flutter_inappwebview: ^6.1.5
 
 dev_dependencies:
   build_runner: ^2.3.3
@@ -76,6 +77,8 @@ flutter:
   assets:
     - assets/images/
     - assets/tessdata/
+    - assets/viewers/
+    - assets/viewers/js/
 
   fonts:
     - family: GT Sectra Fine
