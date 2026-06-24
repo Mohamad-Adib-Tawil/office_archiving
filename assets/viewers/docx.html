@@ -7,71 +7,107 @@
   <script src="js/docx-preview.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
+
     html, body {
       margin: 0; padding: 0;
-      background: #f2f3f5;
+      background: #d1d5db;
       width: 100%; overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    /* حاوية المستند - تملأ عرض الشاشة */
-    #container { width: 100%; }
 
-    /* تجاوز تنسيقات docx-preview الافتراضية لصفحة A4 */
-    .docx-wrapper {
-      background: #f2f3f5 !important;
-      padding: 10px 0 20px !important;
-      width: 100% !important;
+    #loading {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #d1d5db; gap: 14px; z-index: 100;
     }
+    .spinner {
+      width: 38px; height: 38px;
+      border: 3px solid #bbb; border-top-color: #444;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading p {
+      color: #555; font-family: -apple-system, Roboto, sans-serif;
+      font-size: 13px; margin: 0;
+    }
+
+    #error {
+      display: none;
+      padding: 40px 24px; text-align: center;
+      font-family: -apple-system, Roboto, sans-serif;
+      color: #b00020; font-size: 14px; line-height: 1.6;
+    }
+
+    /* ===== الغلاف الخارجي للمستند ===== */
+    #container {
+      padding: 16px 12px 32px;
+    }
+
+    /* ===== تجاوز تنسيقات docx-preview ===== */
+    .docx-wrapper {
+      background: transparent !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 16px !important;
+    }
+
+    /* كل صفحة كورقة بيضاء منفصلة بظل */
     .docx-wrapper > section.docx {
       width: 100% !important;
-      min-width: unset !important;
       max-width: 100% !important;
+      min-width: unset !important;
       min-height: unset !important;
-      padding: 20px 16px !important;
-      margin: 0 0 12px !important;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.15) !important;
-      background: #fff !important;
+      margin: 0 !important;
+
+      /* padding داخلي كافٍ لمحاكاة هامش الورقة */
+      padding: 28px 22px !important;
+
+      background: #ffffff !important;
+      border-radius: 6px !important;
+      box-shadow:
+        0 1px 3px rgba(0,0,0,0.14),
+        0 4px 12px rgba(0,0,0,0.08) !important;
+
+      /* منع الطفح الأفقي */
+      overflow: hidden !important;
       word-wrap: break-word !important;
       overflow-wrap: break-word !important;
     }
-    /* تنسيق النص بشكل عام */
+
+    /* النصوص العامة */
     .docx-wrapper * {
       max-width: 100% !important;
       word-wrap: break-word !important;
       overflow-wrap: break-word !important;
+      line-height: 1.65 !important;
     }
-    /* الجداول داخل المستند - تمرير أفقي */
+
+    /* الجداول: تمرير أفقي بدل الطفح */
     .docx-wrapper table {
       display: block !important;
       overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      width: 100% !important;
       max-width: 100% !important;
     }
-    /* الصور داخل المستند */
+
+    /* الصور تأخذ العرض الكامل */
     .docx-wrapper img {
       max-width: 100% !important;
       height: auto !important;
+      display: block !important;
     }
 
-    /* شريط التحميل */
-    #loading {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      display: flex; align-items: center; justify-content: center;
-      background: #f2f3f5; flex-direction: column; gap: 16px;
+    /* فواصل الصفحات: مسافة بصرية */
+    .docx-wrapper > section.docx + section.docx::before {
+      content: '';
+      display: block;
+      height: 0;
     }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid #ddd; border-top-color: #333;
-      border-radius: 50%; animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #loading p { color: #555; font-family: -apple-system, Roboto, sans-serif; font-size: 14px; }
-
-    /* رسالة الخطأ */
-    #error {
-      color: #b00020; font-family: -apple-system, Roboto, sans-serif;
-      padding: 32px 20px; text-align: center; display: none;
-      font-size: 14px; line-height: 1.6;
-    }
-    #error svg { margin-bottom: 12px; }
   </style>
 </head>
 <body>
@@ -81,35 +117,30 @@
   </div>
   <div id="container"></div>
   <div id="error"></div>
-  <script>
-    var isRtl = false;
 
+  <script>
     function _showError(msg) {
       document.getElementById('loading').style.display = 'none';
       var e = document.getElementById('error');
       e.style.display = 'block';
-      e.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b00020" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><br>' + msg;
-      if (window.flutter_inappwebview) {
+      e.textContent = '⚠️ ' + msg;
+      if (window.flutter_inappwebview)
         window.flutter_inappwebview.callHandler('onError', String(msg));
-      }
     }
 
     function renderDocx(base64, rtl) {
       try {
-        isRtl = rtl === true || rtl === 'true';
-        if (isRtl) document.body.dir = 'rtl';
+        if (rtl === true || rtl === 'true') document.body.dir = 'rtl';
 
         var raw = atob(base64);
         var bytes = new Uint8Array(raw.length);
         for (var i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-        var blob = new Blob([bytes]);
-        var container = document.getElementById('container');
 
-        docx.renderAsync(blob, container, null, {
+        docx.renderAsync(new Blob([bytes]), document.getElementById('container'), null, {
           className: 'docx',
           inWrapper: true,
-          ignoreWidth: true,        /* الأهم: يتجاهل عرض A4 ويتكيّف مع الشاشة */
-          ignoreHeight: true,       /* لا حواجز ارتفاع */
+          ignoreWidth: true,
+          ignoreHeight: true,
           ignoreFonts: false,
           breakPages: true,
           useBase64URL: true,
@@ -117,10 +148,10 @@
           trimXmlDeclaration: true
         }).then(function () {
           document.getElementById('loading').style.display = 'none';
-          if (window.flutter_inappwebview) {
+          if (window.flutter_inappwebview)
             window.flutter_inappwebview.callHandler('onRendered');
-          }
         }).catch(function (err) { _showError(String(err)); });
+
       } catch (err) { _showError(String(err)); }
     }
   </script>
