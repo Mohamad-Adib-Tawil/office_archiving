@@ -54,6 +54,7 @@ dependencies:
   photo_view: ^0.15.0
   pdfrx: ^2.4.4
   flutter_inappwebview: ^6.1.5
+  docx_file_viewer: ^0.0.7
 
 dev_dependencies:
   build_runner: ^2.3.3
