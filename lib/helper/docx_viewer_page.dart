@@ -18,7 +18,7 @@ class DocxViewerPage extends StatefulWidget {
 }
 
 class _DocxViewerPageState extends State<DocxViewerPage> {
-  late final Future<_Content> _future;
+  late Future<_Content> _future;
   bool get _ar => Localizations.localeOf(context).languageCode == 'ar';
 
   @override
