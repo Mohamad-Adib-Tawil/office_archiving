@@ -241,8 +241,11 @@ class _RichTextEditorPageState extends State<RichTextEditorPage> {
                           : 'Note: Formatting is preserved in-app. External Word may render differently.',
                     ),
 
-                  // شريط الأدوات — صف أول
-                  _buildToolbar(theme),
+                  // شريط الأدوات
+                  SizedBox(
+                    height: 48,
+                    child: _buildToolbar(theme),
+                  ),
 
                   const Divider(height: 1),
 
@@ -258,7 +261,7 @@ class _RichTextEditorPageState extends State<RichTextEditorPage> {
                               : 'Start writing here...',
                           padding: const EdgeInsets.all(16),
                           autoFocus: !widget.isEditing,
-                          expands: true,
+                          expands: false,
                           scrollable: true,
                         ),
                       ),
@@ -273,9 +276,7 @@ class _RichTextEditorPageState extends State<RichTextEditorPage> {
   Widget _buildToolbar(ThemeData theme) {
     return Container(
       color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: QuillSimpleToolbar(
+      child: QuillSimpleToolbar(
           controller: _controller,
           config: QuillSimpleToolbarConfig(
             toolbarSize: 36,
@@ -327,8 +328,7 @@ class _RichTextEditorPageState extends State<RichTextEditorPage> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
