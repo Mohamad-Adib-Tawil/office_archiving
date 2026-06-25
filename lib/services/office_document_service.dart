@@ -33,12 +33,19 @@ class OfficeDocumentService {
     );
   }
 
-  /// إنشاء ملف Word `.docx` بسيط من عنوان وفقرات.
+  /// إنشاء أو تحديث ملف Word `.docx` من عنوان وفقرات.
+  /// إذا مُرّر [existingPath] يُعاد كتابة نفس الملف.
   Future<File> createWordFile({
     required String title,
     required List<String> paragraphs,
+    String? existingPath,
   }) async {
     final bytes = _buildDocx(title: title, paragraphs: paragraphs);
+    if (existingPath != null && existingPath.isNotEmpty) {
+      final file = File(existingPath);
+      await file.writeAsBytes(bytes, flush: true);
+      return file;
+    }
     return _storage.writeBytes(
       bytes: bytes,
       directory: ManagedDirectory.imports,
@@ -46,10 +53,12 @@ class OfficeDocumentService {
     );
   }
 
-  /// إنشاء ملف Excel `.xlsx` من جدول صفوف وأعمدة نصّية.
+  /// إنشاء أو تحديث ملف Excel `.xlsx` من جدول صفوف وأعمدة نصّية.
+  /// إذا مُرّر [existingPath] يُعاد كتابة نفس الملف.
   Future<File> createExcelFile({
     required String title,
     required List<List<String>> rows,
+    String? existingPath,
   }) async {
     final excel = Excel.createExcel();
     final defaultSheet = excel.getDefaultSheet();
@@ -68,6 +77,11 @@ class OfficeDocumentService {
       excel.delete(defaultSheet);
     }
     final bytes = excel.save() ?? <int>[];
+    if (existingPath != null && existingPath.isNotEmpty) {
+      final file = File(existingPath);
+      await file.writeAsBytes(bytes, flush: true);
+      return file;
+    }
     return _storage.writeBytes(
       bytes: bytes,
       directory: ManagedDirectory.imports,

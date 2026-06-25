@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:docx_file_viewer/docx_file_viewer.dart';
+import 'package:office_archiving/pages/word_editor_page.dart';
 import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
 
@@ -40,6 +41,17 @@ class _DocxViewerPageState extends State<DocxViewerPage> {
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              tooltip: _ar ? 'تعديل' : 'Edit',
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      WordEditorPage(existingPath: widget.filePath),
+                ),
+              ),
+            ),
             IconButton(
               icon: const Icon(Icons.share),
               tooltip: _ar ? 'مشاركة' : 'Share',

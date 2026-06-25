@@ -14,15 +14,19 @@ class OfficeWebViewerPage extends StatefulWidget {
     required this.filePath,
     required this.assetHtml,
     required this.jsFunction,
+    this.embedded = false,
+    this.onWebViewCreated,
   });
 
   final String filePath;
-
-  /// مسار قالب HTML داخل الأصول، مثل: assets/viewers/docx.html
   final String assetHtml;
-
-  /// اسم دالة JS التي تُستدعى مع (base64, isRtl)، مثل: renderDocx / renderXlsx
   final String jsFunction;
+
+  /// إذا كان true لا يُنشئ Scaffold/AppBar (يُضمَّن داخل صفحة أخرى)
+  final bool embedded;
+
+  /// callback اختياري للحصول على مرجع الـ WebViewController
+  final void Function(InAppWebViewController)? onWebViewCreated;
 
   @override
   State<OfficeWebViewerPage> createState() => _OfficeWebViewerPageState();
@@ -75,8 +79,49 @@ class _OfficeWebViewerPageState extends State<OfficeWebViewerPage> {
     );
   }
 
+  Widget get _webBody => _error != null
+      ? _ErrorView(message: _error!, isArabic: _ar)
+      : Stack(
+          children: [
+            InAppWebView(
+              initialFile: widget.assetHtml,
+              initialSettings: InAppWebViewSettings(
+                javaScriptEnabled: true,
+                allowFileAccess: true,
+                allowFileAccessFromFileURLs: true,
+                allowUniversalAccessFromFileURLs: true,
+                supportZoom: true,
+                builtInZoomControls: true,
+                displayZoomControls: false,
+                transparentBackground: true,
+              ),
+              onWebViewCreated: (ctrl) {
+                _registerHandlers(ctrl);
+                widget.onWebViewCreated?.call(ctrl);
+              },
+              onLoadStop: (controller, _) async {
+                if (_base64 == null) return;
+                final rtl = _ar ? 'true' : 'false';
+                await controller.evaluateJavascript(
+                  source: "${widget.jsFunction}('$_base64', $rtl)",
+                );
+              },
+              onReceivedError: (controller, request, error) {
+                if (mounted) {
+                  setState(() {
+                    _loading = false;
+                    _error = error.description;
+                  });
+                }
+              },
+            ),
+            if (_loading) const Center(child: CircularProgressIndicator()),
+          ],
+        );
+
   @override
   Widget build(BuildContext context) {
+    if (widget.embedded) return _webBody;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -93,43 +138,7 @@ class _OfficeWebViewerPageState extends State<OfficeWebViewerPage> {
             ),
           ],
         ),
-        body: _error != null
-            ? _ErrorView(message: _error!, isArabic: _ar)
-            : Stack(
-                children: [
-                  InAppWebView(
-                    initialFile: widget.assetHtml,
-                    initialSettings: InAppWebViewSettings(
-                      javaScriptEnabled: true,
-                      allowFileAccess: true,
-                      allowFileAccessFromFileURLs: true,
-                      allowUniversalAccessFromFileURLs: true,
-                      supportZoom: true,
-                      builtInZoomControls: true,
-                      displayZoomControls: false,
-                      transparentBackground: true,
-                    ),
-                    onWebViewCreated: _registerHandlers,
-                    onLoadStop: (controller, _) async {
-                      if (_base64 == null) return;
-                      final rtl = _ar ? 'true' : 'false';
-                      await controller.evaluateJavascript(
-                        source: "${widget.jsFunction}('$_base64', $rtl)",
-                      );
-                    },
-                    onReceivedError: (controller, request, error) {
-                      if (mounted) {
-                        setState(() {
-                          _loading = false;
-                          _error = error.description;
-                        });
-                      }
-                    },
-                  ),
-                  if (_loading)
-                    const Center(child: CircularProgressIndicator()),
-                ],
-              ),
+        body: _webBody,
       ),
     );
   }

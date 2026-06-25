@@ -59,6 +59,30 @@
     tr:nth-child(even) td { background: #fafafa; }
     tr:hover td { background: #eef8f2 !important; }
 
+    /* بحث */
+    #search-bar {
+      position: sticky; top: 0; z-index: 20;
+      display: none; align-items: center; gap: 6px;
+      padding: 6px 10px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    #search-bar.visible { display: flex; }
+    #search-input {
+      flex: 1; padding: 6px 10px; border: 1px solid #ccc;
+      border-radius: 20px; font-size: 13px; outline: none;
+    }
+    #search-input:focus { border-color: #217346; }
+    #search-count { font-size: 12px; color: #666; white-space: nowrap; min-width: 40px; }
+    .search-btn {
+      background: none; border: none; cursor: pointer;
+      color: #217346; font-size: 18px; padding: 2px 6px;
+    }
+    .search-btn:disabled { color: #ccc; cursor: default; }
+    td.highlight { background: #fff3cd !important; }
+    td.highlight-current { background: #ffc107 !important; }
+
     /* تحميل */
     #loading {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -84,6 +108,13 @@
   <div id="loading">
     <div class="spinner"></div>
     <p>جارٍ تحميل الجدول...</p>
+  </div>
+  <div id="search-bar">
+    <input id="search-input" type="text" placeholder="بحث في الجدول..." oninput="onSearchInput(this.value)">
+    <span id="search-count"></span>
+    <button class="search-btn" id="btn-prev" onclick="searchNav(-1)" disabled>▲</button>
+    <button class="search-btn" id="btn-next" onclick="searchNav(1)" disabled>▼</button>
+    <button class="search-btn" onclick="closeSearch()" style="color:#888">✕</button>
   </div>
   <div id="tabs"></div>
   <div id="sheet"></div>
@@ -145,6 +176,62 @@
         for (var t = 0; t < tabs.length; t++) tabs[t].classList.remove('active');
         if (activeTab) activeTab.classList.add('active');
       } catch (err) { _fail('' + err); }
+    }
+
+    // ===== بحث =====
+    var _searchMatches = [];
+    var _searchIdx = 0;
+
+    function openSearch() {
+      document.getElementById('search-bar').classList.add('visible');
+      document.getElementById('search-input').focus();
+      if (window.flutter_inappwebview)
+        window.flutter_inappwebview.callHandler('onSearchOpen');
+    }
+    function closeSearch() {
+      document.getElementById('search-bar').classList.remove('visible');
+      document.getElementById('search-input').value = '';
+      _clearHighlights();
+      _searchMatches = []; _searchIdx = 0;
+      _updateCount();
+    }
+    function _clearHighlights() {
+      document.querySelectorAll('td.highlight, td.highlight-current')
+        .forEach(function(td) {
+          td.classList.remove('highlight', 'highlight-current');
+        });
+    }
+    function _updateCount() {
+      var el = document.getElementById('search-count');
+      el.textContent = _searchMatches.length
+        ? (_searchIdx + 1) + '/' + _searchMatches.length : '';
+      document.getElementById('btn-prev').disabled = _searchMatches.length === 0;
+      document.getElementById('btn-next').disabled = _searchMatches.length === 0;
+    }
+    function onSearchInput(val) {
+      _clearHighlights();
+      _searchMatches = []; _searchIdx = 0;
+      var q = val.trim().toLowerCase();
+      if (!q) { _updateCount(); return; }
+      document.querySelectorAll('#sheet td').forEach(function(td) {
+        if (td.textContent.toLowerCase().indexOf(q) !== -1) {
+          td.classList.add('highlight');
+          _searchMatches.push(td);
+        }
+      });
+      if (_searchMatches.length) {
+        _searchMatches[0].classList.add('highlight-current');
+        _searchMatches[0].scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+      _updateCount();
+    }
+    function searchNav(dir) {
+      if (!_searchMatches.length) return;
+      _searchMatches[_searchIdx].classList.remove('highlight-current');
+      _searchIdx = (_searchIdx + dir + _searchMatches.length) % _searchMatches.length;
+      _searchMatches[_searchIdx].classList.add('highlight-current');
+      _searchMatches[_searchIdx].scrollIntoView({ block: 'center', behavior: 'smooth' });
+      _updateCount();
     }
 
     function renderXlsx(base64, rtl) {
