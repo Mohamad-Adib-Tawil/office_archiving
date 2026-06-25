@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:docx_file_viewer/docx_file_viewer.dart';
-import 'package:office_archiving/pages/word_editor_page.dart';
+import 'package:office_archiving/pages/rich_text_editor_page.dart';
 import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
 
@@ -48,7 +48,7 @@ class _DocxViewerPageState extends State<DocxViewerPage> {
                 context,
                 MaterialPageRoute(
                   builder: (_) =>
-                      WordEditorPage(existingPath: widget.filePath),
+                      RichTextEditorPage(existingPath: widget.filePath),
                 ),
               ),
             ),

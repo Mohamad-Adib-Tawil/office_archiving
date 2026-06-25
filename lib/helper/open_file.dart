@@ -7,7 +7,7 @@ import 'package:office_archiving/helper/pdf_viewer.dart';
 import 'package:office_archiving/helper/image_viewer_page.dart';
 import 'package:office_archiving/helper/docx_viewer_page.dart';
 import 'package:office_archiving/helper/xlsx_viewer_page.dart';
-import 'package:office_archiving/pages/text_editor_page.dart';
+import 'package:office_archiving/pages/rich_text_editor_page.dart';
 
 Future<void> openFile({
   required String pathFile,
@@ -27,7 +27,7 @@ Future<void> openFile({
       if (!context.mounted) return;
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => TextEditorPage(existingPath: pathFile),
+          builder: (_) => RichTextEditorPage(existingPath: pathFile, fileType: 'txt'),
         ),
       );
       return;

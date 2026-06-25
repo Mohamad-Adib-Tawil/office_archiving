@@ -7,8 +7,7 @@ import 'package:office_archiving/theme/app_icons.dart';
 import 'package:office_archiving/l10n/app_localizations.dart';
 import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
 import 'package:office_archiving/services/scanner_import_service.dart';
-import 'package:office_archiving/pages/text_editor_page.dart';
-import 'package:office_archiving/pages/word_editor_page.dart';
+import 'package:office_archiving/pages/rich_text_editor_page.dart';
 import 'package:office_archiving/pages/excel_editor_page.dart';
 
 bool _isArabic(BuildContext context) =>
@@ -95,9 +94,10 @@ void showAddItemSheet(
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TextEditorPage(
+                      builder: (_) => RichTextEditorPage(
                         sectionId: idSection,
                         itemCubit: itemCubit,
+                        fileType: 'txt',
                       ),
                     ),
                   );
@@ -112,9 +112,10 @@ void showAddItemSheet(
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => WordEditorPage(
+                      builder: (_) => RichTextEditorPage(
                         sectionId: idSection,
                         itemCubit: itemCubit,
+                        fileType: 'docx',
                       ),
                     ),
                   );
